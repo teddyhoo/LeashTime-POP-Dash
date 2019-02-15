@@ -1,0 +1,559 @@
+{
+    "clientid": "45",
+    "clientname": "Carmelo Barone",
+    "sortname": "Barone, Carmelo",
+    "lname": "Barone",
+    "fname": "Carmelo",
+    "lname2": "Barone",
+    "fname2": "Susie",
+    "street1": "4 N Thomspon St",
+    "street2": null,
+    "city": "Richmond",
+    "state": "VA",
+    "zip": "23221",
+    "email": "teddyhoo@hotmail.com",
+    "email2": "charles.ajemian@gmail.com",
+    "cellphone": "952-484-1695",
+    "cellphone2": "999-999-0000",
+    "workphone": "202-334-6072",
+    "homephone": "703-578-4848",
+    "garagegatecode": "Garage Access: 0-4-0-1",
+    "alarmcompany": "The Alarm Co",
+    "alarmcophone": "703-333-3333",
+    "alarminfo": "7-2-0-4 OFF, then 2-4-0-7 ON. Double tap the EXIT key. Let's make this alarm code field super duper long and see what happens with it. We gonna make it really really long so that we can test the app to its limits and see if it cracks and can handle all the field data. We really will see if we try really hard. I don't know what the heck.\r\n\r\n7-2-0-4 OFF, then 2-4-0-7 ON. Double tap the EXIT key. Let's make this alarm code field super duper long and see what happens with it. We gonna make it really really long so that we can test the app to its limits and see if it cracks and can handle all the field data. We really will see if we try really hard. I don't know what the heck.\r\n\r\nThen do another thing.\r\n\r\nYet another thing.\r\n\r\nFollowed by the thing.\r\n\r\nThat thing you know.\r\n\r\nAnd another one. \r\nFinally, do the thing again. ",
+    "clinicptr": "5",
+    "vetptr": "2",
+    "notes": "This Client is particularly Note's like",
+    "leashloc": "The place where things go and where they stay",
+    "directions": "Drive all the way down and hit the right turn",
+    "parkinginfo": "Do not park on the street. if you park on the",
+    "foodloc": "Food is good and so good that we don't know w",
+    "nokeyrequired": "0",
+    "keyid": "0154",
+    "keydescription": null,
+    "showkeydescriptionnotkeyid": "No",
+    "clinicname": "Ballston Animal Hospital",
+    "clinicstreet1": "234 Washington Blvd",
+    "clinicstreet2": null,
+    "cliniccity": "Arlington",
+    "clinicstate": "VA",
+    "cliniczip": "22198",
+    "clinicphone": "554-2344",
+    "cliniclat": "38.8831",
+    "cliniclon": "-77.1699",
+    "emergency": {
+        "name": "Grandma McCain",
+        "location": "GrandmaVille",
+        "homephone": "404-444-444",
+        "workphone": "976-333-2222",
+        "cellphone": "817-000-8540",
+        "note": "She is senile",
+        "haskey": "No"
+    },
+    "neighbor": {
+        "name": "Trusty Trustworth",
+        "location": "Neighborhood",
+        "homephone": "904-999-9999",
+        "workphone": "804-999-9999",
+        "cellphone": "704-999-9999",
+        "note": "",
+        "haskey": "No"
+    },
+    "vetname": "Dr Vet",
+    "vetstreet1": "3000 Wilson Blvd",
+    "vetstreet2": null,
+    "vetcity": "Arlington",
+    "vetstate": "VA",
+    "vetzip": "22203",
+    "vetphone": "786-9876",
+    "vetlat": "38.8876",
+    "vetlon": "-77.0943",
+    "custom1": {
+        "label": "Trash Location",
+        "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. \r\n\r\nI don't know and I don't really care. \r\n\r\nThe trash located in the trash bin behind the home and not close to the other trash stuff.\r\n\r\n I don't know and I don't really care. \r\n\r\nThe trash located in the trash bin behind the home and not close to the other trash stuff. \r\n\r\nI don't know and I don't really care. \r\n\r\nThe trash located in the trash bin behind the home and not close to the other trash stuff.\r\n\r\n I don't know and I don't really care. \r\n\r\nThe trash located in the trash bin behind the home and not close to the other trash stuff.\r\n\r\n I don't know and I don't really care. \r\n\r\nThe trash located in the trash bin behind the home and not close to the other trash stuff.\r\n\r\n I don't know and I don't really care. ",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "custom1"
+  },
+  "custom2": {
+        "label": "Vicious Client",
+        "value": "0",
+        "type": "boolean",
+        "hidden": true,
+        "serverkey": "custom20"
+  },
+  "custom3": {
+        "label": "Leash Location",
+        "value": "This is a very long description of the Leash Location custom field.  I can think of little reason why anyone would need to type this much clutter into this field. This is a very long description of the Leash Location custom field.  I can think of little reason why anyone would need to type this much clutter into this field.",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "custom2"
+  },
+  "custom4": {
+      "label": "Crate Information",
+      "value": "This is a very long description of the Crate Information custom field.  I can think of little reason why anyone would need to type this much clutter into this field. This is a very long description of the Leash Location custom field.  I can think of little reason why anyone would need to type this much clutter into this field.This is a very long description of the Leash Location custom field.  I can think of little reason why anyone would need to type this much clutter into this field.",
+      "type": "text",
+      "hidden": false,
+      "serverkey": "custom3"
+  },
+  "custom5": {
+      "label": "Medical History",
+      "value": "This is a very long description of the  Medical History custom field.  I can think of little reason why anyone would need to type this much clutter into this field.",
+      "type": "text",
+      "hidden": false,
+      "serverkey": "custom4"
+  },
+  "custom6": {
+      "label": "Custom Client Field #1",
+      "value": "sliding-shortest-path-algorithm.pdf",
+      "type": "file",
+      "hidden": false,
+      "serverkey": "custom26"
+  },
+  "custom7": {
+      "label": "Custom Client Field #2",
+      "value": "A_heuristic_approach_based_on.PDF",
+      "type": "file",
+      "hidden": false,
+      "serverkey": "custom27"
+  },
+  "custom8": {
+      "label": "bites",
+      "value": "1",
+      "type": "boolean",
+      "hidden": true,
+      "serverkey": "custom16"
+  },
+  "custom9": {
+      "label": "Bring in Mail",
+      "value": "1",
+      "type": "boolean",
+      "hidden": false,
+      "serverkey": "custom17"
+  },
+  "custom10": {
+      "label": "Custom Client Field #3",
+      "value": "LeashTimeDocTest.doc",
+      "type": "file",
+      "hidden": false,
+      "serverkey": "custom25"
+  },
+  "custom11": {
+      "label": "Bothersome client",
+      "value": "1",
+      "type": "boolean",
+      "hidden": true,
+      "serverkey": "custom24"
+  },
+  "custom12": {
+      "label": "Entry Notes",
+      "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+      "type": "text",
+      "hidden": false,
+      "serverkey": "custom5"
+  },
+  "custom13": {
+      "label": "Parking Information",
+      "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+      "type": "text",
+      "hidden": false,
+      "serverkey": "custom6"
+  },
+  "custom14": {
+      "label": "Mail",
+      "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+      "type": "text",
+      "hidden": false,
+      "serverkey": "custom8"
+  },
+  "custom15": {
+      "label": "Information Related to the Walk",
+      "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+      "type": "text",
+      "hidden": false,
+      "serverkey": "custom9"
+  },
+  "custom16": {
+    "label": "Other Pets We Do Not Care For",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom10"
+  },
+  "custom17": {
+    "label": "Other Client Information",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom11"
+  },
+  "custom18": {
+    "label": "Feeding Instructions",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom12"
+  },
+  "custom19": {
+    "label": "Litterbox Location",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom13"
+  },
+  "custom20": {
+    "label": "Circuit Breaker Locations",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "oneline",
+    "hidden": false,
+    "serverkey": "custom14"
+  },
+  "custom21": {
+    "label": "Phobias",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom15"
+  },
+  "custom22": {
+    "label": "How Did You Hear About Us?",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "oneline",
+    "hidden": false,
+    "serverkey": "custom18"
+  },
+  "custom23": {
+    "label": "Neighborhood",
+    "value": null,
+    "type": "oneline",
+    "hidden": false,
+    "serverkey": "custom19"
+  },
+  "custom24": {
+    "label": "Content 1",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom21"
+  },
+  "custom25": {
+    "label": "Content 2",
+    "value": "The trash located in the trash bin behind the home and not close to the other trash stuff. I don't know and I don't really care. ",
+    "type": "text",
+    "hidden": false,
+    "serverkey": "custom22"
+  },
+  "custom26": {
+    "label": "Please leave a note at the end of each visit.",
+    "value": null,
+    "type": "oneline",
+    "hidden": false,
+    "serverkey": "custom23"
+  },
+  "pets": [
+    {
+      "petid": "62",
+      "name": "Amica",
+      "type": "Dog",
+      "breed": "airedale",
+      "sex": "f",
+      "color": "Tan and Black",
+      "fixed": "Yes",
+      "birthday": "12/5/2014",
+      "description": "Fierce and loyal",
+      "notes": "This is one awesome pet who does not put up with anything.\r\n\r\nThis pet is such a badass he once pulled the pants off a letter carrier and showed him who was boss. \r\n\r\nHe don't like to be told what to do.\r\n\r\nHe certainly won't put up with it.\r\n\r\nHe is non-tolerant\r\n\r\nHe will show you how. \r\n",
+      "petcustom1": {
+        "label": "Nickname",
+        "value": "Fanny Panny",
+        "type": "oneline",
+        "hidden": false,
+        "serverkey": "petcustom6"
+      },
+      "petcustom2": {
+        "label": "Water instructions",
+        "value": "Give her the water",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom7"
+      },
+      "petcustom3": {
+        "label": "Other stuff",
+        "value": "1",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom5"
+      },
+      "petcustom4": {
+        "label": "Medications",
+        "value": "Lots of meds",
+        "type": "oneline",
+        "hidden": false,
+        "serverkey": "petcustom3"
+      },
+      "petcustom5": {
+        "label": "Vet",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom2"
+      },
+      "petcustom6": {
+        "label": "Life Story",
+        "value": "No story that is interesting but I will be happy to tell you anyway. \r\n\r\nThe story goes a little sum'pin like dis. You see the dogfather was a mean father and he was a real doggly dog that was witchy witch. \r\n\r\nHe just was a bad dude you know what I am staying.\r\n\r\nSo the story has a happy ending and stuff.\r\n\r\nYou just have to read it through all the way.",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom4"
+      },
+      "petcustom7": {
+        "label": "Bites",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom1"
+      },
+      "petcustom8": {
+        "label": "comment",
+        "value": "She could use more tlcNo story that is interesting but I will be happy to tell you anyway. The story goes a little sum'pin like dis. You see the dogfather was a mean father and he was a real doggly dog that was witchy witch. He just was a bad dude you know what I am staying.No story that is interesting but I will be happy to tell you anyway. The story goes a little sum'pin like dis. You see the dogfather was a mean father and he was a real doggly dog that was witchy witch. He just was a bad dude you know what I am staying.",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom10"
+      },
+      "petcustom9": {
+        "label": "comment 2",
+        "value": "Loves to be cuddled",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom11"
+      },
+      "petcustom10": {
+        "label": "Extra stuff",
+        "value": "Would like to be a comedian",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom12"
+      },
+      "petcustom11": {
+        "label": "Extra extra stuff",
+        "value": "Talk to her and say good things",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom13"
+      },
+      "petcustom12": {
+        "label": "Annoying",
+        "value": "0",
+        "type": "boolean",
+        "hidden": true,
+        "serverkey": "petcustom14"
+      },
+      "petcustom13": {
+        "label": "Pet File #1",
+        "value": "Henri_Rousseau_Eclaireurs_attaques_par_un_tigre.jpg",
+        "type": "file",
+        "hidden": false,
+        "serverkey": "petcustom15"
+      },
+      "petcustom14": {
+        "label": "Pet File #2",
+        "value": "leashtime-keyword.xls",
+        "type": "file",
+        "hidden": true,
+        "serverkey": "petcustom16"
+      },
+      "petcustom15": {
+        "label": "Second check box",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom17"
+      },
+      "petcustom16": {
+        "label": "other Field",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom18"
+      },
+      "petcustom17": {
+        "label": "Pet File #3",
+        "value": null,
+        "type": "file",
+        "hidden": true,
+        "serverkey": "petcustom19"
+      },
+      "petcustom18": {
+        "label": "Pet File #4",
+        "value": null,
+        "type": "file",
+        "hidden": true,
+        "serverkey": "petcustom20"
+      },
+      "petcustom19": {
+        "label": "Walks",
+        "value": "1",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom8"
+      },
+      "petcustom20": {
+        "label": "Vaccines",
+        "value": "1",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom9"
+      }
+    },
+    {
+      "petid": "713",
+      "name": "Sparky",
+      "type": "Dog",
+      "breed": "Chesapeake Bay Retriever",
+      "sex": null,
+      "color": "Black",
+      "fixed": "Yes",
+      "birthday": "1/4/2012",
+      "description": "Just a sweetheart",
+      "notes": "But if you cross him, he will make you rue the day",
+      "petcustom1": {
+        "label": "Nickname",
+        "value": "Darky Sparky",
+        "type": "oneline",
+        "hidden": false,
+        "serverkey": "petcustom6"
+      },
+      "petcustom2": {
+        "label": "Water instructions",
+        "value": "Make sure you give him water",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom7"
+      },
+      "petcustom3": {
+        "label": "Other stuff",
+        "value": "1",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom5"
+      },
+      "petcustom4": {
+        "label": "Medications",
+        "value": "Xanax, twice daily",
+        "type": "oneline",
+        "hidden": false,
+        "serverkey": "petcustom3"
+      },
+      "petcustom5": {
+        "label": "Vet",
+        "value": "1",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom2"
+      },
+      "petcustom6": {
+        "label": "Life Story",
+        "value": "Who can say what the life story is for this little guy.",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom4"
+      },
+      "petcustom7": {
+        "label": "Bites",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom1"
+      },
+      "petcustom8": {
+        "label": "comment",
+        "value": "Oh what a card the boy is.",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom10"
+      },
+      "petcustom9": {
+        "label": "comment 2",
+        "value": "He sure can fly like a mother flicker. He is so lightning quick, I cannot believe he is the way he is and does what he does. He is so swift, I mean, what can I say. I could go on and on. Oh, i see that i have gone on and on.",
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom11"
+      },
+      "petcustom10": {
+        "label": "Extra stuff",
+        "value": null,
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom12"
+      },
+      "petcustom11": {
+        "label": "Extra extra stuff",
+        "value": null,
+        "type": "text",
+        "hidden": false,
+        "serverkey": "petcustom13"
+      },
+      "petcustom12": {
+        "label": "Annoying",
+        "value": "0",
+        "type": "boolean",
+        "hidden": true,
+        "serverkey": "petcustom14"
+      },
+      "petcustom13": {
+        "label": "Pet File #1",
+        "value": "Dog-petting.pdf",
+        "type": "file",
+        "hidden": false,
+        "serverkey": "petcustom15"
+      },
+      "petcustom14": {
+        "label": "Pet File #2",
+        "value": "Playing-styles-and-possible-causative-factors-in-dog_2008_Applied-Animal-Beh.pdf",
+        "type": "file",
+        "hidden": true,
+        "serverkey": "petcustom16"
+      },
+      "petcustom15": {
+        "label": "Second check box",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom17"
+      },
+      "petcustom16": {
+        "label": "other Field",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom18"
+      },
+      "petcustom17": {
+        "label": "Pet File #3",
+        "value": null,
+        "type": "file",
+        "hidden": true,
+        "serverkey": "petcustom19"
+      },
+      "petcustom18": {
+        "label": "Pet File #4",
+        "value": null,
+        "type": "file",
+        "hidden": true,
+        "serverkey": "petcustom20"
+      },
+      "petcustom19": {
+        "label": "Walks",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom8"
+      },
+      "petcustom20": {
+        "label": "Vaccines",
+        "value": "0",
+        "type": "boolean",
+        "hidden": false,
+        "serverkey": "petcustom9"
+      }
+    }
+  ]
+}

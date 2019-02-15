@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LEASHTIME CALENDAR</title>
+
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+    <!-- END META -->
+
+    <!-- BEGIN FRAMEWORK STYLESHEETS -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/bootstrap.css?1422792965" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+
+    <!-- BEGIN PLUGIN STYLESHEETS -->
+    <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar.css">
+
+    <!-- BEGIN LEASHTIME STYLESHEETS -->
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+    <!-- END STYLESHEETS -->
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+<script type="text/javascript" src="../../assets/js/libs/utils/html5shiv.js?1403934957"></script>
+<script type="text/javascript" src="../../assets/js/libs/utils/respond.min.js?1403934956"></script>
+<![endif]-->
+</head>
+
+<body class="header-fixed">
+
+
+    <!-- BEGIN OFFCANVAS HOLDER LEFT -->
+    <div class="offcanvas"></div>
+    <!-- END OFFCANVAS HOLDER LEFT -->
+
+<!-- ////////////////// BEGIN MAIN CONTENT  ////////////////////-->
+    <div id="content">
+        <!-- MAIN BANNER -->
+        <section id="messages" class="full-bleed text-center style-warning opacity-50">
+            <span class=""></span>
+        </section>
+        <!-- END MAIN BANNER  -->
+
+        <!-- MAIN PAGE CONTENT -->
+        <section>
+            <div class="section-body no-margin">
+                <div class="row">
+                    
+                    <!-- BEGIN LEFT SERVICE COLUMN -->
+                    <div class="col-sm-3">
+
+
+                        <div class="card style-info">
+                     
+                            
+           <div class="small-padding"> 
+                <!-- BEGIN SERVICE LIST -->
+                <ul class="list divider-full-bleed list-events">
+                    <li class="tile blue lighten-2 ui-draggable ui-draggable-handle" data-class-name=" blue">
+                        <div class="tile-content">
+                            <div class="tile-text">30 MIN WALK</div>
+                            <div class="tile-icon"><i class="fa fa-circle-thin text-primary"></i></div>
+                        </div>
+                    </li>
+                    <li class="tile  blue lighten-2 ui-draggable ui-draggable-handle" data-class-name="event-info">
+                        <div class="tile-content">
+                            <div class="tile-text">60 MIN WALK</div>
+                            <div class="tile-icon"><i class="fa fa-circle-thin text-info"></i></div>
+                        </div>
+                    </li>
+                    <li class="tile  blue lighten-2 ui-draggable ui-draggable-handle" data-class-name="green">
+                        <div class="tile-content">
+                            <div class="tile-text">Over Night</div>
+                            <div class="tile-icon"><i class="fa fa-circle-thin text-success"></i></div>
+                        </div>
+                    </li>
+                    <li class="tile  blue lighten-2  ui-draggable ui-draggable-handle" data-class-name="event-warning">
+                        <div class="tile-content">
+                            <div class="tile-text">5 Days a Week</div>
+                            <div class="tile-icon"><i class="fa fa-circle-thin text-warning"></i></div>
+                        </div>
+                    </li>
+                    <li class="tile  blue lighten-2  ui-draggable ui-draggable-handle" data-class-name="event-danger">
+                        <div class="tile-content">
+                            <div class="tile-text">7 Days Week</div>
+                            <div class="tile-icon"><i class="fa fa-circle-thin text-danger"></i></div>
+                        </div>
+                    </li>   
+                
+                </ul>
+                <!-- END SERVICE LIST -->
+         
+<div class="card btn-care-report" style="margin-top: 10px">
+    <div class="card-body no-padding ">
+    <button class="text-left small-padding transparent no-border full-bleed no-border" style="width: 100%;border-color:transparent;border-style: none;">
+    <h4 class="no-padding no-margin"><b>CARE</b>REPORTS™</h4>
+    <small id="service-card-time" class="text-light .ccc opacity-75">VIEW &amp; SHARE VISIT REPORTS</small>
+    </button>
+    </div>
+</div>
+
+<div class="card btn-service-history" >
+<div class="card-body no-padding ">
+    <button class="text-left small-padding transparent no-border full-bleed no-border" data-toggle="modal" data-target="#formModal3" style="width: 100%;border-color:transparent;border-style: none;">
+    <h4 class="no-padding no-margin"><b>SERVICE</b> HISTORY</h4>
+<small id="service-card-time" class="text-light .ccc opacity-75">VIEW ACCOUNT HISTORY</small>
+</button>
+</div>
+</div>
+
+<div class="text-center btn-modals small-padding">
+    <button class="btn btn-default-bright btn-raised" data-toggle="modal" data-target="#formModal">
+    ON DROP</button>
+
+    <button class="btn btn-default-bright btn-raised" data-toggle="modal" data-target="#formModal2">
+    MULTI VISIT</button>
+</div>
+                      
+               
+<!-- BEGIN FORM MODAL MARKUP -->
+<div class="modal fade" id="bizModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- TITLE -->
+            <div class="modal-header blue white-text">
+                <button type="button" class="close force-padding" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="formModalLabel">SERVICE PROVIDER</h4>
+            </div>               
+            <div class="row">
+               <!-- MAP -->
+                <div class="col-md-5 m-r-0 biz-map">
+                    <div class="no-padding">
+                    <div id="marker-map" class="border-gray height-10" style="position: relative; overflow: hidden;">
+                        <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);">
+                            <div class="gm-style" style="position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px;">
+                                <div tabindex="0" style="position: absolute; z-index: 0; left: 0px; top: 0px; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; cursor: url(&quot;https://maps.gstatic.com/mapfiles/openhand_8_8.cur&quot;), default; touch-action: pan-x pan-y;">
+                                    <div style="z-index: 1; position: absolute; left: 50%; top: 50%; transform: translate(0px, 0px);">
+                                        <div style="position: absolute; left: 0px; top: 0px; z-index: 100; width: 100%;">
+                                            <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+                                                <div style="position: absolute; z-index: 1; transform: matrix(1, 0, 0, 1, -222, -253);">
+                                                    <div style="position: absolute; left: 0px; top: 256px; width: 256px; height: 256px;">
+                                                        <div style="width: 256px; height: 256px;"></div>
+                                                    </div>
+                                                    <div style="position: absolute; left: -256px; top: 256px; width: 256px; height: 256px;">
+                                                        <div style="width: 256px; height: 256px;"></div>
+                                                    </div>
+                                                    <div style="position: absolute; left: -256px; top: 0px; width: 256px; height: 256px;">
+                                                        <div style="width: 256px; height: 256px;"></div>
+                                                    </div>
+                                                    <div style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px;">
+                                                        <div style="width: 256px; height: 256px;"></div>
+                                                    </div>
+                                                    <div style="position: absolute; left: 256px; top: 0px; width: 256px; height: 256px;">
+                                                        <div style="width: 256px; height: 256px;"></div>
+                                                    </div>
+                                                    <div style="position: absolute; left: 256px; top: 256px; width: 256px; height: 256px;">
+                                                        <div style="width: 256px; height: 256px;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="position: absolute; left: 0px; top: 0px; z-index: 101; width: 100%;"></div>
+                                        <div style="position: absolute; left: 0px; top: 0px; z-index: 102; width: 100%;"></div>
+                                        <div style="position: absolute; left: 0px; top: 0px; z-index: 103; width: 100%;">
+                                            <div style="position: absolute; left: 0px; top: 0px; z-index: -1;">
+                                                <div style="position: absolute; z-index: 1; transform: matrix(1, 0, 0, 1, -222, -253);">
+                                                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: 256px;"></div>
+                                                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: 256px;"></div>
+                                                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -256px; top: 0px;"></div>
+                                                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 0px; top: 0px;"></div>
+                                                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: 0px;"></div>
+                                                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 256px; top: 256px;"></div>
+                                                </div>
+                                            </div>
+                                            <div style="width: 27px; height: 43px; overflow: hidden; position: absolute; left: -5px; top: -28px; z-index: 15;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" draggable="false" style="position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                        </div>
+                                        <div style="position: absolute; left: 0px; top: 0px; z-index: 0;">
+                                            <div style="position: absolute; z-index: 1; transform: matrix(1, 0, 0, 1, -222, -253);">
+                                                <div style="position: absolute; left: 256px; top: 0px; width: 256px; height: 256px;"><img draggable="false" alt="" src="https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i11!2i1052!3i672!4i256!2m3!1e0!2sm!3i427130424!3m9!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875&amp;key=AIzaSyCaFiiyJLSZNfT5D2sBiWzSK1MDo41e-JA&amp;token=89809" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                                <div style="position: absolute; left: 256px; top: 256px; width: 256px; height: 256px;"><img draggable="false" alt="" src="https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i11!2i1052!3i673!4i256!2m3!1e0!2sm!3i427130424!3m9!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875&amp;key=AIzaSyCaFiiyJLSZNfT5D2sBiWzSK1MDo41e-JA&amp;token=37837" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                                <div style="position: absolute; left: -256px; top: 0px; width: 256px; height: 256px;"><img draggable="false" alt="" src="https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i11!2i1050!3i672!4i256!2m3!1e0!2sm!3i427130424!3m9!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875&amp;key=AIzaSyCaFiiyJLSZNfT5D2sBiWzSK1MDo41e-JA&amp;token=76853" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                                <div style="position: absolute; left: -256px; top: 256px; width: 256px; height: 256px;"><img draggable="false" alt="" src="https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i11!2i1050!3i673!4i256!2m3!1e0!2sm!3i427130424!3m9!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875&amp;key=AIzaSyCaFiiyJLSZNfT5D2sBiWzSK1MDo41e-JA&amp;token=24881" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                                <div style="position: absolute; left: 0px; top: 256px; width: 256px; height: 256px;"><img draggable="false" alt="" src="https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i11!2i1051!3i673!4i256!2m3!1e0!2sm!3i427130424!3m9!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875&amp;key=AIzaSyCaFiiyJLSZNfT5D2sBiWzSK1MDo41e-JA&amp;token=31359" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                                <div style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px;"><img draggable="false" alt="" src="https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i11!2i1051!3i672!4i256!2m3!1e0!2sm!3i427130424!3m9!2sen-US!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!4e0!5m1!5f2!23i1301875&amp;key=AIzaSyCaFiiyJLSZNfT5D2sBiWzSK1MDo41e-JA&amp;token=83331" style="width: 256px; height: 256px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="gm-style-pbc" style="z-index: 2; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px; opacity: 0; transition-duration: 0.8s;">
+                                        <p class="gm-style-pbt">Use ⌘ + scroll to zoom the map</p>
+                                    </div>
+                                    <div style="z-index: 3; position: absolute; height: 100%; width: 100%; padding: 0px; border-width: 0px; margin: 0px; left: 0px; top: 0px; touch-action: pan-x pan-y;">
+                                        <div style="z-index: 4; position: absolute; left: 50%; top: 50%; transform: translate(0px, 0px);">
+                                            <div style="position: absolute; left: 0px; top: 0px; z-index: 104; width: 100%;"></div>
+                                            <div style="position: absolute; left: 0px; top: 0px; z-index: 105; width: 100%;"></div>
+                                            <div style="position: absolute; left: 0px; top: 0px; z-index: 106; width: 100%;">
+                                                <div class="gmnoprint" style="width: 27px; height: 43px; overflow: hidden; position: absolute; opacity: 0.01; left: -5px; top: -28px; z-index: 15;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" draggable="false" usemap="#gmimap0" style="position: absolute; left: 0px; top: 0px; width: 27px; height: 43px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"><map name="gmimap0" id="gmimap0"><area log="miw" coords="13.5,0,4,3.75,0,13.5,13.5,43,27,13.5,23,3.75" shape="poly" title="Amsterdam" style="cursor: pointer; touch-action: none;"></map></div>
+                                            </div>
+                                            <div style="position: absolute; left: 0px; top: 0px; z-index: 107; width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                </div><iframe frameborder="0" style="z-index: -1; position: absolute; width: 100%; height: 100%; top: 0px; left: 0px; border: none;" src="about:blank"></iframe>
+                                <div style="margin-left: 5px; margin-right: 5px; z-index: 1000000; position: absolute; left: 0px; bottom: 0px;">
+                                    <a target="_blank" rel="noopener" href="https://maps.google.com/maps?ll=52.37695,4.898365&amp;z=11&amp;t=m&amp;hl=en-US&amp;gl=US&amp;mapclient=apiv3" title="Click to see this area on Google Maps" style="position: static; overflow: visible; float: none; display: inline;">
+                                        <div style="width: 66px; height: 26px; cursor: pointer;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png" draggable="false" style="position: absolute; left: 0px; top: 0px; width: 66px; height: 26px; user-select: none; border: 0px; padding: 0px; margin: 0px;"></div>
+                                    </a>
+                                </div>
+                                <div style="background-color: white; padding: 15px 21px; border: 1px solid rgb(171, 171, 171); font-family: Roboto, Arial, sans-serif; color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; z-index: 10000002; display: none; width: 256px; height: 148px; position: absolute; left: 116px; top: 109px;">
+                                    <div style="padding: 0px 0px 10px; font-size: 16px;">Map Data</div>
+                                    <div style="font-size: 13px;">Map data ©2018 Google</div>
+                                    <div style="width: 13px; height: 13px; overflow: hidden; position: absolute; opacity: 0.7; right: 12px; top: 12px; z-index: 10000; cursor: pointer;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png" draggable="false" style="position: absolute; left: -2px; top: -336px; width: 59px; height: 492px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                </div>
+                                <div class="gmnoprint" style="z-index: 1000001; position: absolute; right: 252px; bottom: 0px; width: 121px;">
+                                    <div draggable="false" class="gm-style-cc" style="user-select: none; height: 14px; line-height: 14px;">
+                                        <div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;">
+                                            <div style="width: 1px;"></div>
+                                            <div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div>
+                                        </div>
+                                        <div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a style="text-decoration: none; cursor: pointer; display: none;">Map Data</a><span>Map data ©2018 Google</span></div>
+                                    </div>
+                                </div>
+                                <div class="gmnoscreen" style="position: absolute; right: 0px; bottom: 0px;">
+                                    <div style="font-family: Roboto, Arial, sans-serif; font-size: 11px; color: rgb(68, 68, 68); direction: ltr; text-align: right; background-color: rgb(245, 245, 245);">Map data ©2018 Google</div>
+                                </div>
+                                <div class="gmnoprint gm-style-cc" draggable="false" style="z-index: 1000001; user-select: none; height: 14px; line-height: 14px; position: absolute; right: 96px; bottom: 0px;">
+                                    <div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;">
+                                        <div style="width: 1px;"></div>
+                                        <div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div>
+                                    </div>
+                                    <div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a href="https://www.google.com/intl/en-US_US/help/terms_maps.html" target="_blank" rel="noopener" style="text-decoration: none; cursor: pointer; color: rgb(68, 68, 68);">Terms of Use</a></div>
+                                </div><button draggable="false" title="Toggle fullscreen view" aria-label="Toggle fullscreen view" type="button" style="background: none rgb(255, 255, 255); border: 0px; margin: 10px 14px; padding: 0px; position: absolute; cursor: pointer; user-select: none; width: 25px; height: 25px; overflow: hidden; top: 0px; right: 0px;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/sv9.png" draggable="false" class="gm-fullscreen-control" style="position: absolute; left: -52px; top: -86px; width: 164px; height: 175px; user-select: none; border: 0px; padding: 0px; margin: 0px;"></button>
+                                <div draggable="false" class="gm-style-cc" style="user-select: none; height: 14px; line-height: 14px; position: absolute; right: 0px; bottom: 0px;">
+                                    <div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;">
+                                        <div style="width: 1px;"></div>
+                                        <div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div>
+                                    </div>
+                                    <div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a target="_blank" rel="noopener" title="Report errors in the road map or imagery to Google" href="https://www.google.com/maps/@52.37695,4.898365,11z/data=!10m1!1e1!12b1?source=apiv3&amp;rapsrc=apiv3" style="font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); text-decoration: none; position: relative;">Report a map error</a></div>
+                                </div>
+                                <div class="gmnoprint gm-bundled-control" draggable="false" controlwidth="28" controlheight="55" style="margin: 10px; user-select: none; position: absolute; left: 0px; top: 0px;">
+                                    <div class="gmnoprint" controlwidth="28" controlheight="55" style="position: absolute; left: 0px; top: 0px;">
+                                        <div draggable="false" style="user-select: none; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; cursor: pointer; background-color: rgb(255, 255, 255); width: 28px; height: 55px;"><button draggable="false" title="Zoom in" aria-label="Zoom in" type="button" style="background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; width: 28px; height: 27px; top: 0px; left: 0px;"><div style="overflow: hidden; position: absolute; width: 15px; height: 15px; left: 7px; top: 6px;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/tmapctrl_hdpi.png" draggable="false" style="position: absolute; left: 0px; top: 0px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 120px; height: 54px;"></div></button>
+                                            <div style="position: relative; overflow: hidden; width: 67%; height: 1px; left: 16%; background-color: rgb(230, 230, 230); top: 0px;"></div><button draggable="false" title="Zoom out" aria-label="Zoom out" type="button" style="background: none; display: block; border: 0px; margin: 0px; padding: 0px; position: relative; cursor: pointer; user-select: none; width: 28px; height: 27px; top: 0px; left: 0px;"><div style="overflow: hidden; position: absolute; width: 15px; height: 15px; left: 7px; top: 6px;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/tmapctrl_hdpi.png" draggable="false" style="position: absolute; left: 0px; top: -15px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 120px; height: 54px;"></div></button></div>
+                                    </div>
+                                </div>
+                                <div class="gmnoprint gm-bundled-control gm-bundled-control-on-bottom" draggable="false" controlwidth="28" controlheight="28" style="margin: 10px; user-select: none; position: absolute; bottom: 42px; right: 28px;">
+                                    <div class="gm-svpc" controlwidth="28" controlheight="28" style="background-color: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; width: 28px; height: 28px; cursor: url(&quot;https://maps.gstatic.com/mapfiles/openhand_8_8.cur&quot;), default; touch-action: none; position: absolute; left: 0px; top: 0px;">
+                                        <div style="position: absolute; left: 1px; top: 1px;"></div>
+                                        <div style="position: absolute; left: 1px; top: 1px;">
+                                            <div aria-label="Street View Pegman Control" style="width: 26px; height: 26px; overflow: hidden; position: absolute; left: 0px; top: 0px;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout5_hdpi.png" draggable="false" style="position: absolute; left: -147px; top: -26px; width: 215px; height: 835px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                            <div aria-label="Pegman is on top of the Map" style="width: 26px; height: 26px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout5_hdpi.png" draggable="false" style="position: absolute; left: -147px; top: -52px; width: 215px; height: 835px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                            <div aria-label="Street View Pegman Control" style="width: 26px; height: 26px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout5_hdpi.png" draggable="false" style="position: absolute; left: -147px; top: -78px; width: 215px; height: 835px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="gmnoprint" controlwidth="28" controlheight="0" style="display: none; position: absolute;">
+                                        <div title="Rotate map 90 degrees" style="width: 28px; height: 28px; overflow: hidden; position: absolute; background-color: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; cursor: pointer; display: none;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/tmapctrl4_hdpi.png" draggable="false" style="position: absolute; left: -141px; top: 6px; width: 170px; height: 54px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                        <div class="gm-tilt" style="width: 28px; height: 28px; overflow: hidden; position: absolute; background-color: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; border-radius: 2px; top: 0px; cursor: pointer;"><img alt="" src="https://maps.gstatic.com/mapfiles/api-3/images/tmapctrl4_hdpi.png" draggable="false" style="position: absolute; left: -141px; top: -13px; width: 170px; height: 54px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div>
+                                    </div>
+                                </div>
+                                <div class="gmnoprint" style="margin: 10px; z-index: 0; position: absolute; cursor: pointer; left: 48px; top: 0px;">
+                                    <div class="gm-style-mtc" style="float: left; position: relative;">
+                                        <div role="button" tabindex="0" title="Show street map" aria-label="Show street map" aria-pressed="true" draggable="false" style="direction: ltr; overflow: hidden; text-align: center; position: relative; color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 8px; border-bottom-left-radius: 2px; border-top-left-radius: 2px; background-clip: padding-box; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; min-width: 22px; font-weight: 500;">Map</div>
+                                        <div style="background-color: white; z-index: -1; padding: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; position: absolute; left: 0px; top: 29px; text-align: left; display: none;">
+                                            <div draggable="false" title="Show street map with terrain" style="color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 6px 8px 6px 6px; direction: ltr; text-align: left; white-space: nowrap;"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; background-color: rgb(255, 255, 255); border: 1px solid rgb(198, 198, 198); border-radius: 1px; width: 13px; height: 13px; vertical-align: middle;"><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden; display: none;"><img alt="" src="https://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false" style="position: absolute; left: -52px; top: -44px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 68px; height: 67px;"></div></span>
+                                                <label style="vertical-align: middle; cursor: pointer;">Terrain</label></div>
+                                        </div>
+                                    </div>
+                                    <div class="gm-style-mtc" style="float: left; position: relative;">
+                                        <div role="button" tabindex="0" title="Show satellite imagery" aria-label="Show satellite imagery" aria-pressed="false" draggable="false" style="direction: ltr; overflow: hidden; text-align: center; position: relative; color: rgb(86, 86, 86); font-family: Roboto, Arial, sans-serif; user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 8px; border-bottom-right-radius: 2px; border-top-right-radius: 2px; background-clip: padding-box; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; min-width: 40px; border-left: 0px;">Satellite</div>
+                                        <div style="background-color: white; z-index: -1; padding: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; position: absolute; right: 0px; top: 29px; text-align: left; display: none;">
+                                            <div draggable="false" title="Show imagery with street names" style="color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 6px 8px 6px 6px; direction: ltr; text-align: left; white-space: nowrap;"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; background-color: rgb(255, 255, 255); border: 1px solid rgb(198, 198, 198); border-radius: 1px; width: 13px; height: 13px; vertical-align: middle;"><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden;"><img alt="" src="https://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false" style="position: absolute; left: -52px; top: -44px; user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 68px; height: 67px;"></div></span><label style="vertical-align: middle; cursor: pointer;">Labels</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div draggable="false" class="gm-style-cc" style="position: absolute; user-select: none; height: 14px; line-height: 14px; right: 168px; bottom: 0px;">
+                                    <div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;">
+                                        <div style="width: 1px;"></div>
+                                        <div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px;"></div>
+                                    </div>
+                                    <div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><span>2 km&nbsp;</span>
+                                        <div style="position: relative; display: inline-block; height: 8px; bottom: -1px; width: 47px;">
+                                            <div style="width: 100%; height: 4px; position: absolute; left: 0px; top: 0px;"></div>
+                                            <div style="width: 4px; height: 8px; left: 0px; top: 0px; background-color: rgb(255, 255, 255);"></div>
+                                            <div style="width: 4px; height: 8px; position: absolute; background-color: rgb(255, 255, 255); right: 0px; bottom: 0px;"></div>
+                                            <div style="position: absolute; background-color: rgb(102, 102, 102); height: 2px; left: 1px; bottom: 1px; right: 1px;"></div>
+                                            <div style="position: absolute; width: 2px; height: 6px; left: 1px; top: 1px; background-color: rgb(102, 102, 102);"></div>
+                                            <div style="width: 2px; height: 6px; position: absolute; background-color: rgb(102, 102, 102); bottom: 1px; right: 1px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div><!--end .card -->
+
+                <!-- INFO -->
+                <div class="col-md-7">
+                    <form class="form-horizontal" role="form">
+                        <div class="modal-body no-padding">
+                            <div class="alert text-lg m-b-0" role="alert">
+                                <h3 class="no-margin"><span class="blue-text">Business Name</span></h3>
+                                <br>
+                                <strong>Website:</strong> <a href="#1"><span class="blue-text">www.businessweb.com</span></a><br>
+                                <strong>Phone:</strong> <span class="blue-text">(804) 555-5555</span><br>
+                                <strong>Address:</strong> <span class="blue-text">777 Good Morning Lane</span><br>
+                                <strong>State Zip:</strong> <span class="blue-text">Virgnia, 23226</span><br>
+
+
+                            <div class="btn-group btn-group-justified m-t-20" role="group" aria-label="Justified button group">
+                                <a href="#!" class="btn btn-default-bright ">
+                               WEBSITE</a>
+                               <a href="#!" class="btn btn-default-bright">
+                               FACEBOOK</a>
+                                <a href="#!" class="btn btn-default-bright ">
+                               LINKEDIN</a>
+                            </div>
+
+                            <div class="modal-footer grey lighten-4">
+                            <button type="button" class="btn btn-default  width-4" data-dismiss="modal">EMAIL</button>
+                            <button type="button" class="btn btn-info width-6 white-text" data-dismiss="modal" data-toggle="modal" data-dismiss="modal">CLOSE WINDOW</button>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+
+            </div><!-- row -->
+        </div><!-- /.modal -->
+    </div>
+</div>            
+ 
+<!-- BEGIN FORM MODAL MARKUP -->
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- TITLE -->
+            <div class="modal-header blue white-text">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="formModalLabel">SERVICE REQUEST</h4>
+            </div>
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+
+                   <div class="alert alert-warning text-lg" role="alert">
+<span class="text-lg"><strong>Service Request:</strong> <span class="blue-text">60 Minute Walk Service</span></span>
+<br>
+<strong>Date:</strong> <span class="blue-text">April 30th, 2017</span>
+
+
+<div class="form-group pull-right control-width-normal">
+  <div class="input-group date" id="demo-date">
+    <div class="input-group-content">
+      <input type="text" class="form-control">
+      <label>Datepicker</label>
+    </div>
+    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+  </div>
+</div>
+       <br>
+</div>
+
+                    <label class="text-default-light">SELECT TIME OF DAY PREFFERENCE</label>
+                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">MORNING</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">MIDDAY</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">AFTERNOON</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">EVENING</a>
+                    </div>
+                    <br>
+                    <label class="text-default-light">SELECT SCHEDULE OPTION</label>
+                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">
+                        MULTI-DAY SERVICES</a>
+                        <a href="#!" class="btn btn-default-bright " type="checkbox" role="checkbox">
+                        SINGLE-DAY SERVICES</a>
+                    </div>
+                    <br>
+                </div>
+
+
+                <div class="modal-footer grey lighten-2">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL REQUEST</button>
+                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3">REQUEST SERVICE</button>
+                </div>
+
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- BEGIN FORM MODAL2 MARKUP -->
+<div class="modal fade" id="formModal2" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- TITLE -->
+            <div class="modal-header blue white-text">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="formModalLabel">PETCARE SERVICE REQUEST:</h4>
+            </div>
+            <!-- FORM -->
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+                    <label class="text-default-light">SELECT DAYS OF THE WEEK TO SCHEDULE THIS SERVICE</label>
+                    <!-- DAYS -->
+                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">MON</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">TUE</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">WED</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">THR</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">FRI</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">SAT</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">SUN</a>
+                    </div>
+                    <br>
+                    <!-- WEEKS -->
+                    <label class="text-default-light">FOR HOW LONG WOULD YOU LIKE THIS SERVICE TO CONTINUE?</label>
+                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">1WEEK</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">2WEEK</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">3WEEK</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">4WEEK</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">5WEEK</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">6WEEK</a>
+                    </div>
+                    <br>
+                    <!-- MONTHS -->
+                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">1MO</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">2MO</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">3MO</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">4MO</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">5MO</a>
+                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">6MO</a>
+                    </div>
+                    <br>
+                </div>
+                <div class="modal-footer grey lighten-2">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL REQUEST</button>
+                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3">REQUEST SERVICE</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- END FORM MODAL MARKUP -->
+
+<!-- BEGIN FORM MODAL3 MARKUP -->
+<div class="modal fade" id="formModal3" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- TITLE -->
+            <div class="modal-header green white-text">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="formModalLabel">SUBMIT PETCARE SERVICE REQUEST</h4>
+            </div>
+            <!-- FORM -->
+            <form class="form-horizontal" role="form">
+                <div class="modal-body">
+
+
+                    <!-- INVOICE -->
+                    <section>
+                        <div class="section-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card card-printable style-default-light">
+                                        <div class="card-head">
+                                            <div class="tools">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-floating-action grey" href="javascript:void(0);" onclick="javascript:window.print();"><i class="md md-print"></i></a>
+                                                </div>
+                                            </div>
+                                        </div><!--end .card-head -->
+                                        <div class="card-body style-default-bright">
+
+                                            <!-- BEGIN INVOICE HEADER -->
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <h1 class="text-light"><i class="fa fa-paw fa-fw fa-2x text-accent-dark"> </i> <strong class="text-accent-dark">LEASHTIME</strong></h1>
+                                                </div>
+                                                <div class="col-xs-4 text-right">
+                                                    <h1 class="text-light text-default-light">Invoice</h1>
+                                                </div>
+                                            </div><!--end .row -->
+                                            <!-- END INVOICE HEADER -->
+                                            <br>
+                                            <!-- BEGIN INVOICE PRODUCTS -->
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width:60px" class="text-center">QTY</th>
+                                                                <th class="text-left">DESCRIPTION</th>
+                                                                <th style="width:140px" class="text-right">UNIT PRICE</th>
+                                                                <th style="width:90px" class="text-right">TOTAL</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center">6</td>
+                                                                <td>60 Minute Walk</td>
+                                                                <td class="text-right">$35.00</td>
+                                                                <td class="text-right">$210.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-center">11</td>
+                                                                <td>30 Minute Walk</td>
+                                                                <td class="text-right">$20.00</td>
+                                                                <td class="text-right">$222.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" rowspan="4">
+                                                                    <h3 class="text-light opacity-50">Invoice Notes</h3>
+                                                                    <p><small><a href="#!">Terms and Conditions</a></small></p>
+                                                                    <p><strong><em>Excepteur sint occaecat est laborum.</em></strong></p>
+                                                                </td>
+                                                                <td class="text-right"><strong>Subtotal</strong></td>
+                                                                <td class="text-right">$432.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-right"><strong class="text-lg text-accent">Total</strong></td>
+                                                                <td class="text-right"><strong class="text-lg text-accent">$432.00</strong></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div><!--end .col -->
+                                            </div><!--end .row -->
+                                            <!-- END INVOICE PRODUCTS -->
+
+                                        </div><!--end .card-body -->
+                                    </div><!--end .card -->
+                                </div><!--end .col -->
+                            </div><!--end .row -->
+                        </div><!--end .section-body -->
+                    </section>
+
+
+
+                </div>
+                <div class="modal-footer grey lighten-2">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal">SUBLIT SERVICE REQUEST</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- END FORM MODAL MARKUP -->
+
+    </div>
+</div>
+
+
+
+</div>
+                    <!-- END RIGHT CALENDAR COLUMN -->
+
+                    <!-- BEGIN RIGHT CALENDAR COLUMN -->
+                    <div class="col-sm-9">
+                    
+                    <!-- CALENDAR -->
+                    <section class="no-padding no-margin">
+                            <!--<div class="section-header"></div>-->
+                            <div class="section-body no-padding no-margin">
+                                <div class="row">
+                                    <!-- BEGIN CALENDAR -->
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-head blue darken-1 white-text">
+
+                                                <header>
+                                                    <span class="selected-day">&nbsp;</span> &nbsp;<small class="selected-date">&nbsp;</small>
+                                                </header>
+                                                <div class="tools">
+                                                    <div class="btn-group">
+                                                        <a id="calender-prev" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-angle-left"></i></a>
+                                                        <a id="calender-next" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-angle-right"></i></a>
+                                                    </div>
+                                                    <div class="btn-group pull-right">
+                                                    </div>
+                                                </div>
+                                                <ul class="nav nav-tabs tabs-text-contrast tabs-accent" style="border-top: solid .01em; border-top-color: aqua" data-toggle="tabs">
+                                                    <li data-mode="month" class="active"><a href="#">Month</a></li>
+                                                    <li data-mode="agendaWeek"><a href="#">Week</a></li>
+                                                    <li data-mode="agendaDay"><a href="#">Day</a></li>
+                                                </ul>
+                                            </div>
+                                            <!-- CALENDAR HOLDER-->
+                                            <div class="card-body no-padding">
+                                                <div id="calendar"></div>
+                                                <div id="calCreateEventDialog">
+
+                                                 <!-- Place holder for the event's description that will be loaded dynamically -->
+                                                 <div id="eventDescription"></div>
+
+                                                 <br />
+                                                 <form>
+
+                                                 <label for="eventTitle" style="display:inline-block">Event description</label>
+                                                 <input type="text" name="eventTitle" id="eventTitle" value="Appointment" />
+
+                                                 </form>
+
+                                                 </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                  
+
+                    </div>
+                    <!-- END RIGHT CALENDAR COLUMN -->
+
+                </div>
+            </div>
+        </section>
+        <!-- END CONTENT -->
+
+
+    </div>
+    <!-- END BASE CONTENT-->
+
+    <!-- BEGIN JAVASCRIPT -->
+    <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+    <script src="../../assets/js/libs/moment/moment.min.js"></script>
+    <script src="../../assets/js/libs/fullcalendar/fullcalendar.min.js"></script>
+    <script src="../../assets/js/leashtime/LeashtimeCalendar.js"></script>
+    <script src="../../assets/js/leashtime/leashtime-modify-event-simple.js"></script>
+
+
+    <script>
+        $(function() {
+            $('h4').addClass('.ccc');
+            $("textarea")
+                .keyup(function() {
+                    var value = $(this).val();
+                    var viewID = $(this).attr('data-viewID');
+                    $('#' + viewID).text(value);
+                })
+                .keyup();
+
+            $('.btn-save-service').on('click', function() {
+                    var serviceSelected = $(this).attr('data-Service');
+                    var classVal = $('#lt-service-card').addClass(serviceSelected);
+                    $('#lt-service-card').removeClass('grey lighten-1 service-1 service-2 service-3 service-4 service-5 service-6 service-7 service-8 ');
+                    $('#lt-service-card').addClass(serviceSelected);
+                    console.log("SERVICE SELECTED: " + serviceSelected + " | CARD CLASSES: " + classVal);
+                }),
+
+                $('#btn-save-contact').on('click', function() {
+                    $('#card-view').fadeIn(400);
+                    $(this).parent().parent().fadeOut(800);
+                }),
+
+                $('#btn-edit-contact').on('click', function() {
+                    $('#card-edit').fadeIn(400);
+                    $(this).parent().parent().parent().fadeOut(800);
+                });
+
+            $("form").submit(function(event) {
+                console.log($(this).serialize());
+                event.preventDefault();
+            });
+
+            $("form").on("submit", function(event) {
+                event.preventDefault();
+                console.log($(this).serialize());
+            });
+
+            function showValues() {
+                var str = $("form").serialize();
+                $("#results").text(str);
+            }
+            $("input[type='checkbox'], input[type='radio']").on("click", showValues);
+            $("select").on("change", showValues);
+            showValues();
+        });
+        
+        $('#calendar').fullCalendar({
+          dayClick: function() {
+            alert('a day has been clicked!');
+          }
+        });
+    </script>
+
+
+    <!-- END JAVASCRIPT -->
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+;(function(global, $) {
+
+  const  dayArrStr = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  
+  var VisitReport = function(visitDictionary) {
+      return new VisitReport.init(visitDictionary);
+  }
+  
+  var statusMessages = {
+      complete: 'Visit Complete',
+      pending:  'Pending Confirmation',
+      canceled: 'Service Canceled',
+      late:     'Running Late'
+  }
+   
+  VisitReport.prototype = {
+    
+    setMoodButtons : function() {
+      console.log('Mood button function');
+      let moodKeys = Object.keys(this.moodButtons);
+      moodKeys.forEach((mKey)=> {
+            if (this.moodButtons[mKey] != null) {
+                if (this.moodButtons[mKey] == 1) {
+
+                  let mood = document.getElementById(mKey);
+                  //mood.className = 'btn transparent';
+                }
+            }
+      })
+    },
+    
+    setSelector : function(sel) {
+      document.getElementById(sel);
+      return this
+    },
+    
+    setPhoto : function() {
+      var imgHolder = document.getElementById('imgHolder');
+      imgHolder.style.backgroundImage = 'url("' + this.VISITPHOTOURL + '")';
+    },
+    
+    setMap : function() {
+      document.getElementById('vrMap').setAttribute('src', this.MAPROUTEURL);
+    },
+    swapPhotoMap : function() {
+      vrPhoto = this.VISITPHOTOURL;
+      vrMap = this.MAPROUTEURL;
+      imgTracker = 'vrPhoto';
+      imgHolder = document.getElementById('imgHolder');
+       
+      if(imgTracker == 'vrPhoto'){
+         image.src='vrMap';
+         image_tracker='vrMap';
+       }
+       else{
+         image.src='vrPhoto.png';
+         image_tracker='vrPhoto';
+        }
+      },
+    log : function(){
+      if (console){
+        console.log(this.vrID+': '+setStatus[this.vrStatus]);
+      }
+      return this;
+    },
+    setNewStatusMessage: function(newStatus){
+      this.vrstatus = newStatus;
+      this.setStatusMessage();
+      return this;  
+    },
+    
+    HTMLContent : function(selector, status){
+      status = this.vrstatus;
+//      if(!$) {throw 'jQuery not loaded';}
+//      if(!selector){throw 'Missing jQuery Selector';}
+      var msg;
+      if(completed) {
+        msg = this.statusMessages[completed];
+      } 
+      if(late) {
+        msg = this.statusMessages[late];
+      } 
+      if(pending) {
+        msg = this.statusMessages[pending];
+      }
+      if(canceled) {
+        msg = this.statusMessages[canceled];
+      }
+      
+      $(selector).html(msg);
+      
+      return msg;
+
+    }
+  };
+  
+  VisitReport.init = function(visitDictionary) {
+    var self = this;
+    this.BIZNAME = visitDictionary["BIZNAME"];
+    this.BIZSHORTNAME = visitDictionary['BIZSHORTNAME'];
+    this.BIZEMAIL = visitDictionary['BIZEMAIL'];
+    this.BIZHOMEPAGE = visitDictionary['BIZHOMEPAGE'];
+    this.BIZADDRESS1 = visitDictionary['BIZADDRESS1'];
+    this.BIZADDRESS2 = visitDictionary['BIZADDRESS2'];
+    this.BIZCITY = visitDictionary['BIZCITY'];
+    this.BIZSTATE = visitDictionary['BIZSTATE'];
+    this.BIZZIP = visitDictionary['BIZZIP'];
+    this.BIZLOGINPAGE = visitDictionary['BIZLOGINPAGE'];
+    this.CLIENTID = visitDictionary['CLIENTID'];
+    this.CLIENTFNAME = visitDictionary['CLIENTFNAME'];
+    this.CLIENTLNAME = visitDictionary['CLIENTLNAME'];
+    this.PETOWNER = this.CLIENTFNAME + ' ' + this.CLIENTLNAME;
+    let arriveRaw = visitDictionary['ARRIVED']; //yyyy-mm-dd hh:mm:ss
+    let completeRaw = visitDictionary['COMPLETED'];
+    let reArrComp =/[0-9]+:[0-9]+/;
+    let re=/[0-9]+-[0-9]+-[0-9]+/;
+    this.ARRIVED = reArrComp.exec(arriveRaw);
+    this.COMPLETED = reArrComp.exec(completeRaw);
+    this.vrdate =re.exec(arriveRaw);
+    this.NOTE = visitDictionary['NOTE'];
+    this.PETS = visitDictionary['PETS'];
+    this.MAPROUTEURL = visitDictionary['MAPROUTEURL'];
+    this.MAPROUTENUGGETURL = visitDictionary['MAPROUTENUGGETURL'];
+    this.VISITPHOTOURL = visitDictionary['VISITPHOTOURL'];
+    this.VISITPHOTONUGGETURL = visitDictionary['VISITPHOTONUGGETURL'];
+    this.moodButtons = visitDictionary['MOODBUTTON'];
+    //console.log(this.moodButtons);
+
+    this.setMoodButtons();
+    this.sitterDict = visitDictionary['SITTER'];
+
+    if (this.sitterDict.none == true) {
+      this.SITTER = this.BIZSHORTNAME;
+    } else {
+      this.SITTER = sitterDict.sittername;
+    }
+
+    this.serviceLabel = 'Service';
+    //self.statusMsg =  self.setStatus()
+  }
+  
+  VisitReport.init.prototype = VisitReport.prototype;
+  
+  global.VisitReport = global.VR$ = VisitReport;
+    
+}(window, jQuery));
+
+
+
+
+//    setStatusMessage : function(complete) {
+//      var msg;
+//      
+//      if(complete){
+//        this.statusMsg = setStatus();
+//      } else {
+//        this.statusMsg = 'Status Incomplete';
+//      }
+//      
+//      if (console){
+//        console.log(statusMsg);
+//      }
+//
+//      return statusMessages.vrStatus;
+//    },
+//    
+

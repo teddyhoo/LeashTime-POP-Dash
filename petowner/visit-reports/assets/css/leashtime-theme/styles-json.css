@@ -1,0 +1,337 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	font-size: 13px;
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+}
+
+h2 {
+	color: #fff;
+	font-weight: 600;
+	margin-bottom: 30px;
+	text-align: center;
+	font-size: 14px;
+	letter-spacing: 1px;
+}
+
+h1 {
+	color: #1d1d1d;
+	font-size: 30px;
+	margin: 20px 0;
+}
+
+#content {
+	margin: auto;
+	width: 70%;
+}
+
+.exp-txt {
+	color: #1d1d1d;
+	line-height: 25px;
+	margin-bottom: 15px;
+}
+
+.btn_blue {
+	background: #168eea;
+}
+
+.btn_blue:hover {
+	background: #0075d1;
+}
+
+.btn_red {
+	background: #ee4f4f;
+}
+
+.btn_red:hover {
+	background: #dc3d3d;
+}
+
+.btn_green {
+	background: #76b852;
+}
+
+.btn_green:hover {
+	background: #62a43e;
+}
+
+.btn_dark {
+	background: #0d0d0d;
+}
+
+.btn_dark:hover {
+	background: #070707;
+}
+
+#overlay {
+	background: rgba(0, 0, 0, 0.7);
+	position: fixed;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+#modal_container {
+	width: 380px;
+	height: auto;
+	background-color: #252525;
+	background-image: url("http://www.designbolts.com/wp-content/uploads/2012/11/Free-Topographic-Map-Seamless-pattern.jpg");
+	background-repeat: repeat;
+	background-attatchment: scroll;
+	background-position: 0 0;
+	position: absolute;
+	left: 50%;
+	right: 50%;
+	margin: 65px -200px 0;
+	-webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+	-moz-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+	box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+	outline: 0;
+	z-index: 2;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding-box;
+	background-clip: padding-box;
+	display: none;
+}
+
+.modal_button {
+	float: left;
+	margin: 20px 20px 0 0;
+	padding: 14px 25px;
+	border-radius: 0;
+	border: medium none;
+	color: #fff;
+	cursor: pointer;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.modal_dialog,
+.modal_header,
+.modal_body,
+.modal_footer {
+	float: left;
+	width: 100%;
+	position: relative;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.modal_body,
+.modal_header {
+	padding: 20px;
+}
+
+.close_button {
+	color: #fff;
+	font-size: 25px;
+	font-weight: 700;
+	line-height: 1;
+	opacity: 0.2;
+	position: absolute;
+	right: 8px;
+	top: 2px;
+	cursor: pointer;
+}
+
+.close_button:hover {
+	opacity: 0.5;
+}
+
+.modal_form {
+	float: left;
+	width: 100%;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+	padding: 20px 0px;
+}
+
+.input_labl {
+	float: left;
+	width: 100%;
+	text-align: center;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+	font-size: 11px;
+	letter-spacing: 1px;
+	color: #888;
+	font-weight: 600;
+}
+
+.modal_inpt {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	float: left;
+	margin-bottom: 15px;
+	padding: 12px;
+	width: 100%;
+	background: #1d1d1d;
+	border: medium none;
+	color: #fff;
+	font-family: "Open Sans", sans-serif;
+	font-size: 13px;
+	text-align: center;
+}
+
+.input_chck_ctn {
+	color: #fff;
+	float: left;
+	margin-bottom: 5px;
+	width: 100%;
+}
+
+.btn-full {
+	margin: 0;
+	padding: 15px;
+	width: 100%;
+	font-family: "Open Sans", sans-serif;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.divide:before,
+.divide:after {
+	content: '';
+	float: left;
+	height: 4px;
+	width: 100%;
+}
+
+.divide:before {
+	background: linear-gradient(90deg, #1abc9c 15%, #2ecc71 15%, #2ecc71 12%, #3498db 12%, #3498db 32%, #9b59b6 32%, #9b59b6 35%, #34495e 35%, #34495e 55%, #f1c40f 55%, #f1c40f 59%, #e67e22 59%, #e67e22 63%, #e74c3c 63%, #e74c3c 82%, #ecf0f1 82%, #ecf0f1 92%, #95a5a6 92%);
+}
+
+.divide {
+	float: left;
+	line-height: 0;
+	margin: 0 0 -4px;
+	width: 100%;
+}
+
+.logo {
+	position: relative;
+	margin: auto;
+	border: solid 5px white;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	background: linear-gradient(36deg, #272b66 42.34%, transparent 42.34%) 0 0, linear-gradient(72deg, #2d559f 75.48%, transparent 75.48%) 0 0, linear-gradient(-36deg, #9ac147 42.34%, transparent 42.34%) 100% 0, linear-gradient(-72deg, #639b47 75.48%, transparent 75.48%) 100% 0, linear-gradient(36deg, transparent 57.66%, #e1e23b 57.66%) 100% 100%, linear-gradient(72deg, transparent 24.52%, #f7941e 24.52%) 100% 100%, linear-gradient(-36deg, transparent 57.66%, #662a6c 57.66%) 0 100%, linear-gradient(-72deg, transparent 24.52%, #9a1d34 24.52%) 0 100%, #43a1cd linear-gradient(#ba3e2e, #ba3e2e) 50% 100%;
+	background-repeat: no-repeat;
+	background-size: 50% 50%;
+	transition: 1s;
+	cursor: pointer;
+}
+
+.logo:after {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -10px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: white;
+	content: '';
+}
+
+.logo:hover {
+	transform: rotate(360deg);
+}
+
+.no_margin {
+	margin: 0;
+}
+
+.custom-select {
+	background: #1d1d1d;
+	cursor: pointer;
+	float: left;
+	overflow: hidden;
+	width: 100%;
+	position: relative;
+}
+
+.custom-select:before {
+	content: "\25BE";
+	font-size: 17px;
+	right: 10px;
+	position: absolute;
+	top: 8px;
+}
+
+.custom-select:hover {
+	background: #1a1a1a;
+}
+
+.country_select {
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	border: 0 none;
+	border-radius: 0;
+	color: #fff;
+	cursor: pointer;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	-webkit-box-sizing: border-box;
+	/* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;
+	/* Firefox, other Gecko */
+	box-sizing: border-box;
+	/* Opera/IE 8+ */
+	padding: 12px;
+	width: 100%;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	font-family: 'Open Sans', sans-serif;
+	text-align: center;
+}
+
+.country_select option {
+	background: #1d1d1d none repeat scroll 0 0;
+	text-align: center;
+}
+
+select::-ms-expand {
+	display: none;
+}

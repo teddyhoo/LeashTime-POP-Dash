@@ -1,0 +1,143 @@
+<? // frame-client.php
+if(FALSE && $_SERVER['REMOTE_ADDR'] == '68.225.89.173') {
+	$downTimeStart = '2013-08-31 00:3:00';
+	$downForMaintenance = true;
+	$suppressMenu = true;
+	$noSearchBox = true;
+}
+
+$siteName = $_SESSION['preferences']['bizName'];
+if($_SESSION['preferences']['showBannerText']) {
+	$bannerText = $siteName;
+  $siteSlogan = $_SESSION['preferences']['bannerSubtitle'];
+}
+$screenIsIPad = strpos($_SERVER["HTTP_USER_AGENT"], 'iPad') !== FALSE;
+$screenIsIPhone = strpos($_SERVER["HTTP_USER_AGENT"], 'iPhone') !== FALSE;
+
+
+$INACTIVE = "style='font-style:italic;color:gray;'";
+$LIGHTER_INACTIVE = "style='font-style:italic;color:lightgray;'";
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><!-- html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" -->
+<head> 
+  <!--
+    Created by Artisteer v{Version}
+    Base template (without user's data) checked by http://validator.w3.org : "This page is valid XHTML 1.0 Transitional"
+  -->
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <title> <?= $siteName ?> </title> 
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" >
+<? if($screenIsIPad || $screenIsIPhone) { ?>  
+	<meta name="format-detection" content="telephone=no">
+	<meta name="format-detection" content="date=no">
+	<meta name="format-detection" content="address=no">
+	<meta name="format-detection" content="email=no">
+<? } ?>  
+	
+  
+  <link rel="stylesheet" href="style.css" type="text/css" /> 
+  <link rel="stylesheet" href="pet.css" type="text/css" /> 
+  <link rel="stylesheet" href="<?= $_SESSION["uidirectory"]; ?>style.css" type="text/css" /> 
+	<link rel="stylesheet" href="colorbox/example1/colorbox.css" type="text/css" /> 
+	<script type="text/javascript" src="jquery_1.3.2_jquery.min.js"></script>
+	<script type="text/javascript" src="colorbox/jquery.colorbox.js"></script>
+  <?= $extraHeadContent ?>
+</head> 
+<body>
+<!--? include "splash-block.php"; ? -->
+  <div class="Main">
+    
+    <div class="Sheet">
+      <div class="Sheet-body">
+    
+    <div class="Header">
+    
+      <div>
+        <!--div style="width:207;height:61;position:absolute;left:10px;top:5px;"><img style='border: outset black 3px;' src='logos/doggywalkerdotcom.jpg'></div -->
+    
+<? 	//if($_SERVER['REMOTE_ADDR'] == '68.225.89.173') { echo "UI: ".$_SESSION["uidirectory"]; }
+
+		if(!$_SESSION["uidirectory"] || !file_exists($_SESSION["uidirectory"].'style.css')) {
+			if($_SESSION && !isset($_SESSION['bannerLogo'])) {
+				if(isset($_SESSION["bizfiledirectory"])) {
+					$headerBizLogo = $_SESSION["bizfiledirectory"];
+					if(file_exists($_SESSION["bizfiledirectory"].'logo.jpg')) $headerBizLogo .= 'logo.jpg';
+					else if(file_exists($_SESSION["bizfiledirectory"].'logo.gif')) $headerBizLogo .= 'logo.gif';
+					else $headerBizLogo = '';
+					if($headerBizLogo) {
+						$dimensions = getimagesize($headerBizLogo);
+						$logoX = $dimensions[0] ? 780 - $dimensions[0] : 511;
+						$_SESSION['bannerLogo'] = "<img src='$headerBizLogo' style='position:absolute;left:$logoX"."px;top:5px;'>";
+					}
+
+				}
+				else $_SESSION['bannerLogo'] = null;
+			}
+			if($_SESSION['bannerLogo']) echo $_SESSION['bannerLogo'];
+			else {
+				$choices = array($_SESSION["preferences"]["bannerTitle"], $_SESSION["preferences"]["shortBizName"], $_SESSION["preferences"]["bizName"], $leashtimeSlogan); 
+				foreach($choices as $choice) if($slogan = $choice) break;
+				if($slogan && $_SESSION["preferences"]["bannerSubtitle"]) $slogan = "$slogan<br><span style='font-size:0.85em'>{$_SESSION["preferences"]["bannerSubtitle"]}</span>";
+				else if($_SESSION["preferences"]["bannerSubtitle"]) $slogan = "{$_SESSION["preferences"]["bannerSubtitle"]}";
+				$headerBizLogo = "<span style='font:bold 18px arial,sans-serif;'>$slogan</span>";
+				$left = (780 - 305).'px';
+				$position = "position:absolute;top:20px;left:$left;";
+		?>	 
+						<table class='logo' style='<?= $position ?>'>
+							<tr><td class='bizlogo'>
+									<?= $headerBizLogo ?></td>
+							</tr>
+						</table>
+		<? }
+		} ?>   
+    
+      </div>
+    </div>
+<? //if($_SERVER['REMOTE_ADDR'] == '68.225.89.173') {echo "AGREEMENT REQX? [{$_SESSION["clientAgreementRequired"]}]"; exit;} ?>    
+    <? if(!isset($suppressMenu) && !$suppressMenu) include "menu-client.html"; ?>
+    
+    <div class="contentLayout" style='Xbackground:lightgreen;' id='ContentDiv'>
+    
+          <div class="content" Xstyle='background:green;'>
+          
+            
+            <div class="Block" Xstyle='background:orange'>
+              <div class="Block-body" Xstyle='background:purple'>
+            
+                
+                <div class="BlockContent" Xstyle='background:yellow'>
+                  <div class="BlockContent-body" Xstyle='background:red;'>
+                
+                    
+                    <div style='padding-bottom:20px;'> <!-- background:lightblue -->
+                    	<? if(isset($_SESSION['passwordResetRequired']) && $_SESSION['passwordResetRequired']) include "password-change.php"; // NOTE: this ends the PAGE! ?>  
+                    	<? //if(mattOnlyTEST()) echo "clientagreementrequired: [{$_SESSION["preferences"]["clientagreementrequired"]}] clientAgreementRequired: [{$_SESSION['clientAgreementRequired']}]<p>";//matt0419
+                    		if(isset($_SESSION['clientAgreementRequired']) && $_SESSION['clientAgreementRequired']) {
+														if($_SESSION['preferences']['clientOwnEditSubmitReminder']) {
+															$_SESSION['user_notice_dimensions'] = array('width' => 450, 'height' => 270);
+															unset($_SESSION['user_notice']);
+														}
+														include "agreement-sign.php"; // NOTE: this ends the PAGE!  
+													}
+												
+											?> 
+                      <? if(isset($breadcrumbs)) echo $breadcrumbs; ?>
+											<h2><?= $pageTitle ?></h2>
+											<? echo "<span class='pagenote' style='font-size:1.2em;display:none;'><p id='framemsg'></p></span>";
+												 if($_SESSION['frame_message']) {
+													 echo "<span class='pagenote' style='font-size:1.2em'>{$_SESSION['frame_message']}</span><p>";
+													 unset($_SESSION['frame_message']);
+												 }
+												 if(function_exists('killSwitch')) {
+												 	 if(killSwitch()) {
+														echo "Session ended.";  // kill session if requested
+														include "frame-end.html";
+														exit;
+													 }
+												 }
+
+											?>
+											<!-- div class="entry" -->
+                                    
+<? if($downForMaintenance) include "maintenance-outage.php"; // exits

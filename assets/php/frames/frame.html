@@ -1,0 +1,387 @@
+<? 
+if(FALSE && $_SERVER['REMOTE_ADDR'] == '68.225.89.173') {
+	$downTimeStart = '2013-08-31 00:3:00';
+	$downForMaintenance = true;
+	$suppressMenu = true;
+	$noSearchBox = true;
+}
+
+$frame_msieVersion = internetExplorerVersion();
+
+$siteName = $siteName ? $siteName : 'LeashTime.com';
+$fullScreenMode = $_SESSION['frameLayout'] == 'fullScreenTabletView'; // || $_SESSION['staffuser'];
+//if(agentIsATablet() || isMobileUserAgent()) $fullScreenMode = 'fullScreenTabletView';
+
+$screenIsIPad = strpos($_SERVER["HTTP_USER_AGENT"], 'iPad') !== FALSE;
+$screenIsIPhone = strpos($_SERVER["HTTP_USER_AGENT"], 'iPhone') !== FALSE;
+if($_SESSION) {
+	$screenIsMobile = isset($_SESSION["mobiledevice"]) ? $_SESSION["mobiledevice"] :  isMobileUserAgent();
+	$screenIsTablet = isset($_SESSION["tabletdevice"]) ? $_SESSION["tabletdevice"] :  agentIsATablet();
+}
+
+$leashtimeSlogan = 'Software for Your<br>Pet Sitting Business';
+if($fullScreenMode) $leashtimeSlogan = str_replace('<br>', ' ', $leashtimeSlogan);
+
+$INACTIVE = "style='font-style:italic;color:gray;'";
+$LIGHTER_INACTIVE = "style='font-style:italic;color:lightgray;'";
+
+if(TRUE || !strpos($_SERVER["HTTP_USER_AGENT"], 'MSIE')) 
+echo
+'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+
+else echo
+'<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">'
+?>
+<html><!-- html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" -->
+<head> 
+  <!--
+    Created by Artisteer v{Version}
+    Base template (without user's data) checked by http://validator.w3.org : "This page is valid XHTML 1.0 Transitional"
+  -->
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />  
+  <title> <?= ($_SESSION['staffuser'] ? '[staff] ' : '').$siteName ?> </title>
+ <? if($frame_msieVersion && ($frame_msieVersion < 9)) { // mattOnlyTEST() || // !function_exists('staffOnlyTEST') || (!staffOnlyTEST())?> 
+ <?  // IE=EmulateIE8 was inreoduced because job-reassignment dragging stopped working.  
+ 		 // but it messed up the Search box.  touchpunch-dragdrop-fns.php worked in IE9+ so
+ 		 // I dropped IE=EmulateIE8
+ 	?>
+ <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" >
+ <? } // testing why we emulate IE8 ?>
+  
+<? if($fullScreenMode || $screenIsIPad || $screenIsIPhone) { ?>  
+	<meta name="format-detection" content="telephone=no">
+	<meta name="format-detection" content="date=no">
+	<meta name="format-detection" content="address=no">
+	<meta name="format-detection" content="email=no">
+<? } ?>  
+  
+  
+  <link rel="stylesheet" href="style.css" type="text/css" /> 
+  <link rel="stylesheet" href="pet.css" type="text/css" /> 
+  <? 
+  	if($fullScreenMode) echo
+    ' <link rel="stylesheet" href="tablet-tweak.css" type="text/css" />';
+  	if($fullScreenMode && $screenIsIPad) echo
+    ' <link rel="stylesheet" href="ipad-tweak.css" type="text/css" />';
+  	if(FALSE && mattOnlyTEST()) echo
+    ' <link rel="stylesheet" href="style-big-font.css" type="text/css" />';
+  ?>
+  <? if($_SESSION['trainingMode'] && $_REQUEST['leavetrainingmode']) {
+			require_once "training-fns.php";
+			turnOffTrainingMode();
+		 }
+		 else if($_SESSION['trainingMode']) {
+	?>
+  <link rel="stylesheet" href="trainingmode.css" type="text/css" /> 
+  <? } ?>
+  
+  <link rel="icon" href="/art/favicon16.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/art/favicon16.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="colorbox/example1/colorbox.css" type="text/css" /> 
+	
+	<?= 
+		(TRUE) //function_exists('staffOnlyTest') && (staffOnlyTest() || userTEST(5226) /* Jody */))
+		// $_SERVER['REMOTE_ADDR'] == '68.225.89.173' 
+		? '<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+			 <script type="text/javascript" src="colorbox/version1.3.19/jquery.colorbox-min.js"></script>' 
+		: '<script type="text/javascript" src="jquery_1.3.2_jquery.min.js"></script>
+			 <script type="text/javascript" src="colorbox/jquery.colorbox.js"></script>' ?>
+		
+	<script type="text/javascript" src="jquery.busy.js"></script> 	
+	<script type="text/javascript">jQuery().busy("defaults", { img: 'art/busy.gif', offset : 0, hide : false });</script> 	
+	<?= $extraHeadContent ?>
+</head> 
+<body>
+<? include "splash-block.php"; ?>
+  <div class="PageBackgroundGradient"></div>
+  <div class="Main">
+    <div class="Sheet">
+<?
+	 if(userRole() != 'c'
+	 		&& $_SESSION['auth_user_id']
+	 		/*&& $_SESSION['preferences']['showCalendarPageInBanner']*/) { // always show calendar
+		 require_once "gui-fns.php";
+		 $theDate = null;
+		 $coords = $fullScreenMode ? 'left:5px;top:4px;' : 'left:8px;top:30px;';
+		 echo todaysDateTable($theDate, "position:absolute;{$coords}width:40px;z-index:998;'
+		 																	.'border-color:brown;'
+		 																	.'border-top:solid brown 1px;border-left:solid brown 1px;");
+	 }
+
+?>
+      <div class="Sheet-body">
+    
+    <div class="Header">
+    
+      <div>
+<? 	
+		if($_SESSION && !isset($_SESSION['bannerLogo'])) {
+			if(isset($_SESSION["bizfiledirectory"])) {
+				require_once "gui-fns.php";
+				$headerBizLogo = $_SESSION["bizfiledirectory"];
+				if(file_exists($_SESSION["bizfiledirectory"].'logo.jpg')) $headerBizLogo .= 'logo.jpg';
+				else if(file_exists($_SESSION["bizfiledirectory"].'logo.gif')) $headerBizLogo .= 'logo.gif';
+				else if(file_exists($_SESSION["bizfiledirectory"].'logo.png')) $headerBizLogo .= 'logo.png';
+				else $headerBizLogo = '';
+				if($headerBizLogo) {
+					if($fullScreenMode) $dimensions = imageDimensionsScaledToFit($headerBizLogo, 386, 56);
+					else $dimensions = getimagesize($headerBizLogo);
+					$imgSizeAttributes = "width:{$dimensions[0]}px;height:{$dimensions[1]}px;";
+
+					$logoX = $dimensions[0] ? 780 - $dimensions[0] : 511;
+					if($_SESSION['bizname']) $title = str_replace("'", "", $_SESSION['bizname']);
+					if($_SESSION['staffuser']) {
+						$title = "title='$title [{$_SESSION['bizptr']}] $db'";
+					}
+					else $title = "title='$title'";
+					
+					if($fullScreenMode) $_SESSION['bannerLogo'] = "<img src='$headerBizLogo' style='position:absolute;right:5px;top:5px;$imgSizeAttributes' $title />";
+					else $_SESSION['bannerLogo'] = "<img src='$headerBizLogo' style='position:absolute;left:$logoX"."px;top:5px;$imgSizeAttributes' $title />";
+				}
+
+			}
+			else $_SESSION['bannerLogo'] = null;
+		}
+		
+		if(!$noBannerLogo) {
+			if(!$publicPage && $_SESSION['bannerLogo']) echo $_SESSION['bannerLogo'];
+			else {
+				$slogan = $slogan ? $slogan : ($_SESSION["preferences"]["bizName"] ? $_SESSION["preferences"]["bizName"] : $leashtimeSlogan);
+				$headerBizLogo = (!$publicPage && $_SESSION['bannerLogo']) ? $_SESSION['bannerLogo'] : "<span style='font:bold 18px arial,sans-serif;'>&nbsp;<br>$slogan</span>";
+		?>	 
+						<table class='logo'>
+							<tr><td class='bizlogo'>
+									<?= $headerBizLogo ?></td>
+							</tr>
+						</table>
+		<? } 
+		}
+		?>   
+    
+      </div>
+    </div>
+    
+    <? if($publicPage || $suppressMenu || $_SESSION['passwordResetRequired'])  ; // no menu
+    	 else if($_SESSION["eulaSignatureRequired"])  ;// no menu
+    	 else if(userRole() == 'o') include "menu-owner.html";
+    	 else if(userRole() == 'd') include "menu-owner.html";
+       else if(userRole() == 'p') include "menu-provider.html";
+       else if(userRole() == 'x') include "menu-corp.html";
+    ?>
+    <? 
+    $noSearchBox = $publicPage || $noSearchBox || $_SESSION['passwordResetRequired'] || $_SESSION["eulaSignatureRequired"];
+    if((userRole() == 'o' || userRole() == 'd') && !$noSearchBox) {
+			$noSearchPopMenu = $screenIsMobile || $fullScreenMode;
+			if($noSearchPopMenu) { ?>
+    <div id='searchbar' style='float:right;width:95%;padding-top:5px;text-align:right;padding-right:10px;'>Search: 
+		<? 
+			require_once "gui-fns.php";
+			echoButton('', 'Clients', 'openBoxSearch("")', 'BigButton', 'BigButtonDown', null, 'Find a client');
+			echo " ";
+			echoButton('', 'Sitters', 'openBoxSearch("$")', 'BigButton', 'BigButtonDown', null, 'Find a sitter');	
+			echo "</div>";
+			
+			$leftPosition = TRUE /* $_SESSION['preferences']['showCalendarPageInBanner'] */ ? '66' : '0';
+		?>
+		<div id='searchdiv' class='searchdiv'><div id='controlbar' style='width:100%;background:#BBE8FF;padding-bottom:2px;'>
+    <a href='javascript:closeBoxSearch()' style='color:red;font-size:130%;'>[x]</a>
+    Search: <input id='searchbox' onKeyUp="showMatches(this)">
+    </div>
+    <div id='searchresults' style='padding-left:2px;'></div>
+		</div>
+    <script language='javascript'>
+		function showmenu(element,html) {
+			html = html.replace(/<\/a>/gi,"</a><br>");
+			document.getElementById('searchresults').innerHTML=html;
+		}
+		function openBoxSearch(start) {
+			var sdiv = document.getElementById('searchdiv');
+			var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],
+				width=w.innerWidth||e.clientWidth||g.clientWidth,height=w.innerHeight||e.clientHeight||g.clientHeight;
+			<? if($fullScreenMode && $screenIsTablet) { ?>
+			sdiv.style.left= width - $('#searchdiv').width()+'px';  // had trouble making jquery offset() work..$(window).width() does work, though
+			<? } ?>
+			sdiv.style.display='block';
+			document.getElementById('searchdiv').style.display='block';
+			//$('#searchdiv').css('display:block');
+			document.getElementById('searchbox').value=start;
+			document.getElementById('searchbox').focus();
+			document.getElementById('searchresults').innerHTML='';
+		}
+
+		function closeBoxSearch() {
+			document.getElementById('searchdiv').style.display='none';
+		}
+    
+		</script>
+		<?
+			} // end mobile search box
+		  else { // everyone else's search
+		?>
+    <div id='searchbar' style='float:right;width:95%;padding-top:5px;text-align:right;padding-right:10px;'>
+    <? /*$_SESSION["mobiledevice"] */ if($screenIsMobile /*|| $_SERVER['REMOTE_ADDR'] == '68.225.89.173'*/) {
+		require_once "gui-fns.php";
+		echoButton('', 'C', 'initSearch("")', null, null, null, 'Find a client');
+		echo " ";
+		echoButton('', 'S', 'initSearch("$")', null, null, null, 'Find a sitter');	
+		} ?>
+    Search: <input id='searchbox' onKeyUp="showMatches(this)" onMouseout="delayhidemenu()">
+    </div>
+		<script language='javascript' src='popitmenu2.js'></script>
+    <? } // regular search 
+    ?>
+		<script language='javascript' src='ajax_fns.js'></script>
+    <script language='javascript'>
+    	<? if($alertMessage) echo "alert(\"$alertMessage\")\n"; ?>
+    	
+    	function showNotificationNoMore(i, closebox) {
+				ajaxGet("shownomore.php?id="+i, null);
+				if(typeof closebox != 'undefined' && closebox)
+					$.fn.colorbox.close();
+			}
+    	
+			function toggleNoticeDiv(linkSpan, forceoff) {
+				forceoff = typeof forceoff == 'undefined' ? false : forceoff;
+				var children = linkSpan.parentNode.childNodes;
+				for(var i = 1; i < children.length; i++) {
+					var el = children[i];
+					if(el.tagName) {
+						var show = el.tagName.toLowerCase() == 'div' ? 'block' : 'inline';
+						el.style.display = forceoff ? 'none' : (el.style.display == 'none' ? show : 'none');
+					}
+				}
+			}
+
+			function highlightNoticeItem(item) {
+				var wasOff = item.parentNode.childNodes[1].style.display == 'none';
+				var parent = item.parentNode;
+				while(parent != null && (!parent.tagName || (parent.tagName != 'OL' && parent.tagName != 'UL'))) {
+					parent = parent.parentNode;
+				}
+				if(parent.tagName.toLowerCase != 'ol' && parent.tagName.toLowerCase != 'ul') {
+					var children = parent.childNodes;
+					for(var k = 0; k < children.length; k++) {
+						if(typeof children[k].childNodes[0] != 'undefined' &&
+								children[k].childNodes[0].tagName == 'SPAN' ) 
+										toggleNoticeDiv(children[k].childNodes[0], true);
+					}
+				}
+				if(wasOff) toggleNoticeDiv(item);
+			}
+    	
+    	function initSearch(start) {
+				document.getElementById('searchbox').value=start;
+				document.getElementById('searchbox').focus();
+			}
+    
+    	function showFrameMsg(msg) {
+				document.getElementById('framemsg').innerHTML = msg;
+				document.getElementById('framemsg').parentNode.style.display = 'inline';
+			}
+    
+      function showMatches(element, test) {
+				if(element.value.length < 2) return;
+				var pat = escape(element.value);
+				ajaxGetAndCallWith('getSearchMatches.php?pat='+pat, rebuildMenu, element);
+			}
+			
+			function rebuildMenu(element, content) {
+				if(!content) {
+					showmenu(element,'');
+					return;
+				}
+				if(content.indexOf('GOTO:') == 0) {
+					document.location.href=content.substring(5);
+					return;
+				}
+				else if(content.indexOf('POP:') == 0) {
+					var parts = content.split(':');
+					var w = window.open("",parts[1],
+						'toolbar=0,location=0,directories=0,status=0,resizable=yes,menubar=0,scrollbars=yes,width='+800+',height='+800);
+					w.document.location.href=parts[2];
+					if(w) w.focus();
+					return;
+				}
+				var url = 'client-edit.php?tab=services&id=';
+				if(content.indexOf('PROVIDERS:') == 0) {
+					url = 'provider-edit.php?id=';
+					content = content.substring('PROVIDERS:'.length);
+				}
+				else if(content.indexOf('KEYS:') == 0) {
+					url = 'key-edit.php?client=';
+					content = content.substring('KEYS:'.length);
+				}
+				var html = '';
+				var arr = content.split('||');
+				for(var i = 0; i < arr.length; i++) {
+					if(arr[i] == '--') html += '<hr>';
+					else if(arr[i] == '-+-') html += '<hr style="border: 0;color: #9E9E9E;background-color: #9E9E9E;height: 1px;">';
+					else {
+						var line = arr[i].split('|');
+						<? $onFocusBlur = "onFocus='this.className=\"popitfocus\"' onBlur='this.className=\"popitmenu\"'"; ?>
+						html += '<a href=\''+url+line[0]+"\' onFocus='this.className=\"popitfocus\"' onBlur='this.className=\"popitmenu\"'>"+line[1]
+						+""
+						+'</a>';
+					}
+				}
+<? //if($_SERVER['REMOTE_ADDR'] == '68.225.89.173') echo "alert(content);" ?>
+<? //if($_SERVER['REMOTE_ADDR'] == '68.225.89.173') echo "alert('rebuildMenu: '+html);" ?>
+<? //if($_SERVER['REMOTE_ADDR'] == '68.225.89.173') echo "alert('all: ['+document.all+'] getEl: ['+document.getElementById+']');" ?>
+				showmenu(element,html);
+				//delayhidemenu();
+			}
+    </script>
+    
+    <? } // all search 
+    ?>
+    <div class="contentLayout" style='Xbackground:lightgreen;' id='ContentDiv'>
+    
+          <div class="content" Xstyle='background:green;'>
+          
+            
+            <div class="Block" Xstyle='background:orange'>
+              <div class="Block-body" Xstyle='background:purple'>
+            
+                
+                <div class="BlockContent" Xstyle='background:yellow'>
+                  <div class="BlockContent-body" Xstyle='background:red;'>
+                
+                    
+                    <div style='padding-bottom:20px;' id='InnerMostFrame'> <!-- background:lightblue -->
+                    	<? if(!$publicPage && $_SESSION['passwordResetRequired']) include "password-change.php"; // NOTE: this ends the PAGE! ?>  
+                    	<? if(!$publicPage && $_SESSION["eulaSignatureRequired"]) include "eula-sign.php"; // NOTE: this ends the PAGE! ?>  
+                      <? if(!$publicPage && isset($_SESSION['impersonator'])) {
+                      		$breadcrumbs = "<a href='impersonate.php?end'>[Exit to Manager login]</a>".($breadcrumbs ? " - $breadcrumbs" : '');
+                      		}
+												 else if(!$publicPage && isset($_SESSION['corporateuser'])) {
+                      		$breadcrumbs = "<a href='impersonate.php?branchout=1'>[Exit from Branch login]</a>".($breadcrumbs ? " - $breadcrumbs" : '');
+                      		}
+												 else if(!$publicPage && isset($_SESSION['staffuser'])) {
+                      		$breadcrumbs = "<a href='impersonate.php?staffout=1'>[Exit from Client Biz login]</a>".($breadcrumbs ? " - $breadcrumbs" : '');
+                      		if($_SESSION["inactivebiz"]) $breadcrumbs .= "<span class='warning fontSize1_3em'><b> INACTIVE BUSINESS</b></span>";
+                      		}
+                      	 if(!$publicPage && $_SESSION['trainingMode']) {
+													 if($breadcrumbs) $breadcrumbs .= " - ";
+													 $breadcrumbs .= "<a href='index.php?leavetrainingmode=1'><b>[Leave Training Mode]</b></a>";
+												 }
+                      ?>
+                      <? if(isset($breadcrumbs)) echo "<span id='breadcrumbs'>$breadcrumbs</span>"; ?>
+											<h2><?= $pageTitle ?></h2>
+											<? echo "<span class='pagenote' style='font-size:1.2em;display:none;'><p id='framemsg'></p></span>";
+												 if($_SESSION['frame_message']) {
+													 echo "<span class='pagenote' style='font-size:1.2em'>{$_SESSION['frame_message']}</span><p></p>";
+													 unset($_SESSION['frame_message']);
+												 }
+												 if(function_exists('killSwitch')) {
+													 if(killSwitch()) {
+														echo "Session ended.";  // kill session if requested
+														include "frame-end.html";
+														exit;
+													 }
+												 }
+											?>
+											
+											<!-- div class="entry" -->
+<? 
+if($downForMaintenance) include "maintenance-outage.php"; // exits
+//if(mattOnlyTEST()) {echo "[".($frame_msieVersion && ($frame_msieVersion < 9))."]";exit;}

@@ -1,0 +1,329 @@
+<html lang="en">
+
+<head>
+  <title>Public CareReport™</title>
+
+  <!-- BEGIN META -->
+  <!-- -------------------------------------------------------- -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="your,keywords">
+  <meta name="description" content="Short explanation about this website">
+
+  <!-- BEGIN STYLESHEETS -->
+  <!-- -------------------------------------------------------- -->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,300,400,600,700,800' rel='stylesheet' type='text/css' />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/lt-materialadmin.css" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/libs/toastr/toastr.css">
+  <!-- Additional CSS includes -->
+  <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+  <link href="../assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+  <link href="assets/css/styles-json.css" rel="stylesheet" type="text/css">
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+<script type="text/javascript" src="/assets/js/libs/utils/html5shiv.js"></script>
+<script type="text/javascript" src="/assets/js/libs/utils/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body class="Full-height no-margin no-padding">
+  <!---->
+  <div id="lt-off-left" class="offcanvas">
+    <div class="offcanvas-pane">
+      ~ Off LEFT ~
+    </div>
+    <div class="offcanvas-pane">
+      ~ Off LEFT ~
+    </div>
+  </div>
+  <!-- -------------------------------------------------------- -->
+  <main>
+    <section class="no-padding">
+      <div class="section-body no-margin">
+        <div class="row">
+          <!-- MODAL CONTAINER (REUSABLE) -->
+          <div id="modal_container" class="full-bleed"></div>
+          <div id="overlay"></div>
+
+
+          <!-- LEFT BUSINESS ID -->
+          <!-- -------------------------------------------------------- -->
+          <div class="col-sm-4 style-info Full-height force-padding hidden-xs">
+
+            <div id="lt-left-panel">
+
+              <div class="opacity-50">
+                <div class="text-light">
+                  <i class="fa fa-photo"></i> &nbsp;LEASHTIME <strong>CARE</strong>REPORTS&trade;
+                </div>
+              </div>
+         
+              <!-- BIZ ADDRESS -->
+              <div class="force-padding">
+                <div class="divide"></div>
+                <div class="card style-info small-padding">
+                  <div class="card-head card-head-xs">
+                    <header><span class="vrd text-lg" data-vrdata="BIZNAME">[BIZNAME]</span></header>
+                  </div>
+                  <div class="card-body p-t-5 p-b-5">
+                    <div>
+                      <span class="vrd" data-vrdata="BIZADDRESS1">[Street Address]</span><br>
+                      <span class="vrd" data-vrdata="BIZCITY">[City]</span>,
+                      <span class="vrd" data-vrdata="BIZSTATE">[State]</span>
+                      <span class="vrd" data-vrdata="BIZZIP">[Zip]</span><br>
+                      <span class="text-medium">233-332-342</span> &nbsp;<span class="opacity-50">office</span><br>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <span> 
+                  <a class="btn btn-info ink-reaction btn-raised btn-xs  m-r-5" role="button" style="background-color:rgba(0,0,0,.1)">
+                    <span class="vrd2" data-vrdata="BIZEMAIL">SEND EMAIL</span>
+                    </a>
+                    </span>
+                    <span>
+                  <a class="btn btn-info ink-reaction btn-raised btn-xs" role="button" style="background-color:rgba(0,0,0,.1)">
+                    <span class="vrd2" data-vrdata="BIZHOMEPAGE">VISIT WEBSITE</span>
+                    </a>
+                    </span>
+                  </div>
+
+
+                </div>
+              </div>
+
+              <div class="stick-bottom-left stick-bottom-right">
+                <ul id="lt-provider-card" class="nav nav-pills nav-stacked force-padding">
+                  <li class="force-padding">
+
+                    <img class="img-circle img-responsive pull-left width-1" src="http://www.codecovers.eu/assets/img/modules/materialadmin/avatar9.jpg?1422538626" alt="Sitter Name" style="margin-top:2px">
+                    <span class="opacity-50 no-margin no-padding text-caption">
+                    <!-- <span class="fa fa-user text-sm"></span> &nbsp;--> SERVICE PROVIDER<br>
+                    </span>
+
+                    <h3 class="text-medium no-margin" style="display: inline-block" data-vrdata="">Ann Marie</h3>
+
+                  </li>
+                </ul>
+
+                <iframe class="img-responsive" width="560" height="415" src="https://www.youtube.com/embed/Ac6kApz1JBc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+              </div>
+
+
+            </div>
+          </div>
+
+
+
+          <!-- RIGHT CARE REPORT -->
+          <!-- -------------------------------------------------------- -->
+          <div id="ReportView" class="col-sm-8 Full-height force-padding">
+            <div id="lt-right-panel">
+
+              <div id="care-report" class="card style-info">
+                <div class="card-head">
+
+                  <section id="lt-vrCard" class="full-bleed " style="height: 60%">
+                    <div class="section-body force-padding text-shadow" style="overflow: hidden;">
+
+                      <!--<div id="imgHolder" modal-value="modal_a" class="img-backdrop responsive-image modal_button" style="background-image: url('https://leashtime.com/email/visit-reports/assets/img/pic-dogsun.jpg');"></div>-->
+                      <div id="imgHolder" modal-value="modal_a" class="img-backdrop responsive-image modal_button vrd" style="background-image: url('https://leashtime.com/email/visit-reports/assets/img/pic-dogsun.jpg');">
+
+                          <img data-vrdata="VISITPHOTOURL">
+
+                      </div>
+
+                      <div class="overlay overlay-shade-top stick-top-left height-3"></div>
+                      <div class="overlay overlay-shade-bottom stick-bottom-left text-right"></div>
+
+                      <div class="stick-top-left">
+                        <div class="text-light small-padding m-l-20"><i class="fa fa-photo"></i><strong> CARE</strong>REPORTS&trade;</div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-xs-12 no-padding">
+                          <div class="width-3 text-center pull-right" style="line-height:1;">
+
+                            <div class="">
+                              <strong class="text-lg no-margin">
+                              <span class="vrd" data-vrdata="vrdate">[DATE]</span></strong><br>
+                              <span class="vrd" data-vrdata="ARRIVED">[ARRIVE]</span></strong><br>
+                              <span class="vrd" data-vrdata="COMPLETED">[COMPLETE]</span></strong><br>
+                              <span class=" text-xs text-light opacity-75">
+                              <span class="vrd" data-vrdata="serviceLabel">[servicelabel]</span></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="stick-bottom-left force-padding">
+                        <img id="vrMap" modal-value="modal_c" class="mg-responsive modal_button" src="https://LeashTime.com/appointment-map.php?token=pslvp" style="width:18%;border-radius: 6px;box-shadow: 2px 2px 20px rgba(0,0,0,.2);" alt="Map ">
+                      </div>
+
+                      <div class="stick-bottom-right text-right force-padding mg-responsive" style="padding-bottom:5px;width:80%">
+                        <div class="btn-group" id="moodButtons">
+
+                          <a id="pee" type="message" class="btn transparent" data-content="" data-original-title="" title="" aria-describedby=""><i class="md md-invert-colors" style="font-size:2em;margin-top:-10px"></i></a>
+
+                          <a id="poo" type="button" class="btn transparent hidden" data-content="Pet Poo'd" data-original-title="" title="" aria-describedby="Poo'd"><i class="fa fa-cubes fa-2x"></i></a>
+
+                          <a id="litterbox" type="button" class="btn transparent hidden" data-content="Litter Box Changed" data-original-title="" title="" aria-describedby="Litter Box"><i class="fa fa-recycle fa-2x"></i></a>
+
+                          <a id="sick" type="button" class="btn transparent hidden" data-content="Sick" data-original-title="" title="" aria-describedby="Sick"><i class="fa fa-stethoscope fa-2x"></i></a>
+
+                          <a id="hungry" type="button" class="btn transparent hidden" data-content="Hungry" data-original-title="" title="" aria-describedby="Hungry"><i class="md md-local-restaurant" style="font-size:2em;margin-top:-10px"></i></a>
+
+                          <a id="sad" type="button" class="btn transparent hidden" data-content="Sad" data-original-title="" title="" aria-describedby="Sad"><i class="fa fa-frown-o fa-2x"></i></a>
+
+                          <a id="shy" type="button" class="btn transparent hidden" data-content="Shy" data-original-title="" title="" aria-describedby="Shy"><i class="fa fa-meh-o fa-2x"></i></a>
+
+                          <a id="happy" type="button" class="btn transparent hidden" data-content="Happy" data-original-title="" title="" aria-describedby="Happy"><i class="fa fa-smile-o fa-2x"></i></a>
+
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </section>
+
+                  <div class="tools">
+                    <div class="">
+                      <a id="btnTwitter" class="btn btn-icon-toggle m-r-5" data-toggle="tooltip" data-placement="top" data-original-title="Send as Email"><i class="fa fa-envelope"></i></a>
+                      <a id="btnTwitter" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" data-original-title="Share on Instagram"><i class="fa fa-instagram"></i></a>
+                      <a id="btnFacebook" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" data-original-title="Share on Facebook"><i class="fa fa-facebook"></i></a>
+                    </div>
+                  </div>
+
+                  <header>
+                    <div class="m-t-5" style="margin-top:7px;font-size:16px !important">CARE VISIT COMPLETE</div>
+                  </header>
+
+                </div>
+              </div>
+
+
+              <div id="care-message" style="border-radius:0; border-bottom-left-radius: 6px; -webkit-border-bottom-left-radius: 6px; -moz-border-bottom-left-radius: 6px;border-bottom-right-radius: 6px; -webkit-border-bottom-right-radius: 6px; -moz-border-bottom-right-radius: 6px; background-color: rgba(255,255,255,.5);margin-bottom: 2em;">
+
+                <div style="font-size:.8em;text-align:right;" class="small-padding m-b-0 p-b-0">
+                  <p style="margin-bottom:-5px;"><strong><span class="vrd" data-vrdata="SITTER">[SITTER]</span></strong></p>
+                  <p style=""><span class="vrd" data-vrdata="BIZSHORTNAME" style="text-transform: uppercase;">[BUSINESS]</span></p>
+                </div>
+                <div style="text-align:left;padding:0 1.5em 1em 2em;color:#242424;font-size:1.15em;">
+                  <p style="line-height:1.5em;margin-bottom:1.2em;"><span class="vrd" data-vrdata="PETOWNER">[PETOWNER]</span></p>
+                  <p style="line-height:1.5em;"><span class="vrd" data-vrdata="NOTE">[NOTE] </span></p>
+                  <p style="margin:0;line-height: 1.3em;">Best Regards,</p>
+                  <p style="margin:0;"><span class="vrd" data-vrdata="SITTER">[SITTER] </span></p>
+                </div>
+                <div style="font-size:1.4em;text-align: center;color:rgba(0,0,0,.2); font-family: cursive;">
+                  <p style="margin:.5em 0 0;padding: 0;">Thank You!</p>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------- -->
+    <div id="lt-off-right" class="offcanvas">
+      <!-- -------------------------------------------------------- -->
+    </div>
+  </main>
+
+
+  <style>
+    #ReportView {}
+
+    #GalleryView {}
+
+    .care-message {
+      border-radius: 0;
+      border-bottom-left-radius: 6px;
+      -webkit-border-bottom-left-radius: 6px;
+      -moz-border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      -webkit-border-bottom-right-radius: 6px;
+      -moz-border-bottom-right-radius: 6px;
+      background-color: rgba(255, 255, 255, .5);
+      margin-bottom: 2em;
+    }
+
+    #lt-vrCard {
+      min-height: 350px;
+      border-top-left-radius: 6px;
+      -webkit-border-top-left-radius: 6px;
+      -moz-border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      -webkit-border-top-right-radius: 6px;
+      -moz-border-top-right-radius: 6px;
+      overflow: hidden;
+    }
+
+    .margin-p5em {
+      margin: .5em;
+    }
+
+    .parent {
+      background-color: blue;
+      display: flex;
+      justify-content: center;
+    }
+
+    .post div {
+      color: white;
+      font-size: 1.5em;
+      padding: 20px;
+    }
+
+    #content-left {
+      background-color: antiquewhite;
+    }
+
+    #content-right {
+      background-color: aqua;
+    }
+  </style>
+
+  <!-- BEGIN JAVASCRIPT -->
+  <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+  <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+  <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+  <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+  <script src="../../assets/js/libs/skycons/skycons.js"></script>
+  <script src="../../assets/js/libs/toastr/toastr.js"></script>
+
+
+  <!-- Put App.js last in your javascript imports -->
+  <script src="../../assets/js/core/source/App.min.js"></script>
+  <script src="../../assets/js/leashtime/LTSkycons.js"></script>
+
+  <script src="assets/js/lt-modal.js"></script>
+  <script src="assets/js/LeashtimeMessages.js"></script>
+
+  <script src="assets/js/CareReport.js"></script>
+  <script src="assets/js/app-carereport.js"></script>
+
+    <script>
+    // ***************************************************************************
+    //
+    // PHP SCRIPT WRITES THIS HMTL, PASSING IN THE VISIT ID AS A PARAMETER
+    // THE FUNCTION DOES AJAX FETCH CALL FOR THE VISIT INFO JSON
+    //
+    // ***************************************************************************
+    let VISITID = 123;
+    let BIZID = 234;
+    
+    getVisitReport(VISITID, BIZID);
+  </script>
+</body>
+
+</html>

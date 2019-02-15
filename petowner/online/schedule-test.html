@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LEASHTIME CALENDAR</title>
+
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+    <!-- END META -->
+
+    <!-- BEGIN FRAMEWORK STYLESHEETS -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/bootstrap.css?1422792965" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+
+    <!-- BEGIN PLUGIN STYLESHEETS -->
+    <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar-leashtime.css">
+
+    <!-- BEGIN LEASHTIME STYLESHEETS -->
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/libs/fullcalendar/fullcalendar.css" rel="stylesheet" type = "text/css">
+</head>
+
+<body class="header-fixed">
+
+    <header id="header">
+        <div class="headerbar blue">
+            <!-- HEADER BRANDING -->
+            <div class="headerbar-left hidden-on-mobile">
+                    <ul class="header-nav header-nav-options">
+                        <li style="float: left;">
+                            <a class="btn btn-icon-toggle" data-toggle="menubar" href="javascript:void(0);">
+                          <i class=" fa fa-paw white-text fa-2x"></i>
+                        </a>
+                        </li>
+                        <li style="line-height:1;padding:24px 0">
+                            <div class="brand-holder">
+                                <span class="text-lg white-text " style="margin:0;padding-left: 12px">CARE<strong>PORTAL</strong>™<span style="font-weight: 100;opacity: .8">  |  PET CARE CALENDAR</span></span>
+                            </div>
+                        </li>
+                    </ul>
+
+            </div>
+            <div class="headerbar-right">
+                    <!-- START NAV DROP -->
+                    <div class="headerbar-right">
+                        <!-- MAIN MENU -->
+                        <ul class="header-nav header-nav-profile">
+                            <li class="dropdown  no-padding no-margin" style="width:280px">
+                                <a href="javascript:void(0);" class="dropdown-toggle ink-reaction white-text" data-toggle="dropdown">
+
+                               <i class="fa fa-fw fa-calendar white-text fa-3x text-info"></i>
+                                <!--<img src="assets/img/profile-images/pic-petowner200.jpg" alt="" />-->
+                                <span class="profile-info white-text" style="margin-top:-15px">
+                                    CARE<b> CALENDAR</b>
+                                  <small>SERVICE SCHEDULE</small>
+                                </span>
+                            </a>
+                                <!-- MAIN DROPDOWN -->
+                                <ul class="dropdown-menu animation-dock styled-info no-padding no-margin blue lighten-3">
+
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-1 force-padding white-text " style="width: 100%;"><a href="base-profile.html"><i class="white-text fa fa-2x fa-fw fa-user text-success"></i>
+                                        <span class="profile-info white-text" style="margin-top:-15px">
+                                            <b>MY PETS</b> AND PROFILES
+                                          <small>PROFILE MANAGER</small>
+                                        </span></a>
+                                        </div>
+                                    </li>
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-2 force-padding white-text " style="width: 100%;"><a href="base-account.html"><i class="white-text fa fa-2x fa-credit-card text-success"></i>
+                                            <span class="profile-info white-text" style="margin-top:-15px">
+                                                <b>SERVICE</b> HISTORY
+                                                <small>ACCOUNT MANAGER</small>
+                                            </span></a>
+                                        </div>
+                                    </li>
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-1 force-padding white-text " style="width: 100%;"><a href="base-timeline.html"><i class="fa fa-2x fa-leanpub"></i>
+                                            <span class="profile-info white-text" style="margin-top:-15px">
+                                                <b>PET JOURNAL</b>
+                                                <small>CARE TIMELINE</small>
+                                            </span></a>
+                                        </div>
+                                    </li>
+
+                                <li class="">
+                                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                                        <a class="btn btn-default-bright" role="button">
+                                            <i class="fa fa-fw fa-life-ring text-success"></i>
+                                            SUPPORT</a>
+                                        <a class="btn btn-default-bright" role="button">
+                                            <i class="fa fa-fw fa-power-off text-danger"></i>
+                                            LOGOUT</a>
+                                    </div>
+                                </l
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- END HEADER NAV-->
+
+    <!-- BEGIN OFFCANVAS HOLDER LEFT -->
+    <div class="offcanvas"></div>
+    <!-- END OFFCANVAS HOLDER LEFT -->
+
+<!-- ////////////////// BEGIN MAIN CONTENT  ////////////////////-->
+    <div id="content">
+        <!-- MAIN BANNER -->
+        <section id="messages" class="full-bleed text-center style-warning opacity-50">
+            <span class=""></span>
+        </section>
+        <!-- END MAIN BANNER  -->
+
+        <!-- MAIN PAGE CONTENT -->
+        <section>
+            <div class="section-body no-margin">
+                <div class="row">
+
+                    <!-- BEGIN RIGHT CALENDAR COLUMN -->
+                    <div class="col-sm-9">
+                    <!-- CALENDAR -->
+                    <section class="no-padding no-margin">
+                            <!--<div class="section-header"></div>-->
+                            <div class="section-body no-padding no-margin">
+                                <div class="row">
+
+
+                                    <!-- BEGIN CALENDAR -->
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-head blue darken-1 white-text">
+                                                <header>
+                                                    <span class="selected-day">&nbsp;</span> &nbsp;<small class="selected-date">&nbsp;</small>
+                                                </header>
+                                                <div class="tools">
+                                                    <div class="btn-group">
+                                                        <a id="calender-prev" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-angle-left"></i></a>
+                                                        <a id="calender-next" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-angle-right"></i></a>
+                                                    </div>
+                                                    <div class="btn-group pull-right">
+                                                    </div>
+                                                </div>
+                                                <ul class="nav nav-tabs tabs-text-contrast tabs-accent" style="border-top: solid .01em; border-top-color: aqua" data-toggle="tabs">
+                                                    <li data-mode="month" class="active"><a href="#">Month</a></li>
+                                                    <li data-mode="agendaWeek"><a href="#">Week</a></li>
+                                                    <li data-mode="agendaDay"><a href="#">Day</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body no-padding">
+                                                <div id="calendar">
+                                                </div>
+                                                <div id="calendarModal" class="modal fade">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                                                                <h4 id="modalTitle" class="modal-title"></h4>
+                                                            </div>
+                                                            <div id="modalBody" class="modal-body"> </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </section>
+                    <!-- END RIGHT CALENDAR COLUMN -->
+
+                    <!-- BEGIN LEFT SERVICE COLUMN -->
+                    <div class="col-sm-3 no-padding">
+
+
+                        <div class="transparent">
+                            <!-- PROVIDER TITLE -->
+                            <div class="card-head" style="line-height: 20px;">
+
+                                <div class="text-light m-l-20 p-t-10">
+                                    <small><strong style="font-weight: 800">PET</strong>CARE™ | SCHEDULE SERVICES</small>
+                                    <button class="no-margin no-padding btn transparent thin ink-reaction" style="width:100%" data-toggle="modal" data-target="#bizModal" aria-expanded="true">
+                                        <h3 class="no-margin no-padding opacity-50 text-left">PETLOVER LLC</h3>
+                                    </button>
+
+                                </div>
+                            </div>
+
+                            <!-- BEGIN SERVICE LIST -->
+                            <div class="small-padding">
+
+                                <style>
+                                    ul li{
+                                        margin: 0 0 3px 0;
+                                    }
+                                </style>
+
+                                <ul class="list divider-full-bleed list-events" id="serviceList">
+
+                                    <li class="tile lightgrey ui-draggable ui-draggable-handle padding" data-class-name="event-info">
+                                        <div class="tile-content">
+                                            <div class="tile-text">30 MIN WALK</div>
+                                            <div class="tile-icon"><i class="fa fa-circle-thin text-info"></i></div>
+                                        </div>
+                                    </li>
+                                    <li class="tile lightgrey ui-draggable ui-draggable-handle" data-class-name="event-info">
+                                        <div class="tile-content">
+                                            <div class="tile-text">60 MIN WALK</div>
+                                            <div class="tile-icon"><i class="fa fa-circle-thin text-info"></i></div>
+                                        </div>
+                                    </li>
+                                    <li class="tile lightgrey ui-draggable ui-draggable-handle" data-class-name="green">
+                                        <div class="tile-content">
+                                            <div class="tile-text">OVERNIGHT VISIT</div>
+                                            <div class="tile-icon"><i class="fa fa-circle-thin text-success"></i></div>
+                                        </div>
+                                    </li>
+                                    <li class="tile lightgrey ui-draggable ui-draggable-handle" data-class-name="green">
+                                        <div class="tile-content">
+                                            <div class="tile-text">OVERNIGHT BOARDING</div>
+                                            <div class="tile-icon"><i class="fa fa-circle-thin text-success"></i></div>
+                                        </div>
+                                    </li>
+                                    <li class="tile lightgrey ui-draggable ui-draggable-handle" data-class-name="orange">
+                                        <div class="tile-content">
+                                            <div class="tile-text">FEEDING/LITTER</div>
+                                            <div class="tile-icon"><i class="fa fa-circle-thin text-warning no-border"></i></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- END SERVICE LIST -->
+                                <div class="text-center btn-modals small-padding">
+                                    <button class="btn btn-default-bright btn-raised" data-toggle="modal" data-target="#formModal">
+                                        ON DROP</button>
+
+                                    <button class="btn btn-default-bright btn-raised" data-toggle="modal" data-target="#formModal2">
+                                        MULTI VISIT</button>
+                                </div>
+                                <!-- BEGIN FORM MODAL MARKUP -->
+                                <div class="modal fade" id="bizModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- TITLE -->
+                                            <div class="modal-header blue white-text">
+                                                <button type="button" class="close force-padding" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title" id="formModalLabel">SERVICE PROVIDER</h4>
+                                            </div>
+                                        </div><!-- /.modal -->
+                                    </div>
+                                </div>
+
+                                <!-- BEGIN FORM MODAL MARKUP -->
+                                <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- TITLE -->
+                                            <div class="modal-header blue white-text">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title" id="formModalLabel">SERVICE REQUEST</h4>
+                                            </div>
+                                            <form class="form-horizontal" role="form">
+                                                <div class="modal-body">
+
+                                                    <div class="alert alert-warning text-lg" role="alert">
+                                                        <span class="text-lg"><strong>Service Request:</strong> <span class="blue-text">60 Minute Walk Service</span></span>
+                                                        <br>
+                                                        <strong>Date:</strong> <span class="blue-text">April 30th, 2017</span>
+
+
+                                                        <div class="form-group pull-right control-width-normal">
+                                                            <div class="input-group date" id="demo-date">
+                                                                <div class="input-group-content">
+                                                                    <input type="text" class="form-control">
+                                                                    <label>Datepicker</label>
+                                                                </div>
+                                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
+
+                                                    <label class="text-default-light">SELECT TIME OF DAY PREFFERENCE</label>
+                                                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                                                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">MORNING</a>
+                                                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">MIDDAY</a>
+                                                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">AFTERNOON</a>
+                                                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">EVENING</a>
+                                                    </div>
+                                                    <br>
+                                                    <label class="text-default-light">SELECT SCHEDULE OPTION</label>
+                                                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                                                        <a href="#!" class="btn btn-default-bright" type="checkbox" role="checkbox">
+                                                            MULTI-DAY SERVICES</a>
+                                                        <a href="#!" class="btn btn-default-bright " type="checkbox" role="checkbox">
+                                                            SINGLE-DAY SERVICES</a>
+                                                    </div>
+                                                    <br>
+                                                </div>
+
+
+                                                <div class="modal-footer grey lighten-2">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL REQUEST</button>
+                                                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3">REQUEST SERVICE</button>
+                                                </div>
+
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+
+                                <!-- BEGIN FORM MODAL3 MARKUP -->
+                                <div class="modal fade" id="formModal3" tabindex="-1" role="dialog" aria-labelledby="textModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- TITLE -->
+                                            <div class="modal-header green white-text">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title" id="formModalLabel">SUBMIT PETCARE SERVICE REQUEST</h4>
+                                            </div>
+                                            <!-- FORM -->
+                                            <form class="form-horizontal" role="form">
+                                                <div class="modal-body">
+                                                    <!-- INVOICE -->
+                                                    <section>
+                                                        <div class="section-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="card card-printable style-default-light">
+                                                                        <div class="card-head">
+                                                                            <div class="tools">
+                                                                                <div class="btn-group">
+                                                                                    <a class="btn btn-floating-action grey" href="javascript:void(0);" onclick="javascript:window.print();"><i class="md md-print"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div><!--end .card-head -->
+                                                                        <div class="card-body style-default-bright">
+
+                                                                            <!-- BEGIN INVOICE HEADER -->
+                                                                            <div class="row">
+                                                                                <div class="col-xs-8">
+                                                                                    <h1 class="text-light"><i class="fa fa-paw fa-fw fa-2x text-accent-dark"> </i> <strong class="text-accent-dark">LEASHTIME</strong></h1>
+                                                                                </div>
+                                                                                <div class="col-xs-4 text-right">
+                                                                                    <h1 class="text-light text-default-light">Invoice</h1>
+                                                                                </div>
+                                                                            </div><!--end .row -->
+                                                                            <!-- END INVOICE HEADER -->
+                                                                            <br>
+                                                                            <!-- BEGIN INVOICE PRODUCTS -->
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <table class="table">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th style="width:60px" class="text-center">QTY</th>
+                                                                                                <th class="text-left">DESCRIPTION</th>
+                                                                                                <th style="width:140px" class="text-right">UNIT PRICE</th>
+                                                                                                <th style="width:90px" class="text-right">TOTAL</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td class="text-center">6</td>
+                                                                                                <td>60 Minute Walk</td>
+                                                                                                <td class="text-right">$35.00</td>
+                                                                                                <td class="text-right">$210.00</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="text-center">11</td>
+                                                                                                <td>30 Minute Walk</td>
+                                                                                                <td class="text-right">$20.00</td>
+                                                                                                <td class="text-right">$222.00</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td colspan="2" rowspan="4">
+                                                                                                    <h3 class="text-light opacity-50">Invoice Notes</h3>
+                                                                                                    <p><small><a href="#!">Terms and Conditions</a></small></p>
+                                                                                                    <p><strong><em>Excepteur sint occaecat est laborum.</em></strong></p>
+                                                                                                </td>
+                                                                                                <td class="text-right"><strong>Subtotal</strong></td>
+                                                                                                <td class="text-right">$432.00</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="text-right"><strong class="text-lg text-accent">Total</strong></td>
+                                                                                                <td class="text-right"><strong class="text-lg text-accent">$432.00</strong></td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div><!--end .col -->
+                                                                            </div><!--end .row -->
+                                                                            <!-- END INVOICE PRODUCTS -->
+
+                                                                        </div><!--end .card-body -->
+                                                                    </div><!--end .card -->
+                                                                </div><!--end .col -->
+                                                            </div><!--end .row -->
+                                                        </div><!--end .section-body -->
+                                                    </section>
+                                                </div>
+                                                <div class="modal-footer grey lighten-2">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
+                                                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal">SUBLIT SERVICE REQUEST</button>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                                <!-- END FORM MODAL MARKUP -->
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END RIGHT CALENDAR COLUMN -->
+
+                </div>
+            </div>
+        </section>
+        <!-- END CONTENT -->
+
+
+    </div>
+    <!-- END BASE CONTENT-->
+
+    <!-- BEGIN JAVASCRIPT -->
+    <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../assets/js/libs/spin.js/spin.min.js"></script>
+    <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+
+    <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+
+    <script src="../../assets/js/libs/moment/moment.min.js"></script>
+    <script src="../../assets/js/libs/fullcalendar/fullcalendar-leashtime.js"></script>
+
+    <script src="../../assets/js/core/source/App.js"></script>
+    <script src="../../assets/js/core/source/AppNavigation.js"></script>
+    <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
+    <script src="../../assets/js/core/source/AppCard.js"></script>
+    <script src="../../assets/js/core/source/AppForm.js"></script>
+    <script src="../../assets/js/core/source/AppNavSearch.js"></script>
+    <script src="../../assets/js/core/source/AppVendor.js"></script>
+    <script src="../../../modules/LT.js"></script>
+    <script src="../../assets/js/leashtime/LeashtimeCalendar.js"></script>
+
+</body>
+</html>

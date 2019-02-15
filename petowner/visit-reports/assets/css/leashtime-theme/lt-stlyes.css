@@ -1,0 +1,16 @@
+/* LEASHTIME STYLES */
+
+@charset "UTF-8";
+
+.lt-body {
+    border-left: #2b323a solid 12px;
+}
+
+.lt-header {
+    height: 64px;
+    font-size: 4em;
+}
+
+.clear-both {
+    clear: both;
+}

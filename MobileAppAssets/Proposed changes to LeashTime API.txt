@@ -1,0 +1,46 @@
+Proposed changes to LeashTime API:
+
+
+(1) mmd-visits.php
+
+One of the functions of the manager sitter app is to display interim state of the visit reports.
+Add the following fields to visit dictionary:
+
+- visitReportSent				<DATE>
+- mapSnapURL 					<URL>
+- photoURL							<URL>
+- visitReportReceived		<DATE>
+- moodButtons					<ARRAY>
+- visitNote							<STRING>
+
+Another addition to this endpoint is  sending a list of Unassigned Visits in the array.
+
+(2) mmd-sitters.php
+
+Add sitter email and phone number(s) fields.
+
+See #1 regarding Unassigned visits.
+
+(3) visit-report-list-ajax.php 
+
+Currently, this accepts a single clientid parameter. 
+The likely use case for this api endpoint (for a manager) is to gather an entire
+day of visit reports for clients serviced that day. 
+
+(4) visit-report-data.php
+
+In the response, please indicate the following:
+
+- What components are configured to be sent for the template (E.g. mood buttons,
+visit note, arrive, complete time, photo, mapsnap)?
+- Indicate whether the specific client has the communication option enabled and 
+accepts visit reports via email or text message.
+
+(5) NEW API ENDPOINT: send-visit-report-to-pet-owner.php
+
+parameters: clientID
+
+
+
+
+

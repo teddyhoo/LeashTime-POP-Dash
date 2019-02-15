@@ -1,0 +1,111 @@
+/* LEASHTIME STYLES */
+
+@charset "UTF-8";
+
+.lt-body {
+    border-left: #2b323a solid 12px;
+}
+
+.lt-header {
+    height: 64px;
+    font-size: 4em;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.btn-save-service:hover {
+    color: azure;
+    background-color:red;
+}
+
+#service-card-title {
+    color: inherit;
+}
+.service-body {
+    padding: 0;
+    margin: 0 auto;
+}
+.service-tab .tab-pane {
+    line-height: 18px;
+    padding-top: 0;
+    min-height:60px;
+    
+}
+
+	.text-shadow-lt {
+		text-shadow: 2px 2px 5px rgba(1, 2, 4, 0.3);
+	}
+	.text-shadow-big {
+		text-shadow: 4px 4px 7px rgba(1, 2, 4, 0.4);
+	}
+	.no-text-shadow {
+		text-shadow: none;
+	}
+
+	.service-1 #service-title {
+		color: #fff !important;
+		text-shadow: 2px 2px 5px rgba(1, 2, 4, 0.3);
+	}
+	.service-1 {
+		background-color: #883275;
+
+	}
+	.service-1:hover, .service-1:focus {
+		color:white;
+		opacity: 1;
+	}
+	.service-2 {
+		background-color: #dd3ae8;
+
+	}
+	.service-2:hover, .service-2:focus  {
+		color:white;
+		opacity: 1;
+	}
+	.service-3 {
+		background-color: #b940ff;
+
+	}
+	.service-3:hover, .service-3:focus  {
+		color:white;
+		opacity: 1;
+	}
+	.service-4 {
+		background-color: #0179FF;
+
+	}
+	.service-4:hover, .service-4:focus  {
+		color:white;
+		opacity: 1;
+	}
+	.service-5 {
+		background-color:#238BFF;
+
+	}
+	.service-5:hover, .service-5:focus  {
+		color:white;
+		opacity: 1;
+	}
+	.service-6 {
+		background-color: #D44181;
+
+	}
+
+	.service-6:hover, .service-6:focus  {
+		color:white;
+		opacity: 1;
+	}
+
+	.lt-drop .dropdown > a:after {
+	  content: "\f107";
+	  position: absolute;
+	  right: 10px;
+	  top: 8px;
+	  font-family: FontAwesome;
+	  font-weight: normal;
+	  font-style: normal;
+	  text-decoration: inherit;
+	  -webkit-font-smoothing: antialiased;
+	}

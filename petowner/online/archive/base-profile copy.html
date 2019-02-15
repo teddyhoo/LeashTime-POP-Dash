@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>LEASHTIME PROFILES</title>
+
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+    <!-- END META -->
+
+    <!-- BEGIN STYLESHEETS -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link href='https://fonts.googleapis.com/css?family=Mr+Bedfort&text=L'
+  rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/bootstrap.css?1422792965" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+    
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <!-- END STYLESHEETS -->
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+		<script type="text/javascript" src="../../assets/js/libs/utils/html5shiv.js?1403934957"></script>
+		<script type="text/javascript" src="../../assets/js/libs/utils/respond.min.js?1403934956"></script>
+		<![endif]-->
+</head>
+
+<body class="header-fixed">
+
+    <!-- BEGIN HEADER NAV-->
+    <header id="header">
+        <div class="headerbar blue">
+            <div class="headerbar-left">
+                <ul class="header-nav header-nav-options">
+                    <li style="float: left;">
+                        <a class="btn btn-icon-toggle" data-toggle="menubar" href="javascript:void(0);">
+                          <i class=" fa fa-paw white-text fa-2x"></i>
+                        </a>
+                      </li>
+                       <li style="line-height:1;padding:24px 0">
+                        <div class="brand-holder">
+                            <span class="text-lg white-text " style="margin:0;padding-left: 12px"><!--<span class="logo-font text-xl"> L</span>--> CARE<strong>PORTAL</strong>™  
+                            <span style="font-weight: 100;opacity: .8">|  PET AND PARENT PORTAL</span></span>
+                        </div>
+                      </li>
+                </ul>
+             
+            </div>
+            <!-- Header Nav Links -->
+            <div class="headerbar-right">
+                <ul class="header-nav header-nav-options">
+                    <li class=" hidden-xs">
+                        <a href="base-calendar.html" class="btn btn-icon-toggle btn-default opacity-50" >
+                        <i class="fa fa-calendar fa-2x white-text"></i>
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- START Profile Drop -->
+                <ul class="header-nav header-nav-profile">
+                    <li class="dropdown" style="width:280px">
+                        <a href="javascript:void(0);" class="dropdown-toggle ink-reaction white-text" data-toggle="dropdown">
+                           
+                           <i class="fa fa-fw fa-user white-text fa-3x text-info"></i>
+                            <!--<img src="assets/img/profile-images/pic-petowner200.jpg" alt="" />-->
+                            <span class="profile-info white-text" style="margin-top:-15px">
+                              PROFILE MANAGER
+                              <small>OWNER PETS &amp; HOME</small>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu animation-dock" style="">
+                            <li><a href="">My Calendar <span class="badge style-danger pull-right">16</span></a></li>
+                            <li><a href="">My Pets</a></li>
+                            <li><a href="">My Profile</a></li>
+                            
+                            <li><a href="">My Account</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#!"><i class="fa fa-fw fa-medkit text-info"></i> HEALTH & WELLNESS</a></li>
+                            <li><a href="#!"><i class="fa fa-fw fa-life-ring text-success"></i> LEASHTIME SUPPORT</a></li>
+                            <li><a href="#!"><i class="fa fa-fw fa-power-off text-danger"></i> LOGOUT</a></li>
+                        </ul>
+                        <!--end .dropdown-menu -->
+                    </li>
+                    <!--end .dropdown -->
+                </ul>
+                <!--END Profile Nav -->
+           
+            </div>
+            <!--end #header-navbar-collapse -->
+        </div>
+    </header>
+    <!-- END HEADER NAV-->
+
+    <!-- BEGIN BASE CONTENT-->
+    <div>
+        <!-- BEGIN OFFCANVAS LEFT -->
+        <div class="offcanvas"></div>
+        <!-- END OFFCANVAS LEFT -->
+        
+<!-- BEGIN MAIN CONTENT-->
+<div id="content">
+    <!-- MAIN BANNER -->
+    <section id="messages" class="full-bleed text-center style-warning opacity-50">
+        <span class=""></span>
+    </section>
+    <!-- END MAIN BANNER  -->
+
+    <!-- MAIN CONTENT -->
+    <section>
+    <div class="section-body no-margin">
+    <div class="row">
+        <!-- BEGIN LEFT COLUMN -->
+        <div class="col-sm-12">
+        <!-- PROFILES -->
+
+<!-- TABS CARD -->       
+<div class="">
+	<div class="card tabs-left style-default">
+
+	<!-- TABS NAV -->
+	<ul class="card-head nav nav-tabs text-center transparent" data-toggle="tabs">
+	
+		<li id="owner" class="lt-acct active"><a href="#tab-owner">
+        <i class="fa fa-lg fa-user "></i><br>
+          <h4 class="" style="margin-top:0px; padding-bottom:25px">Pet Parents<br><small>Owner Details</small></h4>
+        </a>
+		</li>
+		<li id="pet" class="lt-acct"><a href="#tab-pet">
+          <i class="fa fa-lg fa-paw"></i><br>
+          <h4 class="" style="margin-top:0px; padding-bottom:25px">Our Pets<br><small>Pet Profiles</small></h4>
+        </a>
+		</li>
+		<li id="home" class="lt-acct "><a href="#tab-home">
+          <i class="fa fa-lg fa-home"></i><br>
+          <h4 class="" style="margin-top:0px; padding-bottom:25px">House Info<br><small>Secure Access</small></h4>
+        </a>
+		</li>
+		<li id="account" class="lt-acct "><a href="#tab-account">
+          <i class="fa fa-lg fa-x2 fa-money"></i><br>
+          <h4 class="" style="margin-top:0px; padding-bottom:25px">ACCOUNT INFO<br><small>History / Credit Card</small></h4>
+        </a>
+    </li>
+	
+	</ul>
+
+	<!-- TABS -->
+	<div id="profileTabs" class="card-body tab-content style-default-bright ">
+
+		<!-- TAB OWNER -->
+		<div class="tab-pane " id="tab-owner">
+        <div class="pull-right button btn-lg blue ink-reaction btn-raised">
+          <a href="#!" class="white-text">EDIT</a>
+        </div>
+			<h1><i class="fa fa-user text-accent"></i> PET OWNER PROFILE</h1>
+			<h3 class="text-light">Daniel <strong>Johnson</strong></h3>
+			<p class="text-lg">Description Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur.
+			</p> 
+			<hr />
+
+			<div class="row">
+
+			  <div class="col-xs-12 col-sm-3 col-md-4">
+            <div class="">
+              <img src="assets/img/profile-images/pic-petowner.jpg" 
+              width="100%" height="auto" alt="" class=""/> 	  
+            </div>
+            <div class="full-bleed button btn-lg blue ink-reaction btn-raised text-center">
+                <a href="#!" class="white-text">CHANGE PICTURE</a>
+              </div>
+              <div class="full-bleed button btn-lg orange ink-reaction btn-raised text-center" style="margin-top:10px">
+                <a href="#!" class="white-text">CHANGE PASSWORD</a>
+              </div>
+			  </div>
+
+			  <div class="col-xs-12 col-md-7 col-sm-9 col-lg-offset-1 text-lg">
+				  <dl class="dl-horizontal" style="margin-top:24px;">
+					<dt class="">Password</dt>
+					<dd>
+					 <a href="#!" class="button btn-sm blue ink-reaction btn-raised btn-styled white-text">
+					  Change Password</a>
+					</dd>
+					<dt>Email</dt>
+					<dd>myemail@leashtime.com</dd>
+					<dt>Occupation</dt>
+					<dd>Chemist</dd>
+					<dt>Address</dt>
+					<dd>6102 Morningside Drive</dd>
+					<dd>Richmond, Va 23226</dd>
+					<dt>Cell Phone</dt>
+					<dd>(804) 555-5555</dd>
+					<dt>Home Phone</dt>
+					<dd>(804) 555-5555</dd>
+					<dt>Work Phone</dt>
+					<dd>(804) 555-5555</dd>
+					<dt>Emergency Contact</dt>
+					<dd>John Freedman (Neighbor)</dd>
+					<dd>(804) 555-5555</dd>
+				</dl>
+			  </div>
+			</div>
+		</div>
+
+		<!-- TAB OWNER EDIT -->
+		<div class="tab-pane active" id="tab-owner-edit">
+       <div class="pull-right button btn-lg green ink-reaction btn-raised" style="margin-left:20px">
+        <a href="#!" class="white-text">SAVE</a>
+      </div>
+       <div class="pull-right button btn-lg red ink-reaction btn-raised m-r-20">
+        <a href="#!" class="white-text">CANCEL</a>
+      </div>
+        <h1><i class="fa fa-user text-accent"></i><strong>PET</strong>OWNER PROFILE EDIT</h1>
+			<h3 class="text-light">Daniel <strong>Johnson</strong></h3>
+			<hr />
+
+			<div class="row">
+
+			  <div class="col-xs-12 col-sm-4 col-md-5">
+				<div class="">
+				  <img src="assets/img/profile-images/pic-petowner.jpg" 
+				  width="100%" height="auto" alt="" class=""/> 	  
+				</div>
+			  </div>
+
+			  <div class="col-xs-12 col-sm-8 col-md-7 text-lg">
+
+            <div class="card">
+									<div class="card-body">
+										<form class="form" role="form">
+										  <div class="text-right">
+												<label class="radio-inline radio-styled">
+													<input type="radio" name="gender"><span>Male</span>
+												</label>
+												<label class="radio-inline radio-styled">
+													<input type="radio" name="gender" checked=""><span>Female</span>
+												</label>
+											</div>
+											
+											<div class="row">
+											<!-- F NAME -->
+												<div class="col-sm-6">
+													<div class="form-group floating-label">
+														<input type="text" class="form-control" id="fName-edit">
+														<label for="fName-edit">Firstname</label>
+													</div>
+												</div>
+												<!-- L NAME -->
+												<div class="col-sm-6">
+													<div class="form-group floating-label">
+														<input type="text" class="form-control" id="email-edit">
+														<label for="lName-edit">Lastname</label>
+													</div>
+												</div>
+											</div>
+											<!-- EMAIL -->
+												<div class="col-sm-6">
+													<div class="form-group floating-label">
+														<input type="text" class="form-control" id="email-edit">
+														<label for="email-edit">Email Address</label>
+													</div>
+												</div>
+											<!-- PASSWORD Move to Model -->
+											<div class="form-group floating-label">
+												<input type="password" class="form-control" id="password2">
+												<label for="password2">Password</label>
+											</div>
+											<!-- PHONE CELL -->
+											<div class="form-group">
+												<input type="text" class="form-control" data-inputmask="'mask': '(999) 999-9999'">
+												<label>Cell Phone</label>
+												<p class="help-block">US Telephone: (999) 999-9999</p>
+											</div>
+											<!-- PHONE HOME -->
+											<div class="form-group">
+												<input type="text" class="form-control" data-inputmask="'mask': '(999) 999-9999'">
+												<label>Phone mask</label>
+												<p class="help-block">US Telephone: (999) 999-9999</p>
+											</div>
+											<!-- PHONE WORK -->
+											<div class="form-group">
+												<input type="text" class="form-control" data-inputmask="'mask': '(999) 999-9999'">
+												<label>Work Phone</label>
+												<p class="help-block">US Telephone: (999) 999-9999</p>
+											</div>
+										<hr />
+                        <h2>Emergency Contact</h2
+                            <!-- F NAME -->
+												<div class="col-sm-6">
+													<div class="form-group floating-label">
+														<input type="text" class="form-control" id="fName-edit">
+														<label for="fName-edit">Firstname</label>
+													</div>
+												</div>
+												<!-- L NAME -->
+												<div class="col-sm-6">
+													<div class="form-group floating-label">
+														<input type="text" class="form-control" id="email-edit">
+														<label for="lName-edit">Lastname</label>
+													</div>
+												</div>
+											</div>
+											<!-- EMAIL -->
+												<div class="col-sm-6">
+													<div class="form-group floating-label">
+														<input type="text" class="form-control" id="email-edit">
+														<label for="email-edit">Email Address</label>
+													</div>
+												</div>
+											<!-- PASSWORD Move to Model -->
+											<div class="form-group floating-label">
+												<input type="password" class="form-control" id="password2">
+												<label for="password2">Password</label>
+											</div>
+											<!-- PHONE CELL -->
+											<div class="form-group">
+												<input type="text" class="form-control" data-inputmask="'mask': '(999) 999-9999'">
+												<label>Cell Phone</label>
+												<p class="help-block">US Telephone: (999) 999-9999</p>
+											</div>
+											<!-- PHONE HOME -->
+											<div class="form-group">
+												<input type="text" class="form-control" data-inputmask="'mask': '(999) 999-9999'">
+												<label>Phone mask</label>
+												<p class="help-block">US Telephone: (999) 999-9999</p>
+											</div>
+											<!-- PHONE WORK -->
+											<div class="form-group">
+												<input type="text" class="form-control" data-inputmask="'mask': '(999) 999-9999'">
+												<label>Work Phone</label>
+												<p class="help-block">US Telephone: (999) 999-9999</p>
+											</div>
+										    
+											<div class="form-group floating-label">
+												<input type="text" class="form-control" id="placeholder2">
+												<label for="placeholder2">Placeholder</label>
+											</div>
+											<div class="form-group floating-label">
+												<input type="text" class="form-control" id="help2">
+												<label for="help2">Input with help text</label>
+												<p class="help-block">Help text</p>
+											</div>
+											<div class="form-group floating-label">
+												<input type="text" class="form-control" id="tooltip2" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="Example input tooltip text here">
+												<label for="help2">Input with tooltip</label>
+											</div>
+											<div class="form-group floating-label">
+												<select id="select2" name="select2" class="form-control">
+													<option value="">&nbsp;</option>
+													<option value="30">30</option>
+													<option value="40">40</option>
+													<option value="50">50</option>
+													<option value="60">60</option>
+													<option value="70">70</option>
+												</select>
+												<label for="select2">Select</label>
+											</div>
+											<div class="form-group floating-label">
+												<textarea name="textarea2" id="textarea2" class="form-control" rows="3" placeholder=""></textarea>
+												<label for="textarea2">Textarea</label>
+											</div>
+											<div class="form-group floating-label">
+												<label>Static control</label>
+												<p class="form-control-static">email@example.com</p>
+											</div>
+										</form>
+									</div><!--end .card-body -->
+								</div>
+          
+          
+			  </div>
+			</div>
+		</div>
+
+
+		<!-- TAB PET -->
+		<div class="tab-pane " id="tab-pet">
+		<div class="pull-right button btn-lg blue ink-reaction btn-raised">
+          <a href="#!" class="white-text">EDIT</a>
+        </div>
+			<h1><i class="fa fa-clock-o text-accent"></i> PET PROFILES</h1>
+    <hr />
+			<div class="row">
+				<div class="col-xs-12 col-sm-6">
+					<a href="#!" class="">
+					<div class="card mask card-inverse grey height-3 overlay-shade-bottom">
+						<div class="row">
+
+							<div class="col-xs-6">
+							 <img src=" assets/img/profile-images/pic-mypet-card.jpg" alt="" width="100%" height="auto" class=""/> 			    
+							</div>
+
+							<div class="col-xs-6">
+
+							  <div class="card-head">  
+								<div class="tools">
+									<div class="btn-group white-text">
+
+									  <a class="btn btn-icon-toggle ink-reaction btn-default-brite">
+									  <i class="fa fa-eye"></i></a>
+									</div>
+							   </div>
+							 </div>
+
+							  <div class="card-body no-y-padding white-text">
+							 <h3><span class="text-shadow">ROVER</span></h3>
+							</div>
+
+							</div> 
+
+						</div> 
+					</div>
+					</a>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 text-center">
+				  <div class=" card grey lighten-4 height-3 button ink-reaction p-t-15">
+					<a class="center">
+					<div class="force-padding button text-xl">ADD NEW PET</div>
+					</a>
+				  </div>
+				</div>
+			</div>
+
+			<hr />
+
+			<div class="row">
+
+				<!-- COL 1 -->
+			   <div class="col-xs-12 col-md-4 no-y-padding " style="margin-bottom:40px">
+				<div class="holder">
+				  <img src=" assets/img/profile-images/pic-mypet.jpg" width="100%" height="auto" alt="" class=""/> 	  
+				  <div class="stick-to-bottom full-bleed button btn-lg blue ink-reaction btn-raised text-center">
+					 <a href="#!" class="white-text">VISIT PROFILE</a>
+				  </div>
+				</div>
+
+			   </div>
+
+			   <!-- COL 2 -->
+			   <div class="col-xs-12 col-md-8">  
+
+				 <div class="row">
+				   <div class="col-xs-12 col-sm-6">
+				   <div class="text-lg">
+					<dl class="dl-horizontal">
+						<dt>Pet's Name</dt>
+						<dd>Rover (DOG)</dd>
+						<dt>Nick Name</dt>
+						<dd>AKA RoverKiller</dd>
+						<dt>Age</dt>
+						<dd>3</dd>
+						<dt>Sex</dt>
+						<dd>Male</dd>
+						<dt>Breed/Color</dt>
+						<dd>Pit Bull/Black</dd>
+					  </dl>
+					</div>
+			   </div>
+
+				<div class="col-xs-12 col-sm-6">
+				 <div class="text-lg">
+					<dl class="dl-horizontal">
+						<dt>Fixed</dt>
+						<dd><span class="badge style-success">YES</span></dd>
+						<dt>Vaccinated</dt>
+						<dd><span class="badge style-success">YES</span></dd>
+						<dt>Rabies</dt>
+						<dd><span class="badge style-success">YES</span></dd>
+						<dt>Medication</dt>
+						<dd><span class="badge style-danger">NO</span></dd>
+					</dl>
+				  </div>
+			   </div>
+				 </div>
+
+				 <div class="row">
+				 <div class="col-sm-12">
+				  <div class=" text-lg">
+					<p class=""><strong class="text-ultra-bold">Food Location:</strong> Numquam aliquid eu, in nam sale gubergren.</p>
+					<dl class="dl-verticle">
+						<dt>Feeding Instruction</dt>
+						<dd><p class="lead">Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur. Ea eum veniam audire. </p></dd>
+					</dl>
+				</div>
+			</div>
+				</div>
+			   </div>
+
+			   <div class="row m-t-25 p-l-25">  
+				<div class="col-sm-12 text-lg">
+				  <dl class="dl-verticle">
+					<dt>Life Story</dt>
+					<dd>Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur. Ea eum veniam audire. Dicant vim numquam aliquid eu, in nam consequuntur. Ea eum veniam audire. Dicant vim numquam aliquid eu, in nam consequuntur. Ea eum veniam audire. Dicant vituperata vim numquam aliquid eu, in nam.</dd>
+				  </dl>
+				  <dl>
+				  <dt><span class="badge style-warning text-lg">WARNING</span> with Children</dt>
+					<dd>Ea eum veniam audire. Dicant vituperata consequuntur. Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur.</dd>
+					</dl>
+					<dl>
+					<dt><span class="badge style-warning text-lg">WARNING</span> with Strangers</dt>
+					<dd>Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur.</dd>
+					</dl>
+					<dl>
+				  <dt><span class="badge style-success text-lg">GOOD</span> with Other Pets</dt>
+					<dd>Per at postea mediocritatem. Ea eum veniam audire. Dicant vituperata consequuntur.vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur. Ea eum veniam audire. Dicant vituperata consequuntur.</dd>
+					</dl>
+				</div>
+			</div>
+
+			</div>
+		</div>
+		
+		<!-- TAB PET EDIT-->
+		<div class="tab-pane " id="tab-pe-edit">
+		    <div class="pull-right button btn-lg green ink-reaction btn-raised" style="margin-left:20px">
+        <a href="#!" class="white-text">SAVE</a>
+        </div>
+        <div class="pull-right button btn-lg red ink-reaction btn-raised m-r-20">
+        <a href="#!" class="white-text">CANCEL</a>
+        </div>
+			 <h1><i class="fa fa-clock-o text-accent"></i> PET PROFILES EDITS</h1>
+<hr />
+			<div class="row">
+				<div class="col-xs-12 col-sm-6">
+					<a href="#!" class="">
+					<div class="card mask card-inverse grey height-3 overlay-shade-bottom">
+						<div class="row">
+
+							<div class="col-xs-6">
+							 <img src=" assets/img/profile-images/pic-mypet-card.jpg" alt="" width="100%" height="auto" class=""/> 			    
+							</div>
+
+							<div class="col-xs-6">
+
+							  <div class="card-head">  
+								<div class="tools">
+									<div class="btn-group white-text">
+
+									  <a class="btn btn-icon-toggle ink-reaction btn-default-brite">
+									  <i class="fa fa-eye"></i></a>
+									</div>
+							   </div>
+							 </div>
+
+							  <div class="card-body no-y-padding white-text">
+							 <h3><span class="text-shadow">ROVER</span></h3>
+							</div>
+
+							</div> 
+
+						</div> 
+					</div>
+					</a>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 text-center">
+				  <div class=" card grey lighten-4 height-3 button ink-reaction p-t-15">
+					<a class="center">
+					<div class="force-padding button text-xl">ADD NEW PET</div>
+					</a>
+				  </div>
+				</div>
+			</div>
+
+			<hr />
+
+			<div class="row">
+
+				<!-- LEFT COL -->
+			   <div class="col-xs-12 col-md-4 no-y-padding " style="margin-bottom:40px">
+				<div class="holder">
+				  <img src=" assets/img/profile-images/pic-mypet.jpg" width="100%" height="auto" alt="" class=""/> 	  
+				  <div class="stick-to-bottom full-bleed button btn-lg blue ink-reaction btn-raised text-center">
+					 <a href="#!" class="white-text">VISIT PROFILE</a>
+				  </div>
+				</div>
+
+			   </div>
+
+			   <!-- RIGHT COL -->
+			   <div class="col-xs-12 col-md-8">  
+
+				 <div class="row">
+				   <div class="col-xs-12 col-sm-6">
+				   <div class="text-lg">
+					<dl class="dl-horizontal">
+						<dt>Pet's Name</dt>
+						<dd>Rover (DOG)</dd>
+						<dt>Nick Name</dt>
+						<dd>AKA RoverKiller</dd>
+						<dt>Age</dt>
+						<dd>3</dd>
+						<dt>Sex</dt>
+						<dd>Male</dd>
+						<dt>Breed/Color</dt>
+						<dd>Pit Bull/Black</dd>
+					  </dl>
+					</div>
+			   </div>
+
+				<div class="col-xs-12 col-sm-6">
+				 <div class="text-lg">
+					<dl class="dl-horizontal">
+						<dt>Fixed</dt>
+						<dd><span class="badge style-success">YES</span></dd>
+						<dt>Vaccinated</dt>
+						<dd><span class="badge style-success">YES</span></dd>
+						<dt>Rabies</dt>
+						<dd><span class="badge style-success">YES</span></dd>
+						<dt>Medication</dt>
+						<dd><span class="badge style-danger">NO</span></dd>
+					</dl>
+				  </div>
+			   </div>
+				 </div>
+
+				 <div class="row">
+				 <div class="col-sm-12">
+				  <div class=" text-lg">
+					<p class=""><strong class="text-ultra-bold">Food Location:</strong> Numquam aliquid eu, in nam sale gubergren.</p>
+					<dl class="dl-verticle">
+						<dt>Feeding Instruction</dt>
+						<dd><p class="lead">Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur. Ea eum veniam audire. </p></dd>
+					</dl>
+				</div>
+			</div>
+				</div>
+			   </div>
+
+			   <div class="row m-t-25 p-l-25">  
+				<div class="col-sm-12 text-lg">
+				  <dl class="dl-verticle">
+					<dt>Life Story</dt>
+					<dd>Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur. Ea eum veniam audire. Dicant vim numquam aliquid eu, in nam consequuntur. Ea eum veniam audire. Dicant vim numquam aliquid eu, in nam consequuntur. Ea eum veniam audire. Dicant vituperata vim numquam aliquid eu, in nam.</dd>
+				  </dl>
+				  <dl>
+				  <dt><span class="badge style-warning text-lg">WARNING</span> with Children</dt>
+					<dd>Ea eum veniam audire. Dicant vituperata consequuntur. Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur.</dd>
+					</dl>
+					<dl>
+					<dt><span class="badge style-warning text-lg">WARNING</span> with Strangers</dt>
+					<dd>Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur.</dd>
+					</dl>
+					<dl>
+				  <dt><span class="badge style-success text-lg">GOOD</span> with Other Pets</dt>
+					<dd>Per at postea mediocritatem. Ea eum veniam audire. Dicant vituperata consequuntur.vim numquam aliquid eu, in nam sale gubergren. Fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Dicant vituperata consequuntur. Ea eum veniam audire. Dicant vituperata consequuntur.</dd>
+					</dl>
+				</div>
+			</div>
+
+			</div>
+		</div>
+
+
+		<!-- TAB HOME -->
+		<div class="tab-pane " id="tab-home">
+		<div class="pull-right button btn-lg blue ink-reaction btn-raised">
+          <a href="#!" class="white-text">EDIT</a>
+        </div>
+			<h1><i class="fa fa-home text-accent"></i> HOME INFORMATION</h1>
+
+			<hr />
+
+			<div class="col-sm-4 text-lg">
+				<dl class="dl-verticle">
+					<dt>Home Address</dt>
+					<dd>6102 Morningside Dr</dd>
+					<dd>Richmond, Va 23226</dd>
+				</dl>
+
+				<dl class="dl-verticle">
+					<dt>Mailing Address</dt>
+					<dd>233 Broad Street</dd>
+					<dd>Richmond, Va 23226</dd>
+				</dl>
+				<div class="checkbox checkbox-styled tile-text m-b-25">
+						<label>
+							<input type="checkbox">
+						</label> Bring in Mail
+				</div>
+
+				<dl class="dl-verticle">
+					<dt>Neighbor Contact</dt>
+					<dd>John Freedman</dd>
+					<dt>Neighbor's Address</dt>
+					<dd>6102 Morningside Dr</dd>
+					<dd>Richmond, Va 23226</dd>
+					<dt>Neighbor's Phone</dt>
+					<dd>(804) 555-5555</dd>
+				</dl>
+
+				<div class="checkbox checkbox-styled tile-text">
+						<label>
+							<input type="checkbox">
+						</label> Neighbor has Key to Home
+				</div>
+			</div>
+
+			<div class="col-sm-8 text-lg">
+
+			   <div class="row grey lighten-2 p-b-15">
+				<div class="col-sm-12 col-md-4 text-center">
+				   <div class="m-t-20 grey p-t-5 p-b-5">
+					   <h3 class="m-b-0">Alarm CODE</h3>
+					   <h2 class="white-text text-shadow m-t-5"><strong>7356</strong></h2>   
+				   </div>
+
+				   <div class="m-t-5 grey p-t-5 p-b-5">
+					   <h3 class="m-b-0">Gate CODE</h3>
+					   <h2 class="white-text text-shadow m-t-5"><strong>3562</strong></h2>   
+				   </div>
+				</div>
+
+				<div class="col-sm-12 col-md-8">
+				  <dl class="dl-verticle m-t-25">
+					<dt>Alarm Company</dt>
+					<dd>Acme Alarms</dd>
+					<dt>Alarm Phone</dt>
+					<dd>888-888-8888</dd>
+					<dt>Alarm Instructions</dt>
+					<dd>Alarm: You only have 45 seconds to enter code</dd>
+				  </dl>
+				</div>
+			  </div>
+
+			   <div class="row m-t-20">
+				 <div class="col-sm-12 col-md-12">
+				 <dl class="dl-horizontal">
+					<dt>Directions to Home</dt>
+					<dd>Cu conceptam vituperata temporibus has.</dd>
+					<dt>Parking Info</dt>
+					<dd>Ad ius duis dissentiunt, an sit harum primis persecuti, adipisci tacimates mediocrem sit et. Id illud.</dd>
+					<dt>Entry Notes</dt>
+					<dd>Dissentiunt, an sit harum primis persecuti, adipisci tacimates mediocrem sit et.</dd>
+					<dt>Food Location</dt>
+					<dd>Kitchen under sink</dd>
+					<dt>Leash Location</dt>
+					<dd>Hanging just inside back door</dd>
+					<dt>Litterbox Location</dt>
+					<dd>Laundry Room</dd>
+					<dt>Circuit Breaker</dt>
+					<dd>Located in the Laundry Room</dd>
+				 </dl>
+				 </div>
+			  </div>
+
+			</div>
+
+		</div>
+     
+    <!-- TAB HOME EDIT-->
+		<div class="tab-pane " id="tab-home-edit">
+		<div class="pull-right button btn-lg green ink-reaction btn-raised" style="margin-left:20px">
+        <a href="#!" class="white-text">SAVE</a>
+      </div>
+       <div class="pull-right button btn-lg red ink-reaction btn-raised m-r-20">
+        <a href="#!" class="white-text">CANCEL</a>
+      </div>
+			<h1><i class="fa fa-home text-accent"></i> HOME INFORMATION</h1>
+
+			<hr />
+
+			<div class="col-sm-4 text-lg">
+				<dl class="dl-verticle">
+					<dt>Home Address</dt>
+					<dd>6102 Morningside Dr</dd>
+					<dd>Richmond, Va 23226</dd>
+				</dl>
+
+				<dl class="dl-verticle">
+					<dt>Mailing Address</dt>
+					<dd>233 Broad Street</dd>
+					<dd>Richmond, Va 23226</dd>
+				</dl>
+				<div class="checkbox checkbox-styled tile-text m-b-25">
+						<label>
+							<input type="checkbox">
+						</label> Bring in Mail
+				</div>
+
+				<dl class="dl-verticle">
+					<dt>Neighbor Contact</dt>
+					<dd>John Freedman</dd>
+					<dt>Neighbor's Address</dt>
+					<dd>6102 Morningside Dr</dd>
+					<dd>Richmond, Va 23226</dd>
+					<dt>Neighbor's Phone</dt>
+					<dd>(804) 555-5555</dd>
+				</dl>
+
+				<div class="checkbox checkbox-styled tile-text">
+						<label>
+							<input type="checkbox">
+						</label> Neighbor has Key to Home
+				</div>
+			</div>
+
+			<div class="col-sm-8 text-lg">
+
+			   <div class="row grey lighten-2 p-b-15">
+				<div class="col-sm-12 col-md-4 text-center">
+				   <div class="m-t-20 grey p-t-5 p-b-5">
+					   <h3 class="m-b-0">Alarm CODE</h3>
+					   <h2 class="white-text text-shadow m-t-5"><strong>7356</strong></h2>   
+				   </div>
+
+				   <div class="m-t-5 grey p-t-5 p-b-5">
+					   <h3 class="m-b-0">Gate CODE</h3>
+					   <h2 class="white-text text-shadow m-t-5"><strong>3562</strong></h2>   
+				   </div>
+				</div>
+
+				<div class="col-sm-12 col-md-8">
+				  <dl class="dl-verticle m-t-25">
+					<dt>Alarm Company</dt>
+					<dd>Acme Alarms</dd>
+					<dt>Alarm Phone</dt>
+					<dd>888-888-8888</dd>
+					<dt>Alarm Instructions</dt>
+					<dd>Alarm: You only have 45 seconds to enter code</dd>
+				  </dl>
+				</div>
+			  </div>
+
+			   <div class="row m-t-20">
+				 <div class="col-sm-12 col-md-12">
+				 <dl class="dl-horizontal">
+					<dt>Directions to Home</dt>
+					<dd>Cu conceptam vituperata temporibus has.</dd>
+					<dt>Parking Info</dt>
+					<dd>Ad ius duis dissentiunt, an sit harum primis persecuti, adipisci tacimates mediocrem sit et. Id illud.</dd>
+					<dt>Entry Notes</dt>
+					<dd>Dissentiunt, an sit harum primis persecuti, adipisci tacimates mediocrem sit et.</dd>
+					<dt>Food Location</dt>
+					<dd>Kitchen under sink</dd>
+					<dt>Leash Location</dt>
+					<dd>Hanging just inside back door</dd>
+					<dt>Litterbox Location</dt>
+					<dd>Laundry Room</dd>
+					<dt>Circuit Breaker</dt>
+					<dd>Located in the Laundry Room</dd>
+				 </dl>
+				 </div>
+			  </div>
+
+			</div>
+
+		</div>
+      
+      
+    <!-- TAB ACCOUNT -->
+		<div class="tab-pane " id="tab-account">
+		<div class="pull-right button btn-lg blue ink-reaction btn-raised">
+          <a href="#!" class="white-text">EDIT</a>
+        </div>
+			<h1><i class="fa fa-money text-accent"></i> ACCOUNT INFORMATION</h1>
+
+			<hr />
+
+			<div class="col-sm-4 text-lg">
+				<dl class="dl-verticle">
+					<dt>Home Address</dt>
+					<dd>6102 Morningside Dr</dd>
+					<dd>Richmond, Va 23226</dd>
+				</dl>
+
+				<dl class="dl-verticle">
+					<dt>Mailing Address</dt>
+					<dd>233 Broad Street</dd>
+					<dd>Richmond, Va 23226</dd>
+				</dl>
+				<div class="checkbox checkbox-styled tile-text m-b-25">
+						<label>
+							<input type="checkbox">
+						</label> Bring in Mail
+				</div>
+
+				<dl class="dl-verticle">
+					<dt>Neighbor Contact</dt>
+					<dd>John Freedman</dd>
+					<dt>Neighbor's Address</dt>
+					<dd>6102 Morningside Dr</dd>
+					<dd>Richmond, Va 23226</dd>
+					<dt>Neighbor's Phone</dt>
+					<dd>(804) 555-5555</dd>
+				</dl>
+
+				<div class="checkbox checkbox-styled tile-text">
+						<label>
+							<input type="checkbox">
+						</label> Neighbor has Key to Home
+				</div>
+			</div>
+
+			<div class="col-sm-8 text-lg">
+
+			   <div class="row grey lighten-2 p-b-15">
+				<div class="col-sm-12 col-md-4 text-center">
+				   <div class="m-t-20 grey p-t-5 p-b-5">
+					   <h3 class="m-b-0">Alarm CODE</h3>
+					   <h2 class="white-text text-shadow m-t-5"><strong>7356</strong></h2>   
+				   </div>
+
+				   <div class="m-t-5 grey p-t-5 p-b-5">
+					   <h3 class="m-b-0">Gate CODE</h3>
+					   <h2 class="white-text text-shadow m-t-5"><strong>3562</strong></h2>   
+				   </div>
+				</div>
+
+				<div class="col-sm-12 col-md-8">
+				  <dl class="dl-verticle m-t-25">
+					<dt>Alarm Company</dt>
+					<dd>Acme Alarms</dd>
+					<dt>Alarm Phone</dt>
+					<dd>888-888-8888</dd>
+					<dt>Alarm Instructions</dt>
+					<dd>Alarm: You only have 45 seconds to enter code</dd>
+				  </dl>
+				</div>
+			  </div>
+
+			   <div class="row m-t-20">
+				 <div class="col-sm-12 col-md-12">
+				 <dl class="dl-horizontal">
+					<dt>Directions to Home</dt>
+					<dd>Cu conceptam vituperata temporibus has.</dd>
+					<dt>Parking Info</dt>
+					<dd>Ad ius duis dissentiunt, an sit harum primis persecuti, adipisci tacimates mediocrem sit et. Id illud.</dd>
+					<dt>Entry Notes</dt>
+					<dd>Dissentiunt, an sit harum primis persecuti, adipisci tacimates mediocrem sit et.</dd>
+					<dt>Food Location</dt>
+					<dd>Kitchen under sink</dd>
+					<dt>Leash Location</dt>
+					<dd>Hanging just inside back door</dd>
+					<dt>Litterbox Location</dt>
+					<dd>Laundry Room</dd>
+					<dt>Circuit Breaker</dt>
+					<dd>Located in the Laundry Room</dd>
+				 </dl>
+				 </div>
+			  </div>
+
+			</div>
+
+		</div>
+
+	  </div>
+
+	</div>
+</div>
+
+</div>
+<!-- END LEFT COLUMN -->
+
+</div>
+</div>
+    
+<div class="text-default text-right small-padding" style="margin-right: 20px">
+    POWERED BY LEASHTIME SOFTWARE
+</div>
+
+</section>    
+</div>
+<!-- END CONTENT -->
+        
+        <!-- BEGIN OFFCANVAS RIGHT -->
+        <div class="offcanvas">
+
+            <!-- BEGIN OFFCANVAS SEARCH -->
+            <div id="offcanvas-search" class="offcanvas-pane width-8">
+                <!-- TITLE -->
+                <div class="offcanvas-head blue darken-1">
+                    <header class="white-text">Provider Search</header>
+                    <div class="offcanvas-tools">
+                        <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+                    </div>
+                </div>
+                <div class="offcanvas-body no-padding">
+                    <!-- SEARCH -->
+                    <ul class="list grey lighten-4">
+                        <li class="tile ">
+                            <div class="contain-lg">
+                                <form class="navbar-search" role="search">
+                                    <div class="form-group ">
+                                        <input type="text" class="form-control" name="providerSearch" placeholder="Local Provider Search">
+                                    </div>
+                                    <button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- PROVIDER LIST -->
+                    <ul class="list ">
+                        <li class="tile divider-full-bleed">
+                            <div class="tile-content">
+                                <div class="tile-text"><strong>A</strong></div>
+                            </div>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar4.jpg?1404026791" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Animal House
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar9.jpg?1404026744" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Doggy Walker
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile divider-full-bleed">
+                            <div class="tile-content">
+                                <div class="tile-text"><strong>J</strong></div>
+                            </div>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar2.jpg?1404026449" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Jessica Cruise - Vet
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar8.jpg?1404026729" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Jim Peters - Vet
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile divider-full-bleed">
+                            <div class="tile-content">
+                                <div class="tile-text"><strong>M</strong></div>
+                            </div>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar5.jpg?1404026513" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Mobile Mutts
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar11.jpg?1404026774" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Mary Peterson - Dog Walker
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar3.jpg?1404026799" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Mr Groom - Grooming
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile divider-full-bleed">
+                            <div class="tile-content">
+                                <div class="tile-text"><strong>N</strong></div>
+                            </div>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar6.jpg?1404026572" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Nathan Peterson - Dog Friend
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile divider-full-bleed">
+                            <div class="tile-content">
+                                <div class="tile-text"><strong>P</strong></div>
+                            </div>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar7.jpg?1404026721" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Philip Ericsson - Loser
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="tile divider-full-bleed">
+                            <div class="tile-content">
+                                <div class="tile-text"><strong>S</strong></div>
+                            </div>
+                        </li>
+                        <li class="tile">
+                            <a class="tile-content ink-reaction" href="#offcanvas-chat" data-toggle="offcanvas" data-backdrop="false">
+                                <div class="tile-icon">
+                                    <img src="assets/img/profile-images/avatar10.jpg?1404026762" alt="" />
+                                </div>
+                                <div class="tile-text">
+                                    Samuel Parsons
+                                    <small>123-123-3210</small>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!--end .offcanvas-body -->
+            </div>
+            <!--end .offcanvas-pane -->
+            <!-- END OFFCANVAS SEARCH -->
+
+            <!-- BEGIN OFFCANVAS CHAT -->
+            <div id="offcanvas-chat" class="offcanvas-pane style-default-light width-12">
+                <div class="offcanvas-head style-default-bright">
+                    <header class="text-primary">Chat with Ann Laurens</header>
+                    <div class="offcanvas-tools">
+                        <a class="btn btn-icon-toggle btn-default-light pull-right" data-dismiss="offcanvas">
+								<i class="md md-close"></i>
+							</a>
+                        <a class="btn btn-icon-toggle btn-default-light pull-right" href="#offcanvas-search" data-toggle="offcanvas" data-backdrop="false">
+								<i class="md md-arrow-back"></i>
+							</a>
+                    </div>
+                    <form class="form">
+                        <div class="form-group floating-label">
+                            <textarea name="sidebarChatMessage" id="sidebarChatMessage" class="form-control autosize" rows="1"></textarea>
+                            <label for="sidebarChatMessage">Leave a message</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="list-chats">
+                        <li>
+                            <div class="chat">
+                                <div class="chat-avatar"><img class="img-circle" src="assets/img/profile-images/avatar1.jpg?1403934956" alt="" /></div>
+                                <div class="chat-body">
+                                    Yes, it is indeed very beautiful.
+                                    <small>10:03 pm</small>
+                                </div>
+                            </div>
+                            <!--end .chat -->
+                        </li>
+                        <li class="chat-left">
+                            <div class="chat">
+                                <div class="chat-avatar"><img class="img-circle" src="assets/img/profile-images/avatar9.jpg?1404026744" alt="" /></div>
+                                <div class="chat-body">
+                                    Did you see the changes?
+                                    <small>10:02 pm</small>
+                                </div>
+                            </div>
+                            <!--end .chat -->
+                        </li>
+                        <li>
+                            <div class="chat">
+                                <div class="chat-avatar"><img class="img-circle" src="assets/img/profile-images/avatar1.jpg?1403934956" alt="" /></div>
+                                <div class="chat-body">
+                                    I just arrived at work, it was quite busy.
+                                    <small>06:44pm</small>
+                                </div>
+                                <div class="chat-body">
+                                    I will take look in a minute.
+                                    <small>06:45pm</small>
+                                </div>
+                            </div>
+                            <!--end .chat -->
+                        </li>
+                        <li class="chat-left">
+                            <div class="chat">
+                                <div class="chat-avatar"><img class="img-circle" src="assets/img/profile-images/avatar9.jpg?1404026744" alt="" /></div>
+                                <div class="chat-body">
+                                    The colors are much better now.
+                                </div>
+                                <div class="chat-body">
+                                    The colors are brighter than before. I have already sent an example. This will make it look sharper.
+                                    <small>Mon</small>
+                                </div>
+                            </div>
+                            <!--end .chat -->
+                        </li>
+                        <li>
+                            <div class="chat">
+                                <div class="chat-avatar"><img class="img-circle" src="assets/img/profile-images/avatar1.jpg?1403934956" alt="" /></div>
+                                <div class="chat-body">
+                                    Are the colors of the logo already adapted?
+                                    <small>Last week</small>
+                                </div>
+                            </div>
+                            <!--end .chat -->
+                        </li>
+                    </ul>
+                </div>
+                <!--end .offcanvas-body -->
+            </div>
+            <!--end .offcanvas-pane -->
+            <!-- END OFFCANVAS CHAT -->
+
+        </div>
+        <!--end .offcanvas-->
+        <!-- END OFFCANVAS RIGHT -->
+
+    </div>
+    <!--end #base-->
+    <!-- END BASE CONTENT-->
+
+    <!-- BEGIN JAVASCRIPT -->
+    <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+    <script src="../../assets/js/libs/spin.js/spin.min.js"></script>
+    <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+    <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <script src="../../assets/js/core/source/App.js"></script>
+    <script src="../../assets/js/core/source/AppNavigation.js"></script>
+    <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
+    <script src="../../assets/js/core/source/AppCard.js"></script>
+    <script src="../../assets/js/core/source/AppForm.js"></script>
+    <script src="../../assets/js/core/source/AppNavSearch.js"></script>
+    <script src="../../assets/js/core/source/AppVendor.js"></script>
+    <!-- END JAVASCRIPT -->
+
+</body>
+</html>

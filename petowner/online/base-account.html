@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LEASHTIME CALENDAR</title>
+
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+    <!-- END META -->
+
+    <!-- BEGIN FRAMEWORK STYLESHEETS -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/bootstrap.css?1422792965" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/theme-default/material-design-iconic-font.min.css?1421434286" />
+
+    <!-- BEGIN PLUGIN STYLESHEETS -->
+    <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar-leashtime.css">
+
+    <!-- BEGIN LEASHTIME STYLESHEETS -->
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+    <!-- END STYLESHEETS -->
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+<script type="text/javascript" src="../../assets/js/libs/utils/html5shiv.js?1403934957"></script>
+<script type="text/javascript" src="../../assets/js/libs/utils/respond.min.js?1403934956"></script>
+<![endif]-->
+</head>
+
+<body class="header-fixed">
+
+<!--/////////////// BEGIN HEADER ///////////////-->
+    <header id="header">
+        <div class="headerbar blue">
+            <!-- HEADER BRANDING -->
+            <div class="headerbar-left">
+                    <ul class="header-nav header-nav-options">
+                        <li style="float: left;">
+                            <a class="btn btn-icon-toggle" data-toggle="menubar" href="javascript:void(0);">
+                          <i class=" fa fa-paw white-text fa-2x"></i>
+                        </a>
+                        </li>
+                        <li style="line-height:1;padding:24px 0">
+                            <div class="brand-holder">
+                                <span class="text-lg white-text " style="margin:0;padding-left: 12px">CARE<strong>PORTAL</strong>™<span style="font-weight: 100;opacity: .8">  |  PET CARE CALENDAR</span></span>
+                            </div>
+                        </li>
+                    </ul>
+
+            </div>
+            <!-- HEADER MENU -->
+            <div class="headerbar-right">
+                    <!-- START NAV DROP -->
+                    <div class="headerbar-right">
+                        <!-- MAIN MENU -->
+                        <ul class="header-nav header-nav-profile">
+                            <li class="dropdown  no-padding no-margin" style="width:280px">
+                                <a href="javascript:void(0);" class="dropdown-toggle ink-reaction white-text" data-toggle="dropdown">
+
+                                    <i class="white-text fa fa-3x fa-credit-card text-success"></i>
+                                    <span class="profile-info white-text" style="margin-top:-15px">
+                                        <b>SERVICE</b> HISTORY
+                                        <small>ACCOUNT MANAGER</small>
+                                    </span>
+                            </a>
+                                <!-- MAIN DROPDOWN -->
+                                <ul class="dropdown-menu animation-dock styled-info no-padding no-margin blue lighten-3">
+
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-1 force-padding white-text " style="width: 100%;"><a href="base-profile.html">
+                                        <i class="white-text fa fa-2x fa-fw fa-user text-success"></i>
+                                        <span class="profile-info white-text" style="margin-top:-10px">
+                                            <b>MY PETS</b> AND PROFILES
+                                          <small>PROFILE MANAGER</small>
+                                        </span></a>
+                                        </div>
+                                    </li>
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-2 force-padding white-text " style="width: 100%;"><a href="base-calendar.html">
+                                            <i class="fa fa-fw fa-calendar white-text fa-2x text-info"></i>
+                                            <!--<img src="assets/img/profile-images/pic-petowner200.jpg" alt="" />-->
+                                            <span class="profile-info white-text" style="margin-top:-10px">
+                                                CARE<b> CALENDAR</b>
+                                                <small>SERVICE SCHEDULE</small>
+                                            </span></a>
+                                        </div>
+                                    </li>
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-1 force-padding white-text " style="width: 100%;"><a href="base-timeline.html">
+                                           <i class="fa fa-2x fa-leanpub"></i>
+                                            <span class="profile-info white-text" style="margin-top:-10px">
+                                                <b>PET JOURNAL</b>
+                                                <small>CARE TIMELINE</small>
+                                            </span></a>
+                                        </div>
+                                    </li>
+
+                                <li class="">
+                                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                                        <a class="btn btn-default-bright" role="button">
+                                            <i class="fa fa-fw fa-life-ring text-success"></i>
+                                            SUPPORT</a>
+                                        <a class="btn btn-default-bright" role="button">
+                                            <i class="fa fa-fw fa-power-off text-danger"></i>
+                                            LOGOUT</a>
+                                    </div>
+                                </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!--end #header-navbar-collapse -->
+
+            </div>
+        </div>
+    </header>
+    <!-- END HEADER NAV-->
+
+    <!-- BEGIN OFFCANVAS HOLDER LEFT -->
+    <div class="offcanvas"></div>
+    <!-- END OFFCANVAS HOLDER LEFT -->
+
+<!-- ////////////////// BEGIN MAIN CONTENT  ////////////////////-->
+    <div id="content">
+        <!-- MAIN BANNER -->
+        <section id="messages" class="full-bleed text-center style-warning opacity-50">
+            <span class=""></span>
+        </section>
+        <!-- END MAIN BANNER  -->
+
+        <!-- MAIN PAGE CONTENT -->
+        <section>
+            <div class="section-body no-margin">
+                <div class="row">
+
+                    <!-- BEGIN RIGHT CALENDAR COLUMN -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>Service History</h4>
+                        </div><!--end .col -->
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body no-padding">
+                                    <div class="table-responsive no-margin">
+                                        <table class="table table-striped no-margin">
+                                            <thead>
+                                                <tr>
+                                                    <th>DATE</th>
+                                                    <th>SERVICE</th>
+                                                    <th>TIME OF DAY</th>
+                                                    <th>COST</th>
+                                                    <th>TAX</th>
+                                                    <th>TOTAL</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>10/16/18</td>
+                                                    <td>30 MIN WALK</td>
+                                                    <td>MIDDAY</td>
+                                                    <td>$21.00</td>
+                                                    <td>$1.90</td>
+                                                    <td>$22.90</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/17/18</td>
+                                                    <td>30 MIN WALK</td>
+                                                    <td>MIDDAY</td>
+                                                    <td>$21.00</td>
+                                                    <td>$1.90</td>
+                                                    <td>$22.90</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/18/18</td>
+                                                    <td>30 MIN WALK</td>
+                                                    <td>MORNING</td>
+                                                    <td>$21.00</td>
+                                                    <td>$1.90</td>
+                                                    <td>$22.90</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/19/18</td>
+                                                    <td>30 MIN WALK</td>
+                                                    <td>MORNING</td>
+                                                    <td>$21.00</td>
+                                                    <td>$1.90</td>
+                                                    <td>$22.90</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/20/18</td>
+                                                    <td>OVERNIGHT</td>
+                                                    <td>FULL DAY</td>
+                                                    <td>$49.00</td>
+                                                    <td>$2.90</td>
+                                                    <td>$51.90</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>10/23/18</td>
+                                                    <td>60 MIN WALK</td>
+                                                    <td>MIDDAY</td>
+                                                    <td>$35.00</td>
+                                                    <td>$1.90</td>
+                                                    <td>$36.90</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!--end .table-responsive -->
+                                </div><!--end .card-body -->
+                            </div><!--end .card -->
+                        </div><!--end .col -->
+                    </div>
+                      <!-- END RIGHT CALENDAR COLUMN -->
+
+                </div>
+            </div>
+        </section>
+        <!-- END CONTENT -->
+
+<!-- Place holder for the event's description that will be loaded dynamically
+<div id="calCreateEventDialog">
+     <div id="eventDescription"></div>
+     <br />
+     <form>
+     <label for="eventTitle" style="display:inline-block">Event description</label>
+     <input type="text" name="eventTitle" id="eventTitle" value="Appointment" />
+     </form>
+ </div>
+ -->
+
+
+
+<!-- //////// BEGIN OFFCANVAS RIGHT  ///////// -->
+        <div class="offcanvas">
+
+            <!-- BEGIN OFFCANVAS PETPROVIDER™ -->
+            <div id="offcanvas-pet-professional" class="offcanvas-pane width-8" style="background-color: #f1be86">
+                <!-- TITLE -->
+                <div class="offcanvas-head ">
+                    <header><small style="color:#a95800"><strong style="font-weight: 800">PET</strong>PROVIDER™</small></header>
+                    <div class="offcanvas-tools">
+                        <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+                        <i class="md md-close"></i>
+                      </a>
+                    </div>
+                </div>
+                <div class="offcanvas-body no-padding">
+            <!-- PET PROTECT ESSENTIAL PANEL CARD -->
+                    <div class="">
+                        <div class="no-padding">
+                            <ul class="list  white-text text-lighten-5">
+                                <li class="tile pp-tile">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-local-hospital fa-2x"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            EMERGENCY CARE
+                                            <small>(123) 456-7890</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-location-on"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            LOST DOG SEARCH
+                                            <small>Leashtime</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-account-balance"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            LOCAL LEASH LAWS
+                                            <small>City of Something</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-account-balance"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            DOG BITE LAW
+                                            <small>Resources</small>
+                                        </div>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <!--end .card-body -->
+                    </div>
+                    <!--END PETPROTECT PANEL CARD -->
+                </div>
+            </div>
+            <!-- END OFFCANVAS PETPROVIDER™ -->
+
+            <!-- BEGIN OFFCANVAS PETPRO™ -->
+            <div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
+                <!-- TITLE -->
+                <div class="offcanvas-head ">
+                    <header><small style="color:#b43d3d"><strong style="font-weight: 800">PET</strong>PROTECT™</small></header>
+                    <div class="offcanvas-tools">
+                        <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+                        <i class="md md-close"></i>
+                      </a>
+                    </div>
+                </div>
+                <div class="offcanvas-body no-padding">
+                    <!-- PET PROTECT ESSENTIAL PANEL CARD -->
+                    <div class="">
+                        <div class="no-padding">
+                            <ul class="list  white-text text-lighten-5">
+                                <li class="tile pp-tile">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-local-hospital fa-2x"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            EMERGENCY CARE
+                                            <small>(123) 456-7890</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-location-on"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            LOST DOG SEARCH
+                                            <small>Leashtime</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-account-balance"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            LOCAL LEASH LAWS
+                                            <small>City of Something</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-account-balance"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            DOG BITE LAW
+                                            <small>Resources</small>
+                                        </div>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <!--end .card-body -->
+                    </div>
+                    <!--END PETPROTECT PANEL CARD -->
+                </div>
+            </div>
+            <!-- END OFFCANVAS PETPRO™ -->
+
+        </div>
+        <!-- END OFFCANVAS RIGHT -->
+
+        <!-- BEGIN FOOTER -->
+        <div class="text-default-style force-padding">
+            POWERED BY LEASHTIME SOFTWARE
+        </div>
+        <!-- END FOOTER -->
+
+    </div>
+    <!-- END BASE CONTENT-->
+
+    <!-- BEGIN JAVASCRIPT -->
+    <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../assets/js/libs/spin.js/spin.min.js"></script>
+    <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+
+    <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+
+    <script src="../../assets/js/libs/moment/moment.min.js"></script>
+    <script src="../../assets/js/libs/fullcalendar/fullcalendar-leashtime.js"></script>
+
+    <script src="../../assets/js/core/source/App.js"></script>
+    <script src="../../assets/js/core/source/AppNavigation.js"></script>
+    <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
+    <script src="../../assets/js/core/source/AppCard.js"></script>
+    <script src="../../assets/js/core/source/AppForm.js"></script>
+    <script src="../../assets/js/core/source/AppNavSearch.js"></script>
+    <script src="../../assets/js/core/source/AppVendor.js"></script>
+    <script src="../../assets/js/leashtime/LeashtimeCalendar.js"></script>
+
+<!--
+
+    <script>
+
+        $(function() {
+            $('h4').addClass('.ccc');
+            $("textarea")
+                .keyup(function() {
+                    var value = $(this).val();
+                    var viewID = $(this).attr('data-viewID');
+                    $('#' + viewID).text(value);
+                })
+                .keyup();
+
+            $('.btn-save-service').on('click', function() {
+                    var serviceSelected = $(this).attr('data-Service');
+                    var classVal = $('#lt-service-card').addClass(serviceSelected);
+                    $('#lt-service-card').removeClass('grey lighten-1 service-1 service-2 service-3 service-4 service-5 service-6 service-7 service-8 ');
+                    $('#lt-service-card').addClass(serviceSelected);
+                    console.log("SERVICE SELECTED: " + serviceSelected + " | CARD CLASSES: " + classVal);
+                }),
+
+            $('#btn-save-contact').on('click', function() {
+                    $('#card-view').fadeIn(400);
+                    $(this).parent().parent().fadeOut(800);
+                }),
+
+            $('#btn-edit-contact').on('click', function() {
+                    $('#card-edit').fadeIn(400);
+                    $(this).parent().parent().parent().fadeOut(800);
+                });
+
+            $("form").submit(function(event) {
+                console.log($(this).serialize());
+                event.preventDefault();
+            });
+
+            $("form").on("submit", function(event) {
+                event.preventDefault();
+                console.log($(this).serialize());
+            });
+
+            function showValues() {
+                var str = $("form").serialize();
+                $("#results").text(str);
+            }
+            $("input[type='checkbox'], input[type='radio']").on("click", showValues);
+            $("select").on("change", showValues);
+            showValues();
+
+            $.ajax({
+                "url" : "http://localhost:3300",
+                "type" : "GET",
+                "data" : {},
+                "dataTYPE" : "JSON"
+            })
+                .done((data)=> {
+                getSurchargeItems(data);
+                getVisits(data);
+                getServiceItems(data);
+                getTimeWindows(data);
+            })
+        });
+
+    </script>
+-->
+
+
+
+
+    <!-- END JAVASCRIPT -->
+
+</body>
+</html>

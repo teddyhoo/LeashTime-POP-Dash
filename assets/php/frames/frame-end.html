@@ -1,0 +1,84 @@
+                                  </div> <!-- lightblue -->
+                  </div> <!-- red -->
+                </div> <!-- yellow -->
+                
+            
+              </div> <!-- purple -->
+            </div> <!-- orange -->
+            
+            
+
+          
+    
+    </div><!-- green -->
+    
+    
+    
+      </div>
+      <div class="Sheet-tl"></div>
+      <div class="Sheet-tr"><div></div></div>
+      <div class="Sheet-bl"><div></div></div>
+      <div class="Sheet-br"><div></div></div>
+      <div class="Sheet-tc"><div></div></div>
+      <div class="Sheet-bc"><div></div></div>
+      <div class="Sheet-cl"><div></div></div>
+      <div class="Sheet-cr"><div></div></div>
+      <div class="Sheet-cc"></div>
+    </div>
+    
+
+  </div>
+<? if($_SESSION && $_SESSION['auth_login_id']) {
+	require_once "gui-fns.php";
+	if(userRole() != 'c' && !$noCommentButton) echoButton('', 'Comments or Bugs?', 
+'var w = window.open("","feedback",
+    "toolbar=0,location=0,directories=0,status=0,resizable=yes,menubar=0,scrollbars=yes,width=600,height=600");
+  w.document.location.href="feedback.php?url="+escape("'.$_SERVER['REQUEST_URI'].'")');
+  } ?>
+
+<?
+		require_once "login-notice-fns.php";
+		dumpNoticesJS();
+		echo "<script language='javascript'>";
+
+		require_once "user-notice-fns.php";
+//echo "<!-- USR [";print_r($_SESSION['user_notice']);	echo "] -->";
+		
+//if(mattOnlyTEST()) echo "// B: [[{$_SESSION['user_notice']}]]\n";	
+		if(!$_SESSION['user_notice']) buildNoticeText();  // if a user notice has just been set, don't overwrite it
+		if($_SESSION['user_notice']) {
+			$userNoticeDimensions = $_SESSION['user_notice_dimensions'] 
+				? $_SESSION['user_notice_dimensions'] 
+				: array('width' => 750, 'height' => 470);
+			$_SESSION['user_notice'] = str_replace("\r", ' ', str_replace("\n", ' ', $_SESSION['user_notice']));
+			//echo str_replace('XXXX', $_SESSION['user_notice'],
+			//									'$(document).ready(function(){$.fn.colorbox({html:"XXXX", width:"750", height:"470", scrolling: true, opacity: "0.3"});
+			//									});');
+			$onLoadFragment = str_replace('XXXX', $_SESSION['user_notice'],
+												'$.fn.colorbox({html:"XXXX", width:"#userNoticeWidth#", height:"#userNoticeHeight#", scrolling: true, opacity: "0.3"});');
+			$onLoadFragment = str_replace('#userNoticeWidth#', $userNoticeDimensions['width'],
+												str_replace('#userNoticeHeight#', $userNoticeDimensions['height'],
+												$onLoadFragment));
+			$onLoadFragments[] = $onLoadFragment;
+			unset($_SESSION['user_notice']);
+		}
+		
+		if($_SESSION['popup_message']) {
+			echo "\nalert(\"{$_SESSION['popup_message']}\");";
+			unset($_SESSION['popup_message']);
+		}
+		
+		if($onLoadFragments) { // possibly collected during page construction...
+			echo "$(document).ready(function(){\n".join("\n", $onLoadFragments)."});";
+		}
+		?>
+    </script>
+		
+</body>
+</html>
+<?
+//if(function_exists('pageTimeOff')) pageTimeOff();	
+if($screenLog) echo "<div style='background:lightblue'>$screenLog</div>";
+if(mattOnlyTEST() && $_REQUEST['rrr']) $_SESSION['preferences'] = fetchPreferences();;
+?>
+

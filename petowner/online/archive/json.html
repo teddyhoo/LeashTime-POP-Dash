@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+      <!-- Google fonts -->
+      <link href='https://fonts.googleapis.com/css?family=Vollkorn:400,700' rel='stylesheet' type='text/css'>
+      
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"> </script>
+
+    </head>
+  
+<body>
+  
+<div class="wrapper">
+<div class="profile">
+   <table id= "userdata" border="2">
+  <thead>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email Address</th>
+            <th>City</th>
+        </thead>
+      <tbody>
+
+       </tbody>
+   </table>
+
+</div>
+</div>
+
+
+<h2 id="BIZNAME">The Biz</h2>
+
+
+<p class="#myElem"></p>
+<p class="BIZSHORTNAME"></p>
+<p class="BIZHOMEPAGE"></p>
+<p class="BIZPHONE"></p>
+<p class="BIZADDRESS1"></p>
+<p class="BIZADDRESS2"></p>
+<p class="BIZCITY"></p>
+<p class="BIZSTATE"></p>
+<p class="BIZZIP"></p>
+<p class="BIZLOGINPAGE"></p>
+<p class="CLIENTID"></p>
+<p class="CLIENTFNAME"></p>
+<p class="CLIENTLNAME"></p>
+<p class="SITTERID"></p>
+<p class="SITTER"></p>
+<p class="ARRIVED"></p>
+<p class="COMPLETED"></p>
+<p class="MAPROUTEURL"></p>
+<p class="VISITPHOTOURL"></p>
+<p class="NOTE"></p>
+<p class="PETS"></p>
+<p class="PETSENGLISH"></p>
+
+
+<!-- Margus Lillemägi | codepen.io/VisualAngle/-->
+<div id="container">
+<!--<!DOCTYPE html>-->
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Avatars</title>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Oswald:700,400);
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans);
+      #content{
+        width:100%;
+        background-color: #fff;
+        color: #666;
+        font-family: 'Open Sans', arial, sans-serif;
+        padding: 5px;
+        overflow:hidden;}
+      #event{
+        width: 208.6px;
+        background-color: #fff;
+        float: left;
+        text-align: center;
+        padding: 10px;
+        margin: 5px 5px 5px 5px;}
+      p{
+        margin: 0 0 0 0;}
+      h3{
+        margin: 0 0 0 0;
+        font-size: 1.3em;
+        color: #3fbb8a; 
+        font-family: oswald, arial, sans-serif;} 
+      .image{
+        width:200px;
+        padding-bottom:5px;
+        border-radius:50%;}
+     </style>
+  </head>
+  <body>
+
+<section id="content"></section>
+
+
+<div data-potentialAction="" class="">
+    
+</div>
+
+
+
+<script type="text/javascript">
+	
+  
+  
+  
+  
+  function showVisits(data) {  // Callback when JSON loads
+    
+	  var newContent = '';       // Variable to hold HTML
+	 
+    var visitDetails = function() {
+      for (var i = 0; i < data.visits.length; i++) { 
+        var BIZNAME = data.visits[i].BIZNAME;
+        var BIZSHORTNAME = data.visits[i].BIZSHORTNAME;
+        var BIZADDRESS1 = data.visits[i].BIZADDRESS1;
+        var BIZCITY = data.visits[i].BIZCITY;
+        var BIZSTATE = data.visits[i].BIZSTATE;
+        var BIZZIP = data.visits[i].BIZZIP;
+        var CLIENTFNAME = data.visits[i].CLIENTFNAME;
+        var CLIENTLNAME = data.visits[i].CLIENTLNAME;
+        var BIZPHONE = data.visits[i].BIZPHONE;
+        var PETSENGLISH = data.visits[i].PETSENGLISH;
+      } 
+      console.log(BIZNAME);
+      console.log(BIZSHORTNAME);
+      console.log(BIZADDRESS1);
+      console.log(BIZCITY);
+      console.log(BIZSTATE);
+      console.log(BIZZIP);
+      console.log(CLIENTFNAME);
+      console.log(CLIENTLNAME);
+      console.log(BIZPHONE);
+      console.log(PETSENGLISH)
+    }
+    
+    var insertData = function() {
+      for (var i = 0; i < data.visits.length; i++) { 
+          
+      }
+    }
+    
+    visitDetails();
+    
+	    // BUILD UP STRING WITH NEW CONTENT (could also use DOM manipulation)
+	    for (var i = 0; i < data.visits.length; i++) {    // Loop through object
+	      newContent += '<div id="event" data-potentialAction="select-event">';
+	      //newContent += '<img class="image crop" src="' + data.visits[i].avatar + '" ';
+	      newContent += '<h2><b>' + data.visits[i].BIZNAME + '</b></h2>';
+        newContent += '<h3><b>' + data.visits[i].BIZSHORTNAME + '</b></h3>';
+        newContent += '<p>' + data.visits[i].BIZADDRESS1 + '<br>';
+        newContent += data.visits[i].BIZCITY + ', ';
+        newContent += data.visits[i].BIZSTATE + ' - ';
+        newContent += data.visits[i].BIZZIP + '<br>';
+        newContent += data.visits[i].CLIENTFNAME + ' ';
+        newContent += data.visits[i].CLIENTLNAME + '<br>';
+        newContent += data.visits[i].BIZPHONE + '<br>';
+        newContent += data.visits[i].PETSENGLISH + '</p>';
+	      newContent += '</div>';
+	    }
+    
+    
+
+	    // Update the page with the new content
+	    document.getElementById('content').innerHTML = newContent;
+    
+      
+	   }
+  
+    </script>  
+    
+    
+    <!--JSON DATA-->
+    <script type="text/javascript">
+     //JSON data start
+      
+      showVisits({
+        "visits": [     
+        {
+          "BIZNAME":"DOGGYWALKER",
+          "BIZSHORTNAME":"DW LIFE",
+          "BIZEMAIL":"dogslife69@dddd.com",
+          "BIZHOMEPAGE":"http:\/\/s179641890.onlinehome.us\/test\/dogslifehome.html",
+          "BIZPHONE":"804 555 1212",
+          "BIZADDRESS1":"123 Broad Street ",
+          "BIZADDRESS2":" ",
+          "BIZCITY":" RVA ",
+          "BIZSTATE":" VA2 ",
+          "BIZZIP":" 23220",
+          "BIZLOGINPAGE":"http:\/\/leashtime.com\/login-page.php?bizid=3",
+          "CLIENTID":"45",
+          "CLIENTFNAME":"Jonny",
+          "CLIENTLNAME":"Landson",
+          "SITTERID":"42",
+          "SITTER":"CCG",
+          "ARRIVED":"2018-05-14 14:13:58",
+          "COMPLETED":"2018-04-14 15:52:43",
+          /*"MOODBUTTON": [
+            {
+              "cat":"0",
+              "happy":"1",
+              "hungry":"0",
+              "litter":"0",
+              "pee":"1",
+              "play":"0",
+              "poo":"1",
+              "sad":"0",
+              "shy":"0",
+              "sick":"0"
+            }
+          ],
+          "MAPROUTEURL":"https:\/\/LeashTime.com\/appointment-map.php?token=vvtuk",
+          "VISITPHOTOURL":"https:\/\/LeashTime.com\/appointment-photo.php?token=bdqfhh",
+          "NOTE":null,
+          "PETS": [
+            {"Rover"}
+          ],*/
+          "PETSENGLISH":"Roverine"}
+      ]
+ });
+      
+    </script>
+  </body>
+</html>
+
+</div>
+
+</body>
+</html>
