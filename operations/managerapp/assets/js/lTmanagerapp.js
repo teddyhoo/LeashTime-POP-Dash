@@ -305,12 +305,19 @@
                             //visitReportListItem = vReport['report'];
                             return vrListItem;
                         } else {
-
+                            let vReport = await LTMGR.getVisitReportList(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
+                            vrListItem = vReport['report'];
                         }
                     };
                     const vrDetailsForList = async (vrLitem) => {
-                        let vReportDetailsData = await LTMGR.getVisitReport(vrLitem.visitID, vrLitem);
-                        return vReportDetailsData;
+                        if (!ajax) {
+                            let vReportDetailsData = await LTMGR.getVisitReport(vrLitem.visitID, vrLitem);
+                            return vReportDetailsData;
+                        } else {
+
+                            let vReportDetailsData = await LTMGR.getVisitReportAjax(vrLitem.visitID, vrLitem);
+                            return vReportDetailsData;
+                        }
                     };
                     vrList()
                     .then((vListItem)=> { 
