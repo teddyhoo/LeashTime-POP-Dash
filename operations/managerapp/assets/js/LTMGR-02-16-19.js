@@ -349,9 +349,6 @@ var LTMGR = (function() {
 		}
 	}
 	async function managerLoginAjax(username, password, role) {
-		sitterList = [];
-		visitList =[];
-		allClients =[];
 		let url = 'https://leashtime.com/mmd-login.php';
 		const options = {
 			method : 'POST',
@@ -498,28 +495,6 @@ var LTMGR = (function() {
 		}
 		return reportList;
 	}
-	async function getMasterVisitReportListAjax(startDate, endDate) {
-		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
-		let vrListRequest = await fetch(url);
-		let vrListJson = await vrListRequest.json();
-		let report = {};
-		let reportList = [];
-		
-		if(vrListJson == null ) {
-			console.log('getMasterVisitReportListAjax: null vrListJson');
-			return vrListJson;
-		} else if (vrListJson['error'] == 'no reports found') {
-			console.log('getMasterVisitReportListAjax: no reports found');
-			return [];
-		} else {
-				vrListJson.forEach((vrItem) => {
-					let vrKeys = Object.keys(vrItem);
-					let vrObject = new VisitReportVisitDetails(vrItem);
-					reportList.push(vrObject)
-				});
-		}
-		return reportList;
-	}
 	async function getVisitReportList(clientID, startDate, endDate, visitID) {
 		let url = 'http://localhost:3300?type=visitReportList&clientID='+clientID+'&startDate='+startDate+'&endDate='+endDate;
 		let vrListRequest = await fetch(url);
@@ -555,7 +530,7 @@ var LTMGR = (function() {
 		return dictionaryComplete;
 	}
 	async function getVisitReportAjax(visitID, visitReportDetailObj) {
-		console.log("SUCK IT: "+visitID);
+
 		
 	}
 	async function getVisitReportListAjax(clientID, startDate, endDate, visitID) {
@@ -694,10 +669,7 @@ var LTMGR = (function() {
 		managerLoginAjax : managerLoginAjax,
 		getManagerSittersAjax : getManagerSittersAjax,
 		getManagerVisitsAjax : getManagerVisitsAjax,
-		getManagerClientsAjax :getManagerClientsAjax,
-		getVisitReportListAjax : getVisitReportListAjax,
-		getVisitReportAjax: getVisitReportAjax,
-		getMasterVisitReportListAjax : getMasterVisitReportListAjax
+		getManagerClientsAjax :getManagerClientsAjax
 	}
 
 	modules.exports = {

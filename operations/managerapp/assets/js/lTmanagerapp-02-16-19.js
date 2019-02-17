@@ -21,14 +21,8 @@
         var re = /([0-9]+):([0-9]+):([0-9]+)/;
 
         const masterVreportList = async () => {
-						if(!isAjax) {
-							let vReport = await LTMGR.getMasterVisitReportList(fullDate, fullDate);
-							return vReport;
-						}
-						else {
-							let vReport = await LTMGR.getMasterVisitReportListAjax(fullDate, fullDate);
-							return vReport;
-						}
+            let vReport = await LTMGR.getMasterVisitReportList(fullDate, fullDate);
+            return vReport;
         };
         var moodButtonMap = {
             'poo' : 'dog-poo@3x.png',
@@ -192,15 +186,7 @@
             allSitters = await LTMGR.getManagerSittersAjax();
             allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
             allClients = await LTMGR.getManagerClientsAjax();
-            masterVreportList()
-            .then((vListItems)=> { 
-                vListItems.forEach((item)=> {
-                    visitReportList.push(item);
-                    console.log(item.visitID + ' -> ' + item.status);
-                });
-                buildSitterButtons(allVisits, allSitters);
-                flyToFirstVisit();
-            });
+            buildSitterButtons(allVisits, allSitters);
         }     
         function buildSitterButtons(allSitterVisits, allSittersInfo) {
                     
@@ -275,18 +261,14 @@
                 console.log('VR item:' + visitReportItem.visitID);
 
                     if(visitInfo.visitID == visitReportItem.visitID) {
-                        console.log('Matched visit report item list: ' + visitReportItem.status);
-                        if (visitReportItem.status == 'noreportdatareceived' || visitReportItem.status == 'maporphotoreceived') {
-                            console.log('Pet Owner: ' + visitReportItem.clientName + ' No report data received');
+                        console.log('Matched visit report item list');
+                        if (visitReportItem.status == 'noreportdatareceived') {
                             el.setAttribute("class","marker-visit marker-visible marker-noreportreceived");
                         } else if (visitReportItem.status == 'maporphotoreceived') {
-                            console.log('Pet Owner: ' + visitReportItem.clientName + ' No report data received');
                             el.setAttribute("class","marker-visit marker-visible marker-maporphotoreceived");
                         } else if (visitReportItem.status == 'published') {
-                            console.log('Pet Owner: ' + visitReportItem.clientName + ' No report data received');
                             el.setAttribute("class","marker-visit marker-visible marker-published");
                         } else if (visitReportItem.status == 'submitted') {
-                            console.log('Pet Owner: ' + visitReportItem.clientName + ' No report data received');
                             el.setAttribute("class","marker-visit marker-visible marker-submitted");
                         }
                     }
@@ -321,29 +303,19 @@
                             let vReport = await LTMGR.getVisitReportList(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
                             vrListItem = vReport['report'];
                             //visitReportListItem = vReport['report'];
+                            return vrListItem;
                         } else {
-                            let vReport = await LTMGR.getVisitReportListAjax(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
+                            let vReport = await LTMGR.getVisitReportList(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
                             vrListItem = vReport['report'];
                         }
-												return vrListItem;
                     };
                     const vrDetailsForList = async (vrLitem) => {
                         if (!isAjax) {
                             let vReportDetailsData = await LTMGR.getVisitReport(vrLitem.visitID, vrLitem);
                             return vReportDetailsData;
                         } else {
-
-                            //let vReportDetailsData = await LTMGR.getVisitReportAjax(vrLitem.externalUrl, vrLitem);
-                            //return vReportDetailsData;
-                            let vd = await fetch(vrLitem.externalUrl);
-                            let vdResponse = await vd.json();
-console.log("vdResponse: "+JSON.stringify(vdResponse));
-console.log("vrLitem.externalUrl: "+vrLitem.externalUrl);
-                            
-                            vrLitem.addVisitDetail(vdResponse);
-                            let dic = {};
-                            dic.vrDetail = vrLitem;
-                            return dic;
+                            let vReportDetailsData = await LTMGR.getVisitReportAjax(vrLitem.visitID, vrLitem);
+                            return vReportDetailsData;
                         }
                     };
                     vrList()
@@ -1229,3 +1201,10 @@ console.log("vrLitem.externalUrl: "+vrLitem.externalUrl);
             let dateLabel = document.getElementById("dateLabel");
             dateLabel.innerHTML = todayDay;*/
         }
+
+
+
+
+
+
+
