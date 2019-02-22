@@ -113,7 +113,6 @@
                 });
                 flyToFirstVisit();
                 buildSitterButtons(allVisits, allSitters);
-                buildVisitButtons();
             });
         }
         async function loginPromise(loginDate) {
@@ -242,7 +241,7 @@
                     flyToFirstVisit();
                 });
             });*/
-            
+
         }     
         function buildSitterButtons(allSitterVisits, allSittersInfo) {
                     
@@ -300,20 +299,6 @@
             let visitCounter = document.getElementById('numVisits');
             visitCounter.innerHTML = 'TOTAL VISITS: ' + totalVisitCount + ' CANCELED: ' + totalCancelVisitCount;
         }
-        function buildVisitButtons() {
-            let visitDiv = document.getElementById('visitList');
-            allVisits.forEach((visit)=> {
-
-                let visitButton = document.createElement('button');
-                visitButton.setAttribute("type","button");
-                visitButton.setAttribute("id",visit.visitID);
-                visitButton.setAttribute("class", "btn btn-block");
-                visitButton.setAttribute("style", "background-color: Green");
-                visitButton.innerHTML = visit.clientName + ', STATUS: ' + visit.status;
-                visitDiv.appendChild(visitButton);
-
-            })
-        }
         function createMapMarker(visitInfo, markerIcon) {
             let el = document.createElement('div');
             console.log(visitInfo.status);
@@ -331,12 +316,16 @@
                     if(visitInfo.visitID == visitReportItem.visitID) {
                         console.log('Matched visit report item list: ' + visitReportItem.status);
                         if (visitReportItem.status == 'noreportdatareceived' || visitReportItem.status == 'maporphotoreceived') {
+                            console.log(' #1 Pet Owner: ' + visitInfo.clientName + 'NO REPORT received');
                             el.setAttribute("class","marker-visit marker-visible marker-noreportreceived");
                         } else if (visitReportItem.status == 'maporphotoreceived') {
+                            console.log(' #1 Pet Owner: ' + visitInfo.clientName + 'MAP OR PHOTO RCVD');
                             el.setAttribute("class","marker-visit marker-visible marker-maporphotoreceived");
                         } else if (visitReportItem.status == 'published') {
+                            console.log(' #1 Pet Owner: ' + visitInfo.clientName + 'PUBLISHED');
                             el.setAttribute("class","marker-visit marker-visible marker-published");
                         } else if (visitReportItem.status == 'submitted') {
+                            console.log('#1 Pet Owner: ' + visitInfo.clientName + 'SUBMITTED - REVIEW');
                             el.setAttribute("class","marker-visit marker-visible marker-submitted");
                         }
                     }
@@ -673,7 +662,154 @@
 
             return popupBasicInfo;
         }
+        function createPopupNoVisitReportView(visitInfo) {
+            let arriveTime = visitInfo.arrived;
+            let completeTime = visitInfo.completed;
 
+            if (arriveTime == null) {
+                arriveTime = 'Not started';
+                completetime = '';
+            }
+            if (completeTime == null) {
+                completeTime = 'Not completed';
+            }
+            let popupBasicInfo = 
+                                `<div class="card card-bordered style-primary">
+                                        <div class="card-head">
+                                            <div class="tools">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-icon-toggle btn-refresh"><i class="md md-refresh"></i></a>
+                                                    <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
+                                                    <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
+                                                </div>
+                                            </div>
+                                            <header class="">${visitInfo.service}</header>
+                                            <h4 style="color:yellow;">VISIT REPORT HAS NOT BEEN SENT</h4>
+                                            <div class="card-body p-t-0">
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-t-0">
+                                            <p><span class="text-default">ARRIVED: ${arriveTime}
+                                            &nbsp &nbsp COMPLETE: </span>${completeTime}</span></p>
+                                            <p class="no-margin no-padding"><span class="text-default">SITTER: </span>${visitInfo.sitterName}</p>
+                                            <p class="no-margin no-padding"><span class="text-default">CLIENT: ${visitInfo.clientName}</p>
+                                        </div>
+                                </div>`;
+
+                                if (visitInfo.status == 'completed') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-success no-margin\"><i class=\"fa fa-compass\"> COMPLETE: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                } else if (visitInfo.status == 'late') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-warning no-margin\"><i class=\"fa fa-warning\"> LATE: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                } else if (visitInfo.status == 'future') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-info no-margin\"><i class=\"fa fa-wifi\"> FUTURE: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                } else if (visitInfo.status == 'canceled') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-danger no-margin\"><i class=\"fa fa-ban\"> CANCELED: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                }
+
+            let visitNote = "No visit note";
+            if (visitInfo.visitNote != null) {
+                visitNote = visitInfo.visitNote;
+            }
+            popupBasicInfo += `
+                <div class=\"card-body small-padding p-t-0 p-b-0\">
+                    <div class=\"form-group floating-label m-t-0 p-t-0\">
+                        <textarea name=\"messageSitter\" id=\"messageSitter\" class=\"form-control text-sm\" rows=\"3\">
+                            ${visitNote}
+                        </textarea>
+                        <label for=\"messageSitter\">
+                            <i class=\"fa fa-note icon-tilt-alt\"></i> Visit Notes
+                        </label>
+                    </div>
+                    </p>
+                </div>
+                <div class="card-actionbar">
+                    <div class="card-actionbar-row no-padding">
+                        <a href="javascript:void(0);" class="btn btn-icon-toggle btn-danger ink-reaction pull-left">
+                        <i class="fa fa-heart"></i></a><a href="javascript:void(0);" class="btn btn-icon-toggle btn-default ink-reaction pull-left">
+                        <i class="fa fa-reply"></i></a><a href="javascript:void(0);" class="btn btn-flat btn-default-dark ink-reaction">SEND</a>
+                    </div>
+                </div>
+            </div>`;
+            return popupBasicInfo;
+        }
+        function createPopupVisitReportView(visitReportDetailParam) {
+            let dateReport = visitReportDetailParam.reportPublishedDate;
+            let timeReport = visitReportDetailParam.reportPublishedTime;
+            let arrivedTime = visitReportDetailParam.ARRIVED;
+            let completedTime = visitReportDetailParam.COMPLETED;
+            console.log('Popup view: ' + arrivedTime + ' ' + completedTime);
+            //let timeArrive = re.exec(arrivedTime);
+            //let arriveTime = timeArrive[1] + ':' + timeArrive[2];
+            let timeComplete = arrivedTime; //re.exec(completedTime);
+            let completeTime = completedTime; //timeComplete[1] + ':' + timeComplete[2];
+            let onMood;
+            if (visitReportDetailParam.moodButtons != null) {
+                let moodKeys = Object.keys(visitReportDetailParam.MOODBUTTON);
+                console.log('visit report details mood buttons: ' + visitReportDetailParam.MOODBUTTON);
+                onMood = moodKeys.filter(function(key) {
+                      return vrListInfo.MOODBUTTON[key] == 1;
+                });
+            } else {
+                console.log('Mood buttons is null');
+            }
+
+            popupBasicInfo = 
+                `<div class="card card-bordered style-primary" id="popupMain">
+                    <div class="card-head">
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn-icon-toggle btn-refresh"><i class="md md-refresh"></i></a>
+                                <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
+                                <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
+                            </div>
+                        </div>
+                        <header class="">${visitReportDetailParam.service}</header>
+                        <div>
+                            ${onMood.map((mood)=>{
+                                return "<img src=./assets/img/"+moodButtonMap[mood]+" width=36 height=36>"
+                            })}
+                        </div>
+                        <div>
+                            <span><img src=${vrListInfo.VISITPHOTONUGGETURL} id="popupPhoto" width = 160 height = 160></span>
+                            &nbsp&nbsp
+                            <span><img src=${vrListInfo.MAPROUTENUGGETURL} width = 160 height = 160></span>
+                        </div>
+                        <div class="card-body p-t-0">
+                        </div>
+                    </div>
+                    <div class="card-body p-t-0">
+                        <p><span class="text-default">ARRIVED: ${arriveTime}
+                            &nbsp &nbsp COMPLETE: </span>${completeTime}</span></p>
+                        <p class="no-margin no-padding"><span class="text-default">SITTER: </span>${vrListInfo.sitter}</p>
+                        <p class="no-margin no-padding"><span class="text-default">CLIENT: ${vrListInfo.CLIENTFNAME} ${vrDetails.CLIENTLNAME}</p>
+                        <p class="no-margin no-padding"><span class="text-default">PETS: ${vrListInfo.PETS}</p>
+
+                    </div>
+                </div>`;
+            popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-success no-margin\"><i class=\"fa fa-compass\"> COMPLETE</i>';
+            popupBasicInfo += '<p class=\"alert alert-success no-margin\">VISIT REPORT SENT:  '+ timeReport  +' <BR> ' + dateReport +'</p></div>';
+            popupBasicInfo += `
+                    <div class=\"card-body small-padding p-t-0 p-b-0\">
+                        <div class=\"form-group floating-label m-t-0 p-t-0\">
+                                        
+                            <textarea name=\"messageSitter\" id=\"messageSitter\" class=\"form-control text-sm\" rows=\"3\">
+                                \n\n${vrListInfo.NOTE}
+                            </textarea>
+                            <label for=\"messageSitter\">
+                                <i class=\"fa fa-note icon-tilt-alt\"></i> Visit Notes
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-actionbar">
+                        <div class="card-actionbar-row no-padding">
+                            <a href="javascript:void(0);" class="btn btn-icon-toggle btn-danger ink-reaction pull-left">
+                            <i class="fa fa-heart"></i></a><a href="javascript:void(0);" class="btn btn-icon-toggle btn-default ink-reaction pull-left">
+                            <i class="fa fa-reply"></i></a><a href="javascript:void(0);" class="btn btn-flat btn-default-dark ink-reaction">SEND</a>
+                        </div>
+                    </div>
+            </div>`;
+            return popupBasicInfo;
+        }
         function createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList) {
 
             let popupBasicInfo = '<h1>'+sitterInfo.sitterName+'</h1>';
@@ -765,10 +901,12 @@
                 marker.remove();
             });
 
+            //let allVisits = LTMGR.getVisitList();
             let statKeys = Object.keys(statusVisit);
 
             allVisits.forEach((visitDetails)=> {
                 let visitStatus = visitDetails.status;
+                //console.log(visitStatus);
                 if (statusVisit[visitStatus] == 'on' && visitDetails.status == visitStatus) {
                     visitFilterArray.push(visitDetails);
                 }
@@ -1132,153 +1270,4 @@
             monthLabel.innerHTML = monthsArrStr[todayMonth-1];
             let dateLabel = document.getElementById("dateLabel");
             dateLabel.innerHTML = todayDay;*/
-        }
-
-        function createPopupNoVisitReportView(visitInfo) {
-            let arriveTime = visitInfo.arrived;
-            let completeTime = visitInfo.completed;
-
-            if (arriveTime == null) {
-                arriveTime = 'Not started';
-                completetime = '';
-            }
-            if (completeTime == null) {
-                completeTime = 'Not completed';
-            }
-            let popupBasicInfo = 
-                                `<div class="card card-bordered style-primary">
-                                        <div class="card-head">
-                                            <div class="tools">
-                                                <div class="btn-group">
-                                                    <a class="btn btn-icon-toggle btn-refresh"><i class="md md-refresh"></i></a>
-                                                    <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
-                                                    <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
-                                                </div>
-                                            </div>
-                                            <header class="">${visitInfo.service}</header>
-                                            <h4 style="color:yellow;">VISIT REPORT HAS NOT BEEN SENT</h4>
-                                            <div class="card-body p-t-0">
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-t-0">
-                                            <p><span class="text-default">ARRIVED: ${arriveTime}
-                                            &nbsp &nbsp COMPLETE: </span>${completeTime}</span></p>
-                                            <p class="no-margin no-padding"><span class="text-default">SITTER: </span>${visitInfo.sitterName}</p>
-                                            <p class="no-margin no-padding"><span class="text-default">CLIENT: ${visitInfo.clientName}</p>
-                                        </div>
-                                </div>`;
-
-                                if (visitInfo.status == 'completed') {
-                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-success no-margin\"><i class=\"fa fa-compass\"> COMPLETE: </i> '+visitInfo.timeOfDay+'</p></div>';
-                                } else if (visitInfo.status == 'late') {
-                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-warning no-margin\"><i class=\"fa fa-warning\"> LATE: </i> '+visitInfo.timeOfDay+'</p></div>';
-                                } else if (visitInfo.status == 'future') {
-                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-info no-margin\"><i class=\"fa fa-wifi\"> FUTURE: </i> '+visitInfo.timeOfDay+'</p></div>';
-                                } else if (visitInfo.status == 'canceled') {
-                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-danger no-margin\"><i class=\"fa fa-ban\"> CANCELED: </i> '+visitInfo.timeOfDay+'</p></div>';
-                                }
-
-            let visitNote = "No visit note";
-            if (visitInfo.visitNote != null) {
-                visitNote = visitInfo.visitNote;
-            }
-            popupBasicInfo += `
-                <div class=\"card-body small-padding p-t-0 p-b-0\">
-                    <div class=\"form-group floating-label m-t-0 p-t-0\">
-                        <textarea name=\"messageSitter\" id=\"messageSitter\" class=\"form-control text-sm\" rows=\"3\">
-                            ${visitNote}
-                        </textarea>
-                        <label for=\"messageSitter\">
-                            <i class=\"fa fa-note icon-tilt-alt\"></i> Visit Notes
-                        </label>
-                    </div>
-                    </p>
-                </div>
-                <div class="card-actionbar">
-                    <div class="card-actionbar-row no-padding">
-                        <a href="javascript:void(0);" class="btn btn-icon-toggle btn-danger ink-reaction pull-left">
-                        <i class="fa fa-heart"></i></a><a href="javascript:void(0);" class="btn btn-icon-toggle btn-default ink-reaction pull-left">
-                        <i class="fa fa-reply"></i></a><a href="javascript:void(0);" class="btn btn-flat btn-default-dark ink-reaction">SEND</a>
-                    </div>
-                </div>
-            </div>`;
-            return popupBasicInfo;
-        }
-        function createPopupVisitReportView(visitReportDetailParam) {
-            let dateReport = visitReportDetailParam.reportPublishedDate;
-            let timeReport = visitReportDetailParam.reportPublishedTime;
-            let arrivedTime = visitReportDetailParam.ARRIVED;
-            let completedTime = visitReportDetailParam.COMPLETED;
-            console.log('Popup view: ' + arrivedTime + ' ' + completedTime);
-            //let timeArrive = re.exec(arrivedTime);
-            //let arriveTime = timeArrive[1] + ':' + timeArrive[2];
-            let timeComplete = arrivedTime; //re.exec(completedTime);
-            let completeTime = completedTime; //timeComplete[1] + ':' + timeComplete[2];
-            let onMood;
-            if (visitReportDetailParam.moodButtons != null) {
-                let moodKeys = Object.keys(visitReportDetailParam.MOODBUTTON);
-                console.log('visit report details mood buttons: ' + visitReportDetailParam.MOODBUTTON);
-                onMood = moodKeys.filter(function(key) {
-                      return vrListInfo.MOODBUTTON[key] == 1;
-                });
-            } else {
-                console.log('Mood buttons is null');
-            }
-
-            popupBasicInfo = 
-                `<div class="card card-bordered style-primary" id="popupMain">
-                    <div class="card-head">
-                        <div class="tools">
-                            <div class="btn-group">
-                                <a class="btn btn-icon-toggle btn-refresh"><i class="md md-refresh"></i></a>
-                                <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
-                                <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
-                            </div>
-                        </div>
-                        <header class="">${visitReportDetailParam.service}</header>
-                        <div>
-                            ${onMood.map((mood)=>{
-                                return "<img src=./assets/img/"+moodButtonMap[mood]+" width=36 height=36>"
-                            })}
-                        </div>
-                        <div>
-                            <span><img src=${vrListInfo.VISITPHOTONUGGETURL} id="popupPhoto" width = 160 height = 160></span>
-                            &nbsp&nbsp
-                            <span><img src=${vrListInfo.MAPROUTENUGGETURL} width = 160 height = 160></span>
-                        </div>
-                        <div class="card-body p-t-0">
-                        </div>
-                    </div>
-                    <div class="card-body p-t-0">
-                        <p><span class="text-default">ARRIVED: ${arriveTime}
-                            &nbsp &nbsp COMPLETE: </span>${completeTime}</span></p>
-                        <p class="no-margin no-padding"><span class="text-default">SITTER: </span>${vrListInfo.sitter}</p>
-                        <p class="no-margin no-padding"><span class="text-default">CLIENT: ${vrListInfo.CLIENTFNAME} ${vrDetails.CLIENTLNAME}</p>
-                        <p class="no-margin no-padding"><span class="text-default">PETS: ${vrListInfo.PETS}</p>
-
-                    </div>
-                </div>`;
-            popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-success no-margin\"><i class=\"fa fa-compass\"> COMPLETE</i>';
-            popupBasicInfo += '<p class=\"alert alert-success no-margin\">VISIT REPORT SENT:  '+ timeReport  +' <BR> ' + dateReport +'</p></div>';
-            popupBasicInfo += `
-                    <div class=\"card-body small-padding p-t-0 p-b-0\">
-                        <div class=\"form-group floating-label m-t-0 p-t-0\">
-                                        
-                            <textarea name=\"messageSitter\" id=\"messageSitter\" class=\"form-control text-sm\" rows=\"3\">
-                                \n\n${vrListInfo.NOTE}
-                            </textarea>
-                            <label for=\"messageSitter\">
-                                <i class=\"fa fa-note icon-tilt-alt\"></i> Visit Notes
-                            </label>
-                        </div>
-                    </div>
-                    <div class="card-actionbar">
-                        <div class="card-actionbar-row no-padding">
-                            <a href="javascript:void(0);" class="btn btn-icon-toggle btn-danger ink-reaction pull-left">
-                            <i class="fa fa-heart"></i></a><a href="javascript:void(0);" class="btn btn-icon-toggle btn-default ink-reaction pull-left">
-                            <i class="fa fa-reply"></i></a><a href="javascript:void(0);" class="btn btn-flat btn-default-dark ink-reaction">SEND</a>
-                        </div>
-                    </div>
-            </div>`;
-            return popupBasicInfo;
         }

@@ -45,11 +45,17 @@ var loginEndDate;
 http.createServer((req, res) => {
 	var typeRequest = url.parse(req.url,true).query;
 	var theType = typeRequest.type;
-	console.log(theType);
 
 	res.writeHead(200, { 'Content-Type': 'application/json','Access-Control-Allow-Origin':'*'});
- 	
-	if(theType == 'mmdLogin') {
+ 	if (theType == 'poVisits') {
+		console.log('VISIT DATA' + visitData);
+		res.write(JSON.stringify(visitData));
+		res.end();
+	} else if (theType == 'poClients') {
+		console.log('CLIENT DATA'+ clientData);
+		res.write(JSON.stringify(clientData));
+		res.end();
+	} else if(theType == 'mmdLogin') {
 
 		mgrLoginURL = url_Base_MGR +'/'+ mmdLogin;
 
@@ -106,6 +112,7 @@ http.createServer((req, res) => {
 								listSitterID += sitter.id + ',';
 							 }
 			 			});
+			 			console.log(sitterJSON);
 						request.post({
 							url: 'https://leashtime.com/mmd-visits.php',
 							form: {'start' : start_date, 'end': end_date, 'sitterids':listSitterID},
@@ -137,6 +144,7 @@ http.createServer((req, res) => {
 										console.log(err4);
 									} else {
 										let allClientInfo = JSON.parse(body4);	
+										console.log(allClientInfo);
 										clientList = allClientInfo.clients;
 								 		res.write(JSON.stringify({managerData : "ok"}));
 								 		res.end();
@@ -148,11 +156,7 @@ http.createServer((req, res) => {
 				});
 	 		}
 	 	});
-	} else if (theType == 'getSitterList') {
-	} else if (theType == 'getVisitList') {
-	} else if (theType == 'getClientList') {
-	} 
-	else if (theType == "masterReportList") {
+ 	} else if (theType == "masterReportList") {
 		console.log('Master report list');
 		let username = loginUsername;
 		let password = loginPassword;
@@ -190,7 +194,7 @@ http.createServer((req, res) => {
 					headers: {
 						'Cookie' : cookieVal,
 						'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
-						'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+						'Accept' : 'application/json',
 						'Accept-Charset' : 'utf-8',
 						'Allow-Control' : true 
 					}
@@ -225,8 +229,7 @@ http.createServer((req, res) => {
 				});
 			}
 		});
-	}
-	else if (theType == "visitReportList") { 
+	} else if (theType == "visitReportList") { 
 
 		mgrLoginURL = url_Base_MGR +'/'+ mmdLogin;
 
@@ -266,7 +269,7 @@ http.createServer((req, res) => {
 					headers: {
 						'Cookie' : cookieVal,
 						'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
-						'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+						'Accept' : 'application/json',
 						'Accept-Charset' : 'utf-8',
 						'Allow-Control' : true 
 					}
@@ -277,7 +280,7 @@ http.createServer((req, res) => {
 					headers: {
 						'Cookie' : cookieVal,
 						'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
-						'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+						'Accept' : 'application/json',
 						'Accept-Charset' : 'utf-8',
 						'Allow-Control' : true
 					}
@@ -315,14 +318,13 @@ http.createServer((req, res) => {
 					headers: {
 						'Cookie' : cookieVal,
 						'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
-						'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+						'Accept' : 'application/json',
 						'Accept-Charset' : 'utf-8',
 						'Allow-Control' : true 
 					}
 				};
 			}
 		});
-
 	} else if(theType == "visitReport") {
 		console.log('VISIT REPORT DETAILS');
 		let externalURLval = detailVisitReportList[typeRequest.getURL];
@@ -448,13 +450,6 @@ http.createServer((req, res) => {
 		res.write(JSON.stringify({ "response" : "ok"}));
 		visitChange(typeRequest.visitid, typeRequest.note);
 		res.end();
-	} else if (theType == "poVisits") {
-		res.write(JSON.stringify(visitData));
-		res.end();
-	} else if (theType == "poClients") {
-
-		res.write(JSON.stringify(clientData));
-		res.end();
 	} else if (theType == "gSit") {
 		console.log('Num sitters: ' + sitterList.length);
 		res.write(JSON.stringify(sitterList));
@@ -465,7 +460,10 @@ http.createServer((req, res) => {
 	} else if (theType == "gClients") {
 		res.write(JSON.stringify(clientList));
 		res.end();
-	} 
+	} else if (theType == 'getSitterList') {
+	} else if (theType == 'getVisitList') {
+	} else if (theType == 'getClientList') {
+	}
 }).listen(port);
 
 function loginManager(urlString) {

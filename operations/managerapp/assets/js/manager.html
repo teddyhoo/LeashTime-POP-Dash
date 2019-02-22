@@ -307,30 +307,27 @@ list-style: none;
               <div id="filterOptions" class="filterStatus">
                     <div class="btn-group btn-group-info btn-group-justified" role="group" aria-label="Filter View" style="background-color:rgba(0,0,0,.5)">
                         <a class="btn" role="button">
-                          <button type = "button" id="prev" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="prevDay()"><</button>
-                        </a>
-
-                        <a class="btn" role="button">
-                          <button type = "button"id="allSitters" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="showSitters()">SITTERS</button>
-                        </a>
-                        <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="showAllClients()"> CLIENTS</button>
-                        </a>
-                         <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('late')">LATE</button>
-                        </a>
-                        <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="visitReportFilter('published')">VR SENT</button>
-                        </a>
-                        <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="visitReportFilter('submitted')">VR REVIEW</button>
-                        </a>
-                        <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('noreport')">VR NONE</button>
-                        </a>
+                          <button type = "button" id="prev" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="prevDay()">PREV</button>
                         <a class="btn" role="button">
                           <button type = "button"id="next" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="nextDay()">NEXT</button>
-                        </a>
+                        <a class="btn" role="button">
+                          <button type = "button"id="allSitters" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="showSitters()">ALL SITTERS</button>
+                        <a class="btn" role="button">
+                          <input type="checkbox" class="filterStatus" id="late" onclick="filterMapViewByVisitStatus('late')" role="button" checked>Late</a>
+<!--
+                        <a class="btn " role="button">
+                          <input type="checkbox" class="filterStatus" id="incomplete" onclick="filterMapViewByVisitStatus('future')" checked>Incomplete</a>
+-->
+                        <a class="btn " role="button">
+                          <input type="checkbox" class="filterStatus" id="completed" onclick="filterMapViewByVisitStatus('completed')" checked>Completed</a>
+<!--
+                        <a class="btn " role="button">
+                          <input type="checkbox" class="filterStatus" id="visitreport" onclick="filterMapViewByVisitStatus('visitreport')" checked>Visit Report</a>
+-->
+<!--
+                        <a class="btn " role="button">
+                          <input type="checkbox" class="filterStatus" id="canceled" onclick="filterMapViewByVisitStatus('canceled')" checked>Canceled</a>
+-->
                     </div>
                   </div>
 
@@ -348,9 +345,20 @@ list-style: none;
                         <div class="card">
 						              <div class="card-body no-padding">
                             <ul class="list divider-full-bleed">
+                              
                               <div id="sitterList" class="sitterListView full-bleed no-padding m-t-10 Full-height">
-                                  <button type="button"></button>
+                                
+                                <button type="button"
+
                               </div>
+                              
+                              <!--
+                     <div class="text-light force-padding white-text text-shadow text-right">
+                        <i class="fa fa-photo"></i><strong> CARE</strong>REPORTS&trade;
+                      </div>
+-->
+                            
+                            </ul>
                           </div>
                         </div>
                       </div>
@@ -361,31 +369,16 @@ list-style: none;
                    <section id="lt-loginPanel" class="ltLogin m-t-0 section-info">
                      <div class="section-body">
                        <div class="card style-info force-padding">
-                          <span  class="text-small">
-                            <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
-                            <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
-                            <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=login()>LOGIN</button>
-                            <button type = "button" id="ajaxLogin" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=loginAjax()>AJAX</button>
+                        <span  class="text-small">
+                          <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
+                          <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
+                          <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=login()>LOGIN</button>
+                          <button type = "button" id="ajaxLogin" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=loginAjax()>AJAX</button>
 
-                          </span>
+                        </span>
                        </div>
                      </div>
                     </section>
-
-                    <section>
-                      <div class="stick-top-right force-padding"> 
-                        <div class="offset-2">
-                          <div class="card">
-                            <div class="card-body no-padding">
-                              <ul class="list divider-full-bleed">
-                                <div id="visitList" class="sitterListView full-bleed no-padding m-t-10 Full-height">
-                                  <button type="button"></button>
-                                </div>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                </section>
              
                    <section id="lt-datePanel" style="display: none">
                     <div class="full-bleed">

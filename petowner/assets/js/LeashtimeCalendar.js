@@ -35,9 +35,36 @@
         let fullYear = todayDate.getFullYear();
         let dayOfMonth = todayDate.getDate();
         let monthDate = todayDate.getMonth()+1;
+
         let dateString = fullYear + '-' + monthDate + '-' + dayOfMonth;
 
-        let clientURL = 'https://leashtime.com/client-own-schedule.php?'
+        console.log('Today date is: ' + dateString);
+
+        let beginDate = '2019-01-01';
+        let endDate = '2019-03-31';
+
+        let clientURL = 'https://leashtime.com/client-own-scheduler-data.php?start='+beginDate+'&end='+endDate+'timeframe=1&serviceItems=1&visits=1';
+        let options = {
+            method : 'GET',
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            }
+        }
+
+        let getClientInfo = async () => {
+            let response = await fetch(clientURL,options);
+            let visitJSON = await response.json();
+            console.log(visitJSON);
+            return visitJSON;
+        };
+
+        /*getClientInfo()
+        .then((data)=> {
+            console.log(data);
+
+        });*/
+
         $(document).ready(function () {
             $.ajax({
                 "url" : "http://localhost:3300",
@@ -61,8 +88,8 @@
     };
 
         // -------------------------------------------------------------------------
-        // |                                                                                                | 
-        // |                            LeashtimeCal PROTOTYPE functions         | 
+        // |                                                                                       | 
+        // |                            LeashtimeCal PROTOTYPE functions | 
         // -------------------------------------------------------------------------
 
     var p = LeashtimeCal.prototype;

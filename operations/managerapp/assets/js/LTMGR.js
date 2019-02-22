@@ -348,44 +348,7 @@ var LTMGR = (function() {
 			return error;
 		}
 	}
-	async function managerLoginAjax(username, password, role) {
-		sitterList = [];
-		visitList =[];
-		allClients =[];
-		let url = 'https://leashtime.com/mmd-login.php';
-		const options = {
-			method : 'POST',
-			body : JSON.stringify({
-				user_name : username,
-				user_pass: password,
-				expected_role : role
-			}),
-			headers : {
-				'Accept': 'application/json',
-				'Content-Type' : 'application/json'
-			}
-		};
 
-		let responseJSON = await fetch(url, options).then((response)=> {return response.json();});
-		return responseJSON;
-
-	}
-	async function getManagerSittersAjax() {
-		let url = 'https://leashtime.com/mmd-sitters.php';	
-		let sitterJSON = await fetch(url).then((response)=> {return response.json();});
-		sitterJSON.sitters.forEach((sitter)=> {
-			console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
-			sitterList.push(new SitterProfile(sitter));
-		});
-		return sitterList;
-	}
-	function parseVisitReport(visitReportDict) {
-
-		let visitReportKeys = Object.keys(visitReportDict);
-		visitReportKeys.forEach((key) => {
-
-		});
-	}
 	async  function getManagerVisits() {
 		let base_url = 'http://localhost:3300?type=gVisit';		
 		const response = await fetch(base_url);
@@ -402,73 +365,11 @@ var LTMGR = (function() {
 		});
 		return visitList;		
 	}
-	async function getManagerVisitsAjax(startDate, endDate) {
-		let url = 'https://leashtime.com/mmd-visits.php';
-		let listSitterID = [];
-		sitterList.forEach((sitter) => {
-			console.log('Sitter ID: ' + sitter.sitterID + ', Sitter name: ' + sitter.sitterName);
-			if(sitter.active == 1) {
-				listSitterID.push(sitter.sitterID);
-			 }
-		});
-
-		const options = {
-			method: 'POST',
-			body: JSON.stringify(
-				{'start' : startDate,
-				'end' : endDate,
-				'sitterids' : listSitterID.join(',')}),
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type' : 'application/json',
-			}
-		};
-
-		let response = await fetch(url, options);
-		let localVisitList = await response.json();
-
-		localVisitList.forEach((visit) => {
-			let nVisitProfile = new SitterVisit(visit);
-			let visitKeys = Object.keys(visit);
-			visitKeys.forEach((key)=> {
-				if (key == 'report') {
-					parseVisitReport(visit[key])
-				}
-			})
-			visitList.push(nVisitProfile);	
-		});
-		
-		return visitList;
-	}
 	async function getManagerClients() {
 		let base_url = 'http://localhost:3300?type=gClients';		
 		const response = await fetch(base_url);
 		const myJson = await response.json();
 		myJson.forEach((client) => {
-			let petOwner = new PetOwnerProfile(client);
-			allClients.push(petOwner);	
-		});
-		return allClients;
-	}
-	async function getManagerClientsAjax() {
-		let url = 'https://leashtime.com/mmd-clients.php';
-		let listClientID = [];		
-		visitList.forEach((visitItem)=> {
-			listClientID.push(visitItem.clientID);
-		});
-		const options = {
-			method : 'POST',
-			body : JSON.stringify({'clientids':listClientID.join(',')}),
-			credentials : 'include',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type' : 'application/json',
-			}
-		};
-
-		let response = await fetch(url,options);
-		let clientData = await response.json();
-		clientData.clients.forEach((client) => {
 			let petOwner = new PetOwnerProfile(client);
 			allClients.push(petOwner);	
 		});
@@ -495,28 +396,6 @@ var LTMGR = (function() {
 				console.log('Returning null to ltmngr');
 				reportList[0] = 'none';
 			}
-		}
-		return reportList;
-	}
-	async function getMasterVisitReportListAjax(startDate, endDate) {
-		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
-		let vrListRequest = await fetch(url);
-		let vrListJson = await vrListRequest.json();
-		let report = {};
-		let reportList = [];
-		
-		if(vrListJson == null ) {
-			console.log('getMasterVisitReportListAjax: null vrListJson');
-			return vrListJson;
-		} else if (vrListJson['error'] == 'no reports found') {
-			console.log('getMasterVisitReportListAjax: no reports found');
-			return [];
-		} else {
-				vrListJson.forEach((vrItem) => {
-					let vrKeys = Object.keys(vrItem);
-					let vrObject = new VisitReportVisitDetails(vrItem);
-					reportList.push(vrObject)
-				});
 		}
 		return reportList;
 	}
@@ -554,9 +433,221 @@ var LTMGR = (function() {
 		dictionaryComplete['vrDetail'] = visitReportDetailObj;
 		return dictionaryComplete;
 	}
-	async function getVisitReportAjax(visitID, visitReportDetailObj) {
-		console.log("SUCK IT: "+visitID);
+	function parseVisitReport(visitReportDict) {
+
+		let visitReportKeys = Object.keys(visitReportDict);
+		visitReportKeys.forEach((key) => {
+
+		});
+	}
+	async function managerLoginAjax(username, password, role) {
+		sitterList = [];
+		visitList =[];
+		allClients =[];
+		let url = 'https://leashtime.com/mmd-login.php';
+		const options = {
+			method : 'POST',
+			body : JSON.stringify({
+				user_name : username,
+				user_pass: password,
+				expected_role : role
+			}),
+			headers : {
+				'Accept': 'application/json',
+				'Content-Type' : 'application/json'
+			}
+		};
+		let responseJSON = await fetch(url, options).then((response)=> {return response.json();});
+		return responseJSON;
+
+
+		/*let responseLogin = async ()=> {
+			let response = await fetch(url, options); //.then((response)=> {return response.json();});
+			let responseJSON = await response.json();
+			console.log('resonse login json: ' + responseJSON);
+			return responseJSON;
+		};
+		let returnData = await responseLogin()
+		return returnData;*/
+
+
+
+	}
+	async function getManagerSittersAjax() {
+		console.log('Get manager sitters ajax');
+		let url = 'https://leashtime.com/mmd-sitters.php';	
+		const options = {
+			method : 'GET',
+			headers : {
+				'Accept': 'application/json',
+				'Content-Type' : 'application/json'
+			}
+		};
+
+		/*let getSittersAsync = async () => {
+			let getSitterResponse = await fetch(url);//.then((response)=> {return response.json();});
+			let sitterJSON = await getSitterResponse.json();
+			return sitterJSON;
+		};
+
+
+		let processSittersAsync = async () => {
+			let returnSitters = await getSittersAsync();
+			returnSitters.sitters.forEach((sitterDic)=> {
+				sitterList.push(new SitterProfile(sitterDic));
+			});
+			return sitterList;
+		}
+		return processSittersAsync();*/
+		//let sitterRequest = await fetch(url,options);
+		//let sitterJSON = await sitterRequest.json();
+		/*sitterJSON()
+		.then((jsonSitters)=> {
+			console.log(jsonSitters);
+			sitterJSON.sitters.forEach((sitter)=> {
+				console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
+				sitterList.push(new SitterProfile(sitter));
+			});
+		})*/
+		let sitterJSON = await fetch(url).then((response)=> {return response.json();});
+		sitterJSON.sitters.forEach((sitter)=> {
+			console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
+			sitterList.push(new SitterProfile(sitter));
+		});
+		return sitterList;
+	}
+
+	async function getManagerVisitsAjax(startDate, endDate) {
+		console.log('Get manager visits ajax with sitter list: ' + sitterList.length);
+		let url = 'https://leashtime.com/mmd-visits.php';
+		let listSitterID = [];
+		sitterList.forEach((sitter) => {
+			console.log('Sitter status: ' + sitter.status);
+			//console.log('Sitter ID: ' + sitter.sitterID + ', Sitter name: ' + sitter.sitterName);
+			if(sitter.status == 1) {
+				console.log('Sitter ID: ' + sitter.sitterID + ', Sitter name: ' + sitter.sitterName);
+				listSitterID.push(sitter.sitterID);
+			 }
+		});
+		console.log('List sitter ID: ' + listSitterID);
+
+		const options = {
+			method: 'POST',
+			body: JSON.stringify(
+				{'start' : startDate,
+				'end' : endDate,
+				'sitterids' : listSitterID.join(',')}),
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type' : 'application/json',
+			}
+		};
+
+		let response = await fetch(url, options);
+		let localVisitList = await response.json();
+
+		localVisitList.forEach((visit) => {
+			let nVisitProfile = new SitterVisit(visit);
+			let visitKeys = Object.keys(visit);
+			visitKeys.forEach((key)=> {
+				if (key == 'report') {
+					parseVisitReport(visit[key])
+				}
+			})
+			visitList.push(nVisitProfile);	
+		});
 		
+		return visitList;
+
+		/*let visitAsync = async () => {
+			let response = await fetch(url, options);
+			let visitJSON = await response.json();
+			return visitJSON;
+		};
+
+
+		let processVisitAsync = async () => {
+			let returnVisit = await visitAsync();
+			console.log(returnVisit);
+			returnVisit.forEach((visit) => {
+				console.log(visit);
+				visitList.push(new SitterVisit(visit));	
+			});
+			return visitList;
+		};
+		return processVisitAsync();*/
+	}
+	async function getManagerClientsAjax() {
+		let url = 'https://leashtime.com/mmd-clients.php';
+		let listClientID = [];		
+		visitList.forEach((visitItem)=> {
+			console.log(visitItem.clientID);
+			listClientID.push(visitItem.clientID);
+		});
+		const options = {
+			method : 'POST',
+			body : JSON.stringify({'clientids':listClientID.join(',')}),
+			credentials : 'include',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type' : 'application/json',
+			}
+		};
+
+		/*
+		let clientDataAsync = async () => {
+			let response = await fetch(url,options);
+			let dataForClients = await response.json();
+			return dataForClients;
+		};
+
+		let processClientAsync = async () => {
+			let clientData = await clientDataAsync();
+			console.log(clientData);
+			clientData.clients.forEach((client) => {
+				let petOwner = new PetOwnerProfile(client);
+				allClients.push(petOwner);	
+			});
+			console.log('returning cllient list: ' + allClients);
+			return allClients;
+		};
+		
+		return processClientAsync();*/
+		let response = await fetch(url,options);
+		let clientData = await response.json();
+		clientData.clients.forEach((client) => {
+			let petOwner = new PetOwnerProfile(client);
+			allClients.push(petOwner);	
+		});
+		return allClients;
+
+	}
+
+	async function getMasterVisitReportListAjax(startDate, endDate) {
+		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
+		let vrListRequest = await fetch(url);
+		let vrListJson = await vrListRequest.json();
+		let report = {};
+		let reportList = [];
+		
+		if(vrListJson == null ) {
+			console.log('getMasterVisitReportListAjax: null vrListJson');
+			return vrListJson;
+		} else if (vrListJson['error'] == 'no reports found') {
+			console.log('getMasterVisitReportListAjax: no reports found');
+			return [];
+		} else {
+			vrListJson.forEach((vrItem) => {
+				let vrKeys = Object.keys(vrItem);
+				let vrObject = new VisitReportVisitDetails(vrItem);
+				reportList.push(vrObject)
+			});
+		}
+		return reportList;
+	}
+	async function getVisitReportAjax(visitID, visitReportDetailObj) {
+		
+		console.log("SUCK IT: "+visitID);
 	}
 	async function getVisitReportListAjax(clientID, startDate, endDate, visitID) {
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?clientid=' + clientID + '&start='+startDate+'&end='+endDate+'&publishedonly=1';
@@ -580,8 +671,6 @@ var LTMGR = (function() {
 		}
 		return report;
 	}
-
-
 	function getVisitList() {
 
 		return visitList;
