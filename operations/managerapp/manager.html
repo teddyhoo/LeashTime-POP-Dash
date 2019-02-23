@@ -111,32 +111,59 @@
 }
 
 i {
-font-family: Roboto 'sans-serif';
+  font-family: Roboto 'sans-serif';
 }
 .marker-complete {
-background-image: url('../../assets/img/icon-late.png');
-background-size: 85%;
-width: 40px;
-height: 40px;
-border-radius: 50%;
-cursor: pointer;
-background-color: forestgreen;
+  background-image: url('../../assets/img/icon-late.png');
+  background-size: 85%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: forestgreen;
 }
 .marker-canceled {
-background-image: url('./assets/img/red-dot@3x.png');
-background-size: cover;
-width: 32px;
-height: 32px;
-border-radius: 50%;
-cursor: pointer;
+  background-image: url('./assets/img/red-dot@3x.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 .marker-visitreport {
-background-image: url('./assets/img/note-icon@3x.png');
-background-size: cover;
-width: 32px;
-height: 32px;
-border-radius: 50%;
-cursor: pointer;
+  background-image: url('./assets/img/note-icon@3x.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.visit-btn-vr-published {
+  border-width: 10;
+  border-color: Green;
+}
+.visit-btn-vr-submitted {
+  border-width: 10;
+  border-color: Yellow;  
+}
+.visit-btn-vr-noreportreceived {
+  border-width: 10;
+  border-color: Red; 
+}
+.visit-btn-completed {
+  background-color: forestgreen;
+}
+.visit-btn-arrived {
+  background-color: blue;
+}
+.visit-btn-late {
+  background-color: yellow;
+}
+.visit-btn-future {
+  background-color: white;
+}
+.visit-btn-canceled {
+  background-color: red;
 }
 .mapboxgl-popup {
 max-width: 400px;
@@ -320,13 +347,13 @@ list-style: none;
                           <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('late')">LATE</button>
                         </a>
                         <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="visitReportFilter('published')">VR SENT</button>
+                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('published')">VR SENT</button>
                         </a>
                         <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="visitReportFilter('submitted')">VR REVIEW</button>
+                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('submitted')">VR REVIEW</button>
                         </a>
                         <a class="btn" role="button">
-                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('noreport')">VR NONE</button>
+                          <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('noreportdatareceived')">VR NONE</button>
                         </a>
                         <a class="btn" role="button">
                           <button type = "button"id="next" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="nextDay()">NEXT</button>

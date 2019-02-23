@@ -171,7 +171,7 @@ var LT = (function() {
 			}
 			
 			if (visitDictionary['tax'] != null) {
-				this.tax = parseFloat(tax_amt);
+				this.tax = parseFloat(visitDictionary['tax']);
 			} else {
 				this.tax = parseFloat(0);
 			}
@@ -214,7 +214,6 @@ var LT = (function() {
 			return this.totalVisitCharges;
 		}
 	};
-
 	class SitterVisit {
 		constructor(visitid, lat, lon) {
 

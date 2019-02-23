@@ -241,8 +241,7 @@
                     buildSitterButtons(allVisits, allSitters);
                     flyToFirstVisit();
                 });
-            });*/
-            
+            });*/       
         }     
         function buildSitterButtons(allSitterVisits, allSittersInfo) {
                     
@@ -303,15 +302,27 @@
         function buildVisitButtons() {
             let visitDiv = document.getElementById('visitList');
             allVisits.forEach((visit)=> {
-
                 let visitButton = document.createElement('button');
                 visitButton.setAttribute("type","button");
                 visitButton.setAttribute("id",visit.visitID);
-                visitButton.setAttribute("class", "btn btn-block");
-                visitButton.setAttribute("style", "background-color: Green");
+                let visitStatusClass = 'visit-btn-'+visit.status;
+                let visitReportStatusClass = 'visit-btn-vr-'+visit.visitReportStatus; 
+                console.log(visitStatusClass + ' ' + visitReportStatusClass);
+                visitButton.setAttribute("class", "btn btn-block "+ visitStatusClass+" " +visitReportStatusClass);
+                //visitButton.setAttribute("class",visitStatusClass + " " + visitReportStatusClass);
                 visitButton.innerHTML = visit.clientName + ', STATUS: ' + visit.status;
+                visitButton.addEventListener("click", function () {
+                    flyToVisit(visit);
+                });
                 visitDiv.appendChild(visitButton);
-
+            })
+        }
+        function showAllClients() {
+            removeAllMapMarkers();
+            removeVisitDivElements();
+            buildVisitButtons();
+            allVisits.forEach((visit)=> {
+                createMapMarker(visit,'marker');
             })
         }
         function createMapMarker(visitInfo, markerIcon) {
@@ -370,21 +381,17 @@
                         if (!isAjax) {
                             let vReport = await LTMGR.getVisitReportList(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
                             vrListItem = vReport['report'];
-                            //visitReportListItem = vReport['report'];
                         } else {
                             let vReport = await LTMGR.getVisitReportListAjax(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
                             vrListItem = vReport['report'];
                         }
-												return vrListItem;
+                        return vrListItem;
                     };
                     const vrDetailsForList = async (vrLitem) => {
                         if (!isAjax) {
                             let vReportDetailsData = await LTMGR.getVisitReport(vrLitem.visitID, vrLitem);
                             return vReportDetailsData;
                         } else {
-
-                            //let vReportDetailsData = await LTMGR.getVisitReportAjax(vrLitem.externalUrl, vrLitem);
-                            //return vReportDetailsData;
                             let vd = await fetch(vrLitem.externalUrl);
                             let vdResponse = await vd.json();
                             console.log("vdResponse: "+JSON.stringify(vdResponse));
@@ -422,7 +429,6 @@
                 el.class = 'sitter';
                 el.id = 'sitter';
                 el.addEventListener("click", ()=> {
-                    ///console.log('Clicked event listener for sitter with id: ' + sitterInfo.sitterID);
                     allVisits.forEach((visit) => { 
                         if(visit.sitterID == sitterInfo.sitterID) {
                             createMapMarker(visit, 'marker');
@@ -517,12 +523,10 @@
                         }
                     })
                     popupBasicInfo += '</p>';
-
                     if (visit.status == 'completed') {
                         popupBasicInfo += '<p style="color:white">Arrived: ' + visit.arrived + ' Completed: ' + visit.completed + '</p>';
 
                     }
-                    //createMapMarker(visit, 'marker');
                 }
             })
             popupBasicInfo += '<p style="color:white"><img src=\"./assets/img/postit\-20x20.png\" width=20 height=20>&nbsp&nbsp<input type=\"text\" name=\"messageSitter\" id=\"messageSitter\"></p>';
@@ -584,14 +588,17 @@
             popupBasicInfo += `<div>`;
 
             if (visitDictionary.VISITPHOTONUGGETURL != null) {
-                popupBasicInfo += `<span><img src=${visitDictionary.VISITPHOTONUGGETURL} id="popupPhoto" width = 160 height = 160></span>`;
+                //popupBasicInfo += `<span><img src=${visitDictionary.VISITPHOTONUGGETURL}id="popupPhoto" width = 160 height = 160></span>`;
+                popupBasicInfo += `<span><img async src=${visitDictionary.VISITPHOTONUGGETURL} id="popupPhoto" width = 160 height = 160></span>`;
             } else {
                 if(visitDictionary.COMPLETED != null) {
                     popupBasicInfo += `<span><img src="./assets/img/leashtime-logo-big@3x.png" id="popupPhoto" width = 160 height = 160></span>`;
                 }
             }
             if (visitDictionary.MAPROUTENUGGETURL != null) {
-                popupBasicInfo += ` &nbsp&nbsp <span><img src=${visitDictionary.MAPROUTENUGGETURL} width = 160 height = 160></span>`;
+                //popupBasicInfo += ` &nbsp&nbsp <span><img src=${visitDictionary.MAPROUTENUGGETURL} width = 160 height = 160></span>`;
+                popupBasicInfo += ` &nbsp&nbsp <span><img async src=${visitDictionary.MAPROUTENUGGETURL} width = 160 height = 160></span>`;
+
             } else {
 
             }
@@ -673,7 +680,6 @@
 
             return popupBasicInfo;
         }
-
         function createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList) {
 
             let popupBasicInfo = '<h1>'+sitterInfo.sitterName+'</h1>';
@@ -754,23 +760,24 @@
         }
         function filterMapViewByVisitStatus(filterStatus) {
 
-            if (statusVisit[filterStatus] == 'on') {
-                statusVisit[filterStatus] =  'off';
-            } else {
-                statusVisit[filterStatus] = 'on';
-            }
+            console.log(filterStatus);
 
-            let visitFilterArray = [];
             mapMarkers.forEach((marker)=>{
                 marker.remove();
             });
 
-            let statKeys = Object.keys(statusVisit);
+            let visitFilterArray = [];
 
             allVisits.forEach((visitDetails)=> {
                 let visitStatus = visitDetails.status;
-                if (statusVisit[visitStatus] == 'on' && visitDetails.status == visitStatus) {
+
+                if (filterStatus == visitDetails.status) {
                     visitFilterArray.push(visitDetails);
+                } 
+                if (visitDetails.status == 'completed') {
+                    if (visitDetails.visitReportStatus == filterStatus) {
+                        visitFilterArray.push(visitDetails);
+                    } 
                 }
             });
             visitFilterArray.forEach((visit) => {
@@ -1021,6 +1028,19 @@
             var loginPanel = document.getElementById("lt-loginPanel");
             loginPanel.setAttribute("style", "display:block");
         }
+        function flyToVisit(visitDetails) {
+
+            if (visitDetails != null) {
+                if (visitDetails.lon != null && visitDetails.lat != null && visitDetails.lon > -90 && visitDetails.lat < 90) {
+                    map.flyTo({
+                        center: [visitDetails.lon, visitDetails.lat],
+                        zoom: 20
+                    });
+                } else {
+                    alert("Coordinates are invalid");
+                }
+            }
+        }
         function flyToFirstVisit() {
             allVisits.forEach((visit)=> {
                 console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
@@ -1133,7 +1153,6 @@
             let dateLabel = document.getElementById("dateLabel");
             dateLabel.innerHTML = todayDay;*/
         }
-
         function createPopupNoVisitReportView(visitInfo) {
             let arriveTime = visitInfo.arrived;
             let completeTime = visitInfo.completed;

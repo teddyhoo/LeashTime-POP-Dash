@@ -43,7 +43,7 @@
         let beginDate = '2019-01-01';
         let endDate = '2019-03-31';
 
-        let clientURL = 'https://leashtime.com/client-own-scheduler-data.php?start='+beginDate+'&end='+endDate+'timeframe=1&serviceItems=1&visits=1';
+        let clientURL = 'https://leashtime.com/client-own-scheduler-data.php?start='+beginDate+'&end='+endDate+'&timeframe=1&serviceItems=1&visits=1';
         let options = {
             method : 'GET',
             headers : {
@@ -61,7 +61,9 @@
 
         /*getClientInfo()
         .then((data)=> {
-            console.log(data);
+            petOwnerProfile = LT.getClientProfileInfo(data);
+            o.createEvents(data);
+            o.initialize();
 
         });*/
 
@@ -79,6 +81,7 @@
                     "data" : {"type" : "poClients"},
                     "dataTYPE" : "JSON"
                 }).done((clientdata)=>{
+
                     petOwnerProfile = LT.getClientProfileInfo(clientdata);
                     o.createEvents(data);
                     o.initialize();
@@ -96,7 +99,6 @@
     p.selectService = function(serviceID) {
 
         console.log('service selected with service id: ' + serviceID);
-
     };
     p.initialize = function () {
         this._enableEvents();
@@ -466,11 +468,6 @@
         });
     };
 
-    // ----------------------------------------------------------------------------
-    // |                                                                                                    | 
-    // |                           Global functions                                              | 
-    // ----------------------------------------------------------------------------
-
     function displayVisitReport(calEvent, datePicked, visitNote, arrive, complete) {
         console.log(visitNote);
         let eventStartMoment = moment(calEvent.start);
@@ -527,12 +524,10 @@
             gratuityButton.parentNode.removeChild(gratuityButton);
 
             const gratuityHTML = `
-
                 <button type="button" class="btn btn-danger" data-dismiss="modal" id='tenpercent'>10%</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal" id='twentypercent'>20%</button>
                 <input type="text" class="form-control" id='grautuityAmt' size=100%>
                 <label>Custom amount ($): </label>
-
             `;
 
             visitReportPanel.innerHTML = gratuityHTML;
@@ -540,8 +535,6 @@
             let tenPbutton = document.getElementById('tenpercent');
             let twentypercent = document.getElementById('twentypercent');
             tenPbutton.addEventListener("click", function(event) {
-
-
             })
         })
     }
@@ -1105,6 +1098,7 @@
 
         return pickedService;
     }
+
     var calendar = $('#calendar').fullCalendar('getCalendar');
     namespace.LeashtimeCal = new LeashtimeCal;
 

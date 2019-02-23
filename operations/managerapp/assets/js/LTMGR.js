@@ -66,6 +66,34 @@ var LTMGR = (function() {
 	class SitterVisit {
 		constructor(visitInfo) {
 
+			let visitInfoKeys = Object.keys(visitInfo);
+			visitInfoKeys.forEach((key)=> {
+
+				console.log(key + ' --> ' + visitInfo[key]);
+
+				if (key == 'report') {
+					let reportDic = visitInfo.report;
+					let reportKeys = Object.keys(reportDic);
+					//console.log('----------------REPORT KEYS------------------')
+
+					reportKeys.forEach((rKey)=> {
+						//console.log(' ---> ' + rKey + '  ' + reportDic[rKey]);
+					})
+				}
+				if (key == 'performance') {
+					//console.log('----------------PERFORMANCE------------------')
+					let perfKeys = Object.keys(visitInfo.performance);
+					perfKeys.forEach((pKey)=> {
+						//console.log(pKey + ' --> ' + perfKeys.pKey);
+					})
+				}
+			})
+
+			let visitReportInfo = visitInfo.report;
+			if (visitReportInfo != null) {
+				this.visitReportStatus = visitReportInfo.status;
+			}
+
 			this.visitID = visitInfo.appointmentid;
 			this.status = visitInfo.status;
 			this.service = visitInfo.service;
@@ -469,9 +497,6 @@ var LTMGR = (function() {
 		};
 		let returnData = await responseLogin()
 		return returnData;*/
-
-
-
 	}
 	async function getManagerSittersAjax() {
 		console.log('Get manager sitters ajax');
@@ -516,7 +541,6 @@ var LTMGR = (function() {
 		});
 		return sitterList;
 	}
-
 	async function getManagerVisitsAjax(startDate, endDate) {
 		console.log('Get manager visits ajax with sitter list: ' + sitterList.length);
 		let url = 'https://leashtime.com/mmd-visits.php';
@@ -620,7 +644,6 @@ var LTMGR = (function() {
 			allClients.push(petOwner);	
 		});
 		return allClients;
-
 	}
 
 	async function getMasterVisitReportListAjax(startDate, endDate) {
@@ -674,7 +697,6 @@ var LTMGR = (function() {
 	function getVisitList() {
 
 		return visitList;
-
 	}
 	function getVisitsBySitterID(sitterID) {
 	}
