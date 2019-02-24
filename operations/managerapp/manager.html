@@ -138,26 +138,63 @@ i {
   border-radius: 50%;
   cursor: pointer;
 }
+.button {
+  display: inline-block;
+  border: none;
+  padding: 1rem 2rem;
+  margin: 0;
+  text-decoration: none;
+  background: #000069;
+  color: #000000;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out,
+      transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}  
+
 .visit-btn-vr-published {
-  border-width: 10;
-  border-color: Green;
+  border-style: solid ;
+  border-width: 12px;
+  border-color: #1A562F;
+  background: #3DA561;
+  color: #FFFFFF;
+  font-family: sans-serif;
+  font-size: 1rem;
 }
 .visit-btn-vr-submitted {
-  border-width: 10;
-  border-color: Yellow;  
+  border-style: solid ;
+  border-width: 12px;
+  border-color: #F9f777;
+  background: #3DA561;
+  color: #FFFFFF;
+  font-family: sans-serif;
+  font-size: 1rem;
 }
-.visit-btn-vr-noreportreceived {
-  border-width: 10;
-  border-color: Red; 
+.visit-btn-vr-noreportdatareceived {
+  border-style: solid ;
+  border-width: 12px;
+  border-color: #F7390E;
+  background: #3DA561;
+  color: #FFFFFF;
+  font-family: sans-serif;
+  font-size: 1rem;
 }
-.visit-btn-completed {
-  background-color: forestgreen;
-}
+
 .visit-btn-arrived {
   background-color: blue;
 }
 .visit-btn-late {
-  background-color: yellow;
+  border-style: solid ;
+  border-width: 4px;
+  border-color: #F7390E;
+  background: #F9F777;
+  color: #000000;
+  font-family: sans-serif;
+  font-size: 1rem;
 }
 .visit-btn-future {
   background-color: white;
@@ -196,23 +233,7 @@ popup-anchor-bottom-left .mapboxgl-popup-tip {
 .mapboxgl-popup-content {
   background: rgba(0,0,0,.4);
 }
-.button {
-  display: inline-block;
-  border: none;
-  padding: 1rem 2rem;
-  margin: 0;
-  text-decoration: none;
-  background: #0069ed;
-  color: #000000;
-  font-family: sans-serif;
-  font-size: 1rem;
-  cursor: pointer;
-  text-align: center;
-  transition: background 250ms ease-in-out,
-      transform 150ms ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}  
+
 li {
 list-style: none;
 }

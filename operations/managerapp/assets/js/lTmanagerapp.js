@@ -309,8 +309,25 @@
                 let visitReportStatusClass = 'visit-btn-vr-'+visit.visitReportStatus; 
                 console.log(visitStatusClass + ' ' + visitReportStatusClass);
                 visitButton.setAttribute("class", "btn btn-block "+ visitStatusClass+" " +visitReportStatusClass);
-                //visitButton.setAttribute("class",visitStatusClass + " " + visitReportStatusClass);
-                visitButton.innerHTML = visit.clientName + ', STATUS: ' + visit.status;
+                let clientName = visit.clientName;
+                let petNames = visit.pets;
+                let statusVisit = visit.status;
+                let reportStat = visit.visitReportStatus;
+                if (visit.visitReportStatus == 'published') {
+                    visitReportList.forEach((vReport)=> {
+                        if (vReport.visitID == visit.visitID) {
+                            reportStat = reportStat + ': ' + vReport.reportPublishedDate + ' ' + vReport.reportPublishedTime;
+                        }
+                    });
+                } else if (visit.visitReportStatus == 'submitted') {
+                    visitReportList.forEach((vReport)=> {
+                        if (vReport.visitID == visit.visitID) {
+                            reportStat = reportStat + ': ' + vReport.reportsubmissiondate;
+                        }
+                    });
+
+                }
+                visitButton.innerHTML = "<P>" + clientName + ", " + petNames + "<P>" + statusVisit + " - " + reportStat;
                 visitButton.addEventListener("click", function () {
                     flyToVisit(visit);
                 });
@@ -647,14 +664,17 @@
 
                 popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-danger no-margin\"><i class=\"fa fa-compass\">VISIT COMPLETED</i>';
                 popupBasicInfo += '<p class=\"alert alert-danger no-margin\">VISIT REPORT NOT RECEIVED</p></div>';
+                popupBasicInfo += '<div id="chatWrapper"><form id="sendSitterMessageForm"><input type="text" size=50 id="message" placeholder="PLEASE SEND VISIT REPORT"></form></div>';
                 popupBasicInfo += '<p class=\"alert alert-danger no-margin\">SEND MESSAGE TO SITTER</p></div>';
+
              
             } else if (visitDictionary.status == 'maporphotoreceived') {
 
                 popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-danger no-margin\"><i class=\"fa fa-compass\">VISIT COMPLETED</i>';
                 popupBasicInfo += '<p class=\"alert alert-success no-margin\">VISIT REPORT NOT RECEIVED</p></div>';
+                popupBasicInfo += '<div id="chatWrapper"><form id="sendSitterMessageForm"><input type="text" size=50 id="message" placeholder="PLEASE SEND VISIT REPORT"></form></div>';
                 popupBasicInfo += '<p class=\"alert alert-success no-margin\">SEND MESSAGE TO SITTER</p></div>';
-             
+
 
             }
             popupBasicInfo += `

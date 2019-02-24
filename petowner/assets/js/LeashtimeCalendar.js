@@ -35,14 +35,11 @@
         let fullYear = todayDate.getFullYear();
         let dayOfMonth = todayDate.getDate();
         let monthDate = todayDate.getMonth()+1;
-
         let dateString = fullYear + '-' + monthDate + '-' + dayOfMonth;
-
         console.log('Today date is: ' + dateString);
 
         let beginDate = '2019-01-01';
         let endDate = '2019-03-31';
-
         let clientURL = 'https://leashtime.com/client-own-scheduler-data.php?start='+beginDate+'&end='+endDate+'&timeframe=1&serviceItems=1&visits=1';
         let options = {
             method : 'GET',
@@ -89,12 +86,6 @@
             })
         })
     };
-
-        // -------------------------------------------------------------------------
-        // |                                                                                       | 
-        // |                            LeashtimeCal PROTOTYPE functions | 
-        // -------------------------------------------------------------------------
-
     var p = LeashtimeCal.prototype;
     p.selectService = function(serviceID) {
 
@@ -864,14 +855,11 @@
             calEvent.color = 'red';
             $('#calendar').fullCalendar('rerenderEvents');
         });
-
-
         cancelVisitsUntilButton.addEventListener("click", function(event) {
             let cancelB = document.getElementById('cancelVisitButton');
             let changeB = document.getElementById('changeServiceButton');
             cancelB.parentNode.removeChild(cancelB);
             changeB.parentNode.removeChild(changeB);
-
             let panel = document.getElementById('cancelChangeButtonPanel');
             const cancelUntilHTML = `
                     <button type="button" class="btn btn-danger" data-dismiss="modal" id='confirmCancelUntil'>CANCEL VISITS UNTIL</button>  
@@ -891,6 +879,7 @@
             panel.innerHTML = cancelUntilHTML;
             let cancelUntilConfirm = document.getElementById('confirmCancelUntil');
             let untilDate = document.getElementById('untilDate2');
+            let event_remove = [];
 
             cancelUntilConfirm.addEventListener("click", function(event) {
                 let cancelUntilMoment = moment(untilDate2.value);                
@@ -907,17 +896,25 @@
                     newDate.add(p, 'day');
                     console.log('New date: ' + newDate.date());
                     event_visits.forEach((event) => {
+                        console.log('Event: ' + event.id);
                         let startmoment = moment(event.start);
                         //console.log('Event date: ' + startmoment + ' ---> compare:  ' + newDate);
                         if (startmoment.isSame(newDate)) {
+                            event_remove.push(event.id);
                             console.log('Canceling event: ' + newDate);
                             event.status = 'canceled';
                             event.isPending = true;
                             event.color = 'red';
+                            $('#calendar').fullCalendar('renderEvent', event, true);  
+
                         }
-                        $('#calendar').fullCalendar('renderEvent', event, true);  
                     });
                 }
+
+                event_remove.forEach((rEvent)=> {
+                    console.log('remove: ' + event.id);
+                })
+
             })
             $('#calendar').fullCalendar('rerenderEvents');  
         });
