@@ -10,13 +10,11 @@
     var dragStopDate;
     var dragDropServiceID;
 
-
     var all_visits = [];
     var surchargeItems =[];
     var serviceList = [];
     var timeWindowList =[];
     var event_visits = [];
-
     var currentPetsChosen = [];
     var schedule_request = [];
     var pendingVisits = [];
@@ -232,6 +230,7 @@
     };
     p._initEventslist = function () {
 
+        console.log('Init events list');
         if (!$.isFunction($.fn.draggable)) {
             return;
         }
@@ -242,6 +241,8 @@
                 title: $.trim($(this).text()), 
                 className: $.trim($(this).data('className'))
             };
+
+            console.log(eventObject);
         
             $(this).data('eventObject', eventObject);
         
@@ -896,20 +897,20 @@
                     newDate.add(p, 'day');
                     console.log('New date: ' + newDate.date());
                     event_visits.forEach((event) => {
-                        console.log('Event: ' + event.id);
                         let startmoment = moment(event.start);
-                        //console.log('Event date: ' + startmoment + ' ---> compare:  ' + newDate);
                         if (startmoment.isSame(newDate)) {
                             event_remove.push(event.id);
                             console.log('Canceling event: ' + newDate);
                             event.status = 'canceled';
                             event.isPending = true;
                             event.color = 'red';
-                            $('#calendar').fullCalendar('renderEvent', event, true);  
+                            calendar.fullCalendar('updateEvent',event, true);
 
                         }
                     });
                 }
+
+                //$('#calendar').fullCalendar('updateEvents', event_remove, true);  
 
                 event_remove.forEach((rEvent)=> {
                     console.log('remove: ' + event.id);

@@ -12,6 +12,7 @@
 
         var visitsBySitter =  {};
         var mapMarkers = [];
+        var visitButtonList = [];
         var displaySitters = {};
         var trackSitterMileage = [];
 
@@ -331,6 +332,7 @@
                 visitButton.addEventListener("click", function () {
                     flyToVisit(visit);
                 });
+                visitButtonList.push(visitButton);
                 visitDiv.appendChild(visitButton);
             })
         }
@@ -785,6 +787,15 @@
             mapMarkers.forEach((marker)=>{
                 marker.remove();
             });
+
+            if (visitButtonList != null) { 
+                visitButtonList.forEach((button)=>{
+                    if (button.parentNode != null){
+                        button.parentNode.removeChild(button);
+                    }
+                });
+
+            }
 
             let visitFilterArray = [];
 

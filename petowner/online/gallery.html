@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LEASHTIME CALENDAR</title>
+
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">          
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar-leashtime.css">
+
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/libs/fullcalendar/fullcalendar.css" rel="stylesheet" type = "text/css">
+	<!-- jQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+	<!-- nanogallery2 -->
+	<link  href="https://unpkg.com/nanogallery2@2.3.0/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
+	<script  type="text/javascript" src="https://unpkg.com/nanogallery2@2.3.0/dist/jquery.nanogallery2.min.js"></script>
+
+</head>
+
+    <header id="header">
+        <div class="headerbar blue">
+            <div class="headerbar-left hidden-on-mobile">
+                    <ul class="header-nav header-nav-options">
+                        <li style="float: left;">
+                            <a class="btn btn-icon-toggle" data-toggle="menubar" href="javascript:void(0);">
+                          <i class=" fa fa-paw white-text fa-2x"></i>
+                        </a>
+                        </li>
+                        <li style="line-height:1;padding:24px 0">
+                            <span>
+                                <div class="petProfilePhoto">
+                                    
+                                </div>
+                                <div class="brand-holder">
+                                    <span class="text-lg white-text " style="margin:0;padding-left: 12px;padding-bottom: 20px">CARE<strong>PORTAL</strong>™<span style="font-weight: 100;opacity: .8">  |  PET IMAGE GALLERY</span></span>
+                                </div>
+                            </span>
+                        </li>
+                    </ul>
+
+            </div>
+            <div class="headerbar-right">
+                    <div class="headerbar-right">
+                        <ul class="header-nav header-nav-profile">
+                            <li class="dropdown  no-padding no-margin" style="width:280px">
+                                <a href="javascript:void(0);" class="dropdown-toggle ink-reaction white-text" data-toggle="dropdown">
+
+                               <i class="fa fa-fw fa-calendar white-text fa-3x text-info"></i>
+                                <span class="profile-info white-text" style="margin-top:-15px">
+                                    CARE<b> CALENDAR</b>
+                                  <small>SERVICE SCHEDULE</small>
+                                </span>
+                            </a>
+                                <ul class="dropdown-menu animation-dock styled-info no-padding no-margin blue lighten-3">
+
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-1 force-padding white-text " style="width: 100%;"><a href="base-profile.html"><i class="white-text fa fa-2x fa-fw fa-user text-success"></i>
+                                        <span class="profile-info white-text" style="margin-top:-15px">
+                                            <b>MY PETS</b> AND PROFILES
+                                          <small>PROFILE MANAGER</small>
+                                        </span></a>
+                                        </div>
+                                    </li>
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-2 force-padding white-text " style="width: 100%;"><a href="base-account.html"><i class="white-text fa fa-2x fa-credit-card text-success"></i>
+                                            <span class="profile-info white-text" style="margin-top:-15px">
+                                                <b>SERVICE</b> HISTORY
+                                                <small>ACCOUNT MANAGER</small>
+                                            </span></a>
+                                        </div>
+                                    </li>
+                                    <li class="no-border no-padding no-margin full-bleed">
+                                        <div class="text-left full-bleed blue lighten-1 force-padding white-text " style="width: 100%;"><a href="base-timeline.html"><i class="fa fa-2x fa-leanpub"></i>
+                                            <span class="profile-info white-text" style="margin-top:-15px">
+                                                <b>PET JOURNAL</b>
+                                                <small>CARE TIMELINE</small>
+                                            </span></a>
+                                        </div>
+                                    </li>
+
+                                <li class="">
+                                    <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+                                        <a class="btn btn-default-bright" role="button">
+                                            <i class="fa fa-fw fa-life-ring text-success"></i>
+                                            SUPPORT</a>
+                                        <a class="btn btn-default-bright" role="button">
+                                            <i class="fa fa-fw fa-power-off text-danger"></i>
+                                            LOGOUT</a>
+                                    </div>
+                                </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
+            </div>
+        </div>
+    </header>
+	<div class="card-head blue darken-1 white-text">
+		<header>
+			<span class="selected-day">&nbsp;</span> &nbsp;<small class="selected-date">&nbsp;</small>
+		</header>
+		<div class="tools">
+			<div class="btn-group">
+				<a id="calender-prev" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-angle-left"></i></a>
+				<a id="calender-next" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-angle-right"></i></a>
+			</div>
+			<div class="btn-group pull-right">
+			</div>
+		</div>
+    <section>
+
+		<div id="data-nanogallery2">
+		</div>
+	</section>
+<script>
+		$("#data-nanogallery2").nanogallery2({
+	  thumbnailHeight:  'auto',
+	  thumbnailWidth:   220,
+	  galleryDisplayTransition : 'slideUp',
+	  galleryDisplayTransitionDuration : 1,
+	  thumbnailDisplayTransition : 'slideUp2',
+	  thumbnailDisplayTransitionDuration : 1200,
+	  thumbnailDisplayInterval : 500,
+	  thumbnailBorderHorizontal: 1,
+	  thumbnailBorderVertical: 1,
+	  thumbnailGutterHeight : 10,
+	  thumbnailGutterWidth : 20,
+	  thumbnailLabel:     { 
+	  	position: 'onBottom',
+	  	hideIcons: false, 
+	  	titleFontSize: '1.1em', 
+	  	displayDescription : true},
+	  icons : {
+	  	thumbnailAlbum : "<i style=\"color:#e00;\" class=\"fa fa-search-plus\"></i>"
+	  },
+	  itemsBaseURL:     'assets/img/',
+
+	  <!-- ### gallery content ### -->
+	  items: [
+	      	{ src: 'dog0.jpg', srct: 'dog0.jpg', title: 'Watch your head', description: 'Having so much much much fun'},
+	      	{ src: 'Ball2.jpg', srct: 'Ball2.jpg', title: 'Play ball' },
+	      	{ src: 'IMG_1247.jpg', srct: 'IMG_1247.jpg', title: 'Hide and seek' },
+	      	{ src: 'Ball2.jpg', srct: 'Ball2.jpg', title: 'Play ball' },
+			{ src: 'IMG_1246.jpg', srct: 'IMG_1246.jpg', title: 'Where are the treats?' },
+	      	{ src: 'IMG_2009.jpg', srct: 'IMG_2009.jpg', title: 'Play ball' },
+	      	{ src: 'IMG_1262.jpg', srct: 'IMG_1262.jpg', title: 'Where are the treats?' },
+	      	{ src: 'IMG_1744.jpg', srct: 'IMG_1744.jpg', title: 'Where are the treats?' },
+	      	{ src: 'IMG_1749.jpg', srct: 'IMG_1749.jpg', title: 'Where are the treats?' },
+	      	{ src: 'IMG_1773.jpg', srct: 'IMG_1773.jpg', title: 'Where are the treats?' },
+	      	{ src: 'Ball.jpg', srct:  'Ball.jpg', title: 'Play and Fun' },
+			{ src: 'DogStand.jpg', srct:  'DogStand.jpg', title: 'Dog Standoff' },
+	      	{ src: 'Lilly-close.jpg', srct:  'Lilly-close.jpg', title: 'Close up' },
+	      	{ src: 'IMG_1783.jpg', srct: 'IMG_1783.jpg', title: 'Where are the treats?' },
+	      	{ src: 'Lilly-Car.jpg', srct:  'Lilly-Car.jpg', title: 'Joy ride' },
+	      	{ src: 'Group.jpg', srct:  'Group.jpg', title: 'Play date' },
+	      	{ src: 'Lilly-Museum.jpg', srct:  'Lilly-Museum.jpg', title: 'Loving the museum' },
+	      	{ src: 'Museum-2.jpg', srct:  'Museum-2.jpg', title: 'Running wild' },
+	      	{ src: 'L1.jpg', srct:  'L1.jpg', title: 'Play and Fun' },
+			{ src: 'L2.jpg', srct:  'L2.jpg', title: 'Play and Fun' },
+			{ src: 'L3.jpg', srct:  'L3.jpg', title: 'Play and Fun' },
+			{ src: 'IMG_1784.jpg', srct: 'IMG_1784.jpg', title: 'Where are the treats?' },
+			{ src: 'IMG_1785.jpg', srct: 'IMG_1785.jpg', title: 'Where are the treats?' },
+			{ src: 'IMG_1922.jpg', srct: 'IMG_1922.jpg', title: 'Where are the treats?' },
+			{ src: 'IMG_1925.jpg', srct: 'IMG_1925.jpg', title: 'Where are the treats?' },
+
+	  ]
+	});
+</script>
+
+</body>
+</html>
+    
