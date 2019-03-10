@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<meta http-equiv="refresh" content="5; URL="https://leashtime.com/client/sandbox/petowner/online/base-calendar.html" />
-
+<!--<meta http-equiv="refresh" content="10"; URL="https://leashtime.com/client/sandbox/petowner/online/base-calendar.html" />
+-->
 <head>
   <title>LeashTime Manager Dashboard</title>
 
@@ -29,245 +29,76 @@
   <!--<link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">-->
   <!-- END STYLESHEETS -->
 
-  <script src='assets/js/LTMGR.js'></script>
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
   <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.js"></script>
   <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>        
 <style>
-#sitter {
-    background-image: url('./assets/img/sitter1.png');
-    background-size: cover;
-    width:  32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-.marker {
-  background-image: url('./assets/img/dog-marker.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-future {
-  background-image: url('./assets/img/location-marker-future.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-arrived {
-  background-image: url('./assets/img/location-marker-arrived.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-noreportreceived{
-  background-image: url('./assets/img/location-marker-complete-noreport.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-maporphotoreceived {
-  background-image: url('./assets/img/location-marker-noreportreceived.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-published  {
-  background-image: url('./assets/img/location-marker-alldone.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-submitted {
-  background-image: url('./assets/img/location-marker-submitted-review.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-late {
-  background-image: url('./assets/img/location-marker-late.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.map-marker {
-  border-radius: 100%;
-  margin: 10px 0;
-}
 
-i {
-  font-family: Roboto 'sans-serif';
-}
-.marker-complete {
-  background-image: url('../../assets/img/icon-late.png');
-  background-size: 85%;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  background-color: forestgreen;
-}
-.marker-canceled {
-  background-image: url('./assets/img/red-dot@3x.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-visitreport {
-  background-image: url('./assets/img/note-icon@3x.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.button {
-  display: inline-block;
-  border: none;
-  padding: 1rem 2rem;
-  margin: 0;
-  text-decoration: none;
-  background: #000069;
-  color: #000000;
-  font-family: sans-serif;
-  font-size: 1rem;
-  cursor: pointer;
-  text-align: center;
-  transition: background 250ms ease-in-out,
-      transform 150ms ease;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}  
+    .mapboxgl-popup {
+    max-width: 400px;
+    }
+    .trans-black{
+    background-color: rgba(0,0,0,.4);
+    }
+    .mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-left .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-left-top .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-left-bottom .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-right .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-right-top .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-right-bottom .mapboxgl-popup-tip {
+      border-bottom-color: rgba(0,0,0,.4);
+    }
+    .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+    .mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip,
+    {
+      border-top-color: rgba(0,0,0,.4);
+    }
+    popup-anchor-bottom-right .mapboxgl-popup-tip,
+    popup-anchor-bottom .mapboxgl-popup-tip,
+    popup-anchor-bottom-left .mapboxgl-popup-tip {
+      border-top-color: rgba(0,0,0,.4);
+    }
+    .mapboxgl-popup-content {
+      background: rgba(0,0,0,.4);
+    }
 
-.visit-btn-vr-published {
-  border-style: solid ;
-  border-width: 12px;
-  border-color: #1A562F;
-  background: #3DA561;
-  color: #FFFFFF;
-  font-family: sans-serif;
-  font-size: 1rem;
-}
-.visit-btn-vr-submitted {
-  border-style: solid ;
-  border-width: 12px;
-  border-color: #F9f777;
-  background: #3DA561;
-  color: #FFFFFF;
-  font-family: sans-serif;
-  font-size: 1rem;
-}
-.visit-btn-vr-noreportdatareceived {
-  border-style: solid ;
-  border-width: 12px;
-  border-color: #F7390E;
-  background: #3DA561;
-  color: #FFFFFF;
-  font-family: sans-serif;
-  font-size: 1rem;
-}
-
-.visit-btn-arrived {
-  background-color: blue;
-}
-.visit-btn-late {
-  border-style: solid ;
-  border-width: 4px;
-  border-color: #F7390E;
-  background: #F9F777;
-  color: #000000;
-  font-family: sans-serif;
-  font-size: 1rem;
-}
-.visit-btn-future {
-  background-color: white;
-}
-.visit-btn-canceled {
-  background-color: red;
-}
-.mapboxgl-popup {
-max-width: 400px;
-}
-.trans-black{
-background-color: rgba(0,0,0,.4);
-}
-.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-left .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-left-top .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-left-bottom .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-right .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-right-top .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-right-bottom .mapboxgl-popup-tip {
-  border-bottom-color: rgba(0,0,0,.4);
-}
-.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
-.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip,
-{
-  border-top-color: rgba(0,0,0,.4);
-}
-popup-anchor-bottom-right .mapboxgl-popup-tip,
-popup-anchor-bottom .mapboxgl-popup-tip,
-popup-anchor-bottom-left .mapboxgl-popup-tip {
-  border-top-color: rgba(0,0,0,.4);
-}
-.mapboxgl-popup-content {
-  background: rgba(0,0,0,.4);
-}
-
-li {
-list-style: none;
-}
-.alert {
-    cursor: move;
-    margin-bottom: 1em;
-  } 
-.alert.alert-callout.alert-warning {
-    background-color: #faebd4;
-    border-color: #f7d7be;
-    color: #8a6d3b;
-}
-.alert.alert-callout.alert-success {
-    background-color: #d4fad6;
-    border-color: #c5f7be;
-    color: #3c763d;
-}
-.alert.alert-callout..alert-danger {
-    background-color: #fad7d4;
-    border-color: #f7bec3;
-    color: #a94442;
-}
-.alert.alert-callout..alert-info {
-    background-color: #d4e9fa;
-    border-color: #b5e4f6;
-    color: #31708f;
-}
-.alert.alert-callout..alert-default {
-    background-color: rgba(206,206,206,.08);
-    border-color: #666;
-    color: #444;
-}  
+    li {
+    list-style: none;
+    }
+    .alert {
+        cursor: move;
+        margin-bottom: 1em;
+      } 
+    .alert.alert-callout.alert-warning {
+        background-color: #faebd4;
+        border-color: #f7d7be;
+        color: #8a6d3b;
+    }
+    .alert.alert-callout.alert-success {
+        background-color: #d4fad6;
+        border-color: #c5f7be;
+        color: #3c763d;
+    }
+    .alert.alert-callout..alert-danger {
+        background-color: #fad7d4;
+        border-color: #f7bec3;
+        color: #a94442;
+    }
+    .alert.alert-callout..alert-info {
+        background-color: #d4e9fa;
+        border-color: #b5e4f6;
+        color: #31708f;
+    }
+    .alert.alert-callout..alert-default {
+        background-color: rgba(206,206,206,.08);
+        border-color: #666;
+        color: #444;
+    }  
 </style>
 </head>
 
@@ -348,35 +179,58 @@ list-style: none;
                      <div class="section-body">
                        <div class="card style-info force-padding">
                           <span  class="text-small">
-                            <form name='leashtimelogin' method="POST" action="login.php">
-                            <input type='button' id='' name='' value='Login' class='Button' onClick='submitIfValid();' 
-            onMouseOver='this.className="ButtonDown"' onMouseOut='this.className="Button"'>
-                            <input type='hidden' id='bizid' name='bizid' value='' ><input type='hidden' id='jsuseragent' name='jsuseragent' value='' >
-                          </form>
-                            <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=login()>LOGIN</button>
-                            <button type = "button" id="ajaxLogin" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=loginAjax()>AJAX</button>
+                            <form name='leashtimelogin' method="POST" action="https://leashtime.com/login-external.php">
+                                <input type="hidden" name="bizid" value="3">
+                                <input type="hidden" id="jsuseragent" name="jsuseragent" value="">
+                                <input type="hidden" name="failuredestination" value="http://ANY-OLD-DOMAIN.COM/MYLOGINPAGE.HTML">
 
+                                <table style="width:390px" >
+                                <tr>
+                                        <td>Username</td>
+                                        <td align="left"><input type="text" class="full-bleed text-center text-default" name="user_name" size="25" maxlength="65"  autocomplete='off'/></td>
+                                </tr>
+                                <tr>
+                                        <td>Password</td>
+                                        <td align="left"><input type="password" class="full-bleed text-center text-default" name="user_pass" size="25" maxlength="30" onKeyup='autoSubmit(event)'  autocomplete='off'/></td>
+                                </tr>
+                                <tr>
+                                        <td>&nbsp;</td>
+                                        <td align="left">
+                                           <input type='button' value="Login" onclick="submitIfValid()">
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="center"><br /><hr />Click <a href="https://leashtime.com/temp-password-assignment.php?bizid=3"><b>here</b></a> if you have forgotten your password.</td>
+                                </tr>
+
+                            </table>
+
+                            </form>
+
+                            <SCRIPT LANGUAGE="JavaScript" SRC="https://leashtime.com/check-form.js"></SCRIPT>
+                            <SCRIPT LANGUAGE="JavaScript">
+                                document.leashtimelogin.user_name.focus();
+
+                                setPrettynames('user_name','Username','user_pass','Password');
+
+                                function autoSubmit(event) {
+                                  if(event.keyCode == 13) submitIfValid();
+                                }
+                                function submitIfValid(){
+                                  document.getElementById('jsuseragent').value = navigator.userAgent;
+                                  if(MM_validateForm('user_name','','R','user_pass','','R'))
+                                    document.leashtimelogin.submit();
+                                    setTimeout(()=> {
+                                      window.location.replace("https://leashtime.com/client/sandbox/petowner/online/base-calendar.html");
+                                    }, 2000);q
+
+                                }
+
+                            </SCRIPT>
                           </span>
                        </div>
                      </div>
                   </section>
-                  <SCRIPT LANGUAGE="JavaScript" SRC="https://leashtime.com/check-form.js"></SCRIPT>
-                  <SCRIPT LANGUAGE="JavaScript">
-                  document.forms[0].user_name.focus();
-
-                  setPrettynames('user_name','Username','user_pass','Password');
-
-                  function autoSubmit(event) {
-                    if(event.keyCode == 13) submitIfValid();
-                  }
-                  function submitIfValid(){
-                    document.getElementById('jsuseragent').value = navigator.userAgent;
-                    if(MM_validateForm('user_name','','R','user_pass','','R'))
-                      document.leashtimelogin.submit();
-                  }
-                  </SCRIPT>
-
-             
                    <section id="lt-datePanel" style="display: none">
                     <div class="full-bleed">
                       <div class="col-xs-2 no-padding no-margin">
@@ -401,8 +255,7 @@ list-style: none;
         <div class="">
       
           <!-- BEGIN OFFCANVAS PETPRO™ -->
-            <div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
-                <!-- TITLE -->
+           <div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
                 <div class="offcanvas-head ">
                     <header><small style="color:#b43d3d"><strong style="font-weight: 800">PET</strong>PROTECT™</small></header>
                     <div class="offcanvas-tools">
@@ -412,7 +265,6 @@ list-style: none;
                     </div>
                 </div>
                 <div class="offcanvas-body no-padding">
-                    <!-- PET PROTECT ESSENTIAL PANEL CARD -->
                     <div class="">
                         <div class="no-padding">
                             <ul class="list  white-text text-lighten-5">
@@ -424,7 +276,7 @@ list-style: none;
                                         <div class="tile-text">
                                            FDA Recall Alert
                                             <small>January 31, 2019
-<P><a href="">Hill’s Pet Nutrition Voluntarily Recalls Select Canned Dog Food for Excessive Vitamin D</a>
+              <P><a href="">Hill’s Pet Nutrition Voluntarily Recalls Select Canned Dog Food for Excessive Vitamin D</a>
                                             </small>
                                         </div>
                                     </a>
@@ -453,40 +305,14 @@ list-style: none;
                                         </div>
                                     </a>
                                 </li>
-                                <!--<li class="tile pp-sidebar">
-                                    <a href="#!" class="tile-content ink-reaction">
-                                        <div class="tile-icon">
-                                            <i class="md md-account-balance"></i>
-                                        </div>
-                                        <div class="tile-text">
-                                            LOCAL LEASH LAWS
-                                            <small>City of Something</small>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="tile pp-sidebar">
-                                    <a href="#!" class="tile-content ink-reaction">
-                                        <div class="tile-icon">
-                                            <i class="md md-account-balance"></i>
-                                        </div>
-                                        <div class="tile-text">
-                                            DOG BITE LAW
-                                            <small>Resources</small>
-                                        </div>
-                                    </a>
-                                </li>-->
-
                             </ul>
                         </div>
-                        <!--end .card-body -->
                     </div>
-                    <!--END PETPROTECT PANEL CARD -->
-        </div>
+            </div>
               
           </div>
           
       </div>
-        <!-- END OFFCANVAS HOLDER RIGHT -->
 
   
       </div>
@@ -504,7 +330,6 @@ list-style: none;
 <script src="../../assets/js/core/source/AppNavigation.js"></script>
 <script src="../../assets/js/leashtime/LeashtimeOffcanvas.js"></script>
 -->
-<script src="assets/js/lTmanagerapp.js"></script>
       
   </body>
 </html>

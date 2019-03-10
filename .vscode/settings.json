@@ -1,0 +1,7 @@
+{
+    "editor.fontFamily": "Roboto",
+    "editor.fontSize": 16,
+    "editor.fontWeight": "400",
+    "editor.fontLigatures": true,
+    "editor.cursorStyle": "block"
+}
