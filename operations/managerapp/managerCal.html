@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>LeashTime Manager Dashboard</title>
+
+  <!-- BEGIN META -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="per_sitting_businesses">
+  <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+  <!-- END META -->
+
+  <!-- BEGIN FRAMEWORK STYLESHEETS -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+
+  <!-- BEGIN PLUGIN STYLESHEETS -->
+  <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar-leashtime.css">
+
+  <!-- BEGIN LEASHTIME STYLESHEETS -->
+  <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+  <!--<link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">-->
+  <!-- END STYLESHEETS -->
+  <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/core/main.js'></script>
+  <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/interaction/main.js'></script>
+  <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/list/main.js'></script>
+  <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/daygrid/main.js'></script>
+  
+
+  <script src='assets/js/LTMGR.js'></script>
+
+<style>
+#sitter {
+    background-image: url('./assets/img/sitter1.png');
+    background-size: cover;
+    width:  32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.marker {
+  background-image: url('./assets/img/dog-marker.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-future {
+  background-image: url('./assets/img/location-marker-future.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-arrived {
+  background-image: url('./assets/img/location-marker-arrived.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-noreportreceived{
+  background-image: url('./assets/img/location-marker-complete-noreport.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-maporphotoreceived {
+  background-image: url('./assets/img/location-marker-noreportreceived.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-published  {
+  background-image: url('./assets/img/location-marker-alldone.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-submitted {
+  background-image: url('./assets/img/location-marker-submitted-review.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-late {
+  background-image: url('./assets/img/location-marker-late.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+i {
+font-family: Roboto 'sans-serif';
+}
+.marker-complete {
+background-image: url('../../assets/img/icon-late.png');
+background-size: 85%;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+cursor: pointer;
+background-color: forestgreen;
+}
+.marker-canceled {
+background-image: url('./assets/img/red-dot@3x.png');
+background-size: cover;
+width: 32px;
+height: 32px;
+border-radius: 50%;
+cursor: pointer;
+}
+.marker-visitreport {
+background-image: url('./assets/img/note-icon@3x.png');
+background-size: cover;
+width: 32px;
+height: 32px;
+border-radius: 50%;
+cursor: pointer;
+}
+
+.alert {
+/*    background-color:rgba(255,255,255,.5);*/
+/*    display: block;*/
+    cursor: move;
+    margin-bottom: 1em;
+  } 
+.alert.alert-callout.alert-warning {
+    background-color: #faebd4;
+    border-color: #f7d7be;
+    color: #8a6d3b;
+}
+.alert.alert-callout.alert-success {
+    background-color: #d4fad6;
+    border-color: #c5f7be;
+    color: #3c763d;
+}
+.alert.alert-callout..alert-danger {
+    background-color: #fad7d4;
+    border-color: #f7bec3;
+    color: #a94442;
+}
+.alert.alert-callout..alert-info {
+    background-color: #d4e9fa;
+    border-color: #b5e4f6;
+    color: #31708f;
+}
+.alert.alert-callout..alert-default {
+    background-color: rgba(206,206,206,.08);
+    border-color: #666;
+    color: #444;
+}  
+</style>
+</head>
+
+<body class="header-fixed">
+<!--/////////////// BEGIN HEADER ///////////////-->
+<header id="" class="">
+  <div class="headerbar blue ">
+    <!-- HEADER BRANDING -->
+    <div class="">
+      <ul class="header-nav header-nav-options">
+        <li style="float: left;">
+          <a class="btn btn-icon-toggle text-center" data-toggle="menubar" href="javascript:void(0);">
+            <i class=" fa fa-paw white-text fa-2x"></i>
+          </a>
+        </li>
+        <li style="line-height:1;padding:24px 0">
+          <div class="brand-holder hidden-on-mobile">
+            <span class="text-lg white-text">MOBILE<strong> OPERATIONS</strong>™
+            <span style="font-weight: 100;opacity: .8">  |  SITTER MONITOR</span></span>
+            <br><br><br>
+            <span id ="numVisits" style="font-weight: 100;opacity: .8">  NUM VISITS |  </span>
+            <span id ="numVisits" style="font-weight: 100;opacity: .8">  <A HREF='./managerCal.html'>CALENDAR VIEW</a> |  </span>
+            <span id ="numVisits" style="font-weight: 100;opacity: .8">  <A HREF='./managerList.html'>LIST VIEW</a> |  </span>
+
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!-- HEADER TOOLS -->
+    <div class="pull-right m-t-5">
+      <ul class="header-nav header-nav-options">
+
+      </ul>
+    </div>
+
+  </div>
+</header>
+
+    <div id='calendar'></div>
+
+<!-- JAVASCRIPT -->
+<script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+<script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+<script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script> 
+<script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+<script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../assets/js/libs/moment/moment.min.js"></script>
+
+<!--
+<script src="../../assets/js/core/source/AppNavigation.js"></script>
+<script src="../../assets/js/leashtime/LeashtimeOffcanvas.js"></script>
+-->
+<script src="assets/js/managerCal.js"></script>
+      
+  </body>
+</html>

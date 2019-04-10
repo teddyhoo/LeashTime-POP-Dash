@@ -1,0 +1,636 @@
+<html>
+<title>Pet Law</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="zipcodes" value="22201,22202,22203,22204,22205,22206,22207,22213"
+
+	<style type="text/css"></style>
+	<style type="text/css">
+		<!--
+		@import url("./responsive.css");
+		-->
+	</style>
+	<style>
+		p {
+			font-family: Arial;
+			font-size: 12pt;
+			line-height: 1.4;
+			color: #0000000;
+		}
+		a {
+			font-family: Arial;
+			font-size: 12pt;
+			color: #000000;
+		}
+		li {
+			font-family: Arial;
+			font-size: 13pt;
+			color: #000000;
+		}
+		em {
+			font-family: Arial;
+			font-size: 13pt;
+		  	color: #cc0000
+		}
+		.container {
+			width : 96%;
+			height : 380px;
+			text-indent: 14px;
+			text-shadow: 5px;
+			border: 1px #2e466e;
+			background: #0000000;
+		}
+		.container-questions {
+			width : 100%;
+			height : 270px;
+			text-indent: 2px;
+			text-shadow: 2px;
+			border: 1px #2e466e;
+			background: #b1ffe5;
+			font-family: Arial;
+			font-color: #cc0000;
+		}
+		.container-tshirts {
+			width : 92%;
+			height : 250px;
+			text-indent: 4px;
+			text-shadow: 5px;
+			border: 4px #2e466e;
+			background: #1ca1b9;
+			font-family: Helvetica
+		}
+		body {
+			margin: 40px;
+		}
+		.sidebar {
+		  grid-area: sidebar;
+	    }
+
+	    .content {
+	        grid-area: content;
+	    }
+
+	    .header {
+	        grid-area: header;
+	    }
+
+	    .footer {
+	        grid-area: footer;
+	    }
+
+
+	    .wrapper {
+	        display: grid;
+	        grid-gap: 1px;
+	        grid-template-columns: 210px 420px 220px;
+	        grid-template-areas:
+	        "....... header header"
+	        "sidebar content content"
+	        "footer  footer  footer";
+	        background-color: #ccffe5;
+	        font-family:Lato;
+			font-size:18px;
+			font-color:#000000;
+
+	    }
+
+
+		.box {
+		  background-color: #ccffe5;
+		  color: #0000000;
+		  border-radius: 2px;
+		  padding: 5px;
+		  font-color:#000000;
+		  font-size: 100%;
+		}
+
+		.header,
+		.footer {
+		  background-color: #0066cc;
+		}
+
+		.myButton {
+			-moz-box-shadow:inset 0px 39px 0px -24px #23395e;
+			-webkit-box-shadow:inset 0px 39px 0px -24px #23395e;
+			box-shadow:inset 0px 22px 0px -24px #23395e;
+			background-color:#22466e;
+			-moz-border-radius:1px;
+			-webkit-border-radius:px;
+			border-radius:1px;
+			border:1px solid #1f2f47;
+			display:inline-block;
+			cursor:pointer;
+			color:#efefef;
+			font-family:Helvetica;
+			font-size:18px;
+			padding:16px 15px;
+			text-decoration:none;
+			text-shadow:0px 1px 0px #263666;
+			width: 150;
+		}
+
+		.buyButton {
+			-moz-box-shadow:inset 0px 21px 0px -24px #23395e;
+			-webkit-box-shadow:inset 0px 21px 0px -24px #23395e;
+			box-shadow:inset 0px 22px 0px -24px #23395e;
+			background-color:#33ff33;
+			-moz-border-radius:2px;
+			-webkit-border-radius:px;
+			border-radius:1px;
+			border:1px solid #22466e;
+			display:inline-block;
+			cursor:pointer;
+			color:#fffff;
+			font-family:Helvetica;
+			font-size:18px;
+			padding:16px 15px;
+			text-decoration:none;
+			text-shadow:0px 1px 0px #263666;
+			width: 150;
+		}
+		.myButton:hover {
+			background-color:#415989;
+		}
+		.myButton:active {
+			position:relative;
+			top:1px;
+		}
+	</style>
+
+</head>
+<body>
+<div>
+	<script type="text/javascript">
+     	
+		var latitude = 0;
+		var longitude = 0;
+		var client = new XMLHttpRequest();
+
+
+		if(navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(showLocation, null);
+		} else {
+			alert("Geolocation not supported");
+		}
+
+		function showLocation(pos) {
+			latitude = pos.coords.latitude;
+			longitude = pos.coords.longitude;
+	
+			//reverseGeoCode();
+		}
+
+		function reverseGeoCode() {
+
+			client.onload = handler;
+			var createRequest = "https://us1.unwiredlabs.com/v2/process.php/v1/reverse.php?format=json&key=9232f7285af48311eeae&lat=" + latitude + " &lon=" + longitude;
+			client.open("GET", createRequest);
+			client.setRequestHeader("Content-Type","application/json");
+			///client.open("GET", "http://locationiq.org/v1/reverse.php?format=json&key=9232f7285af48311eeae&lat=33.333333&lon=-77.2222&zoom=18&addressdetails=1",true);
+			client.send();
+
+			function handler() {
+
+				if (this.status == 200) {
+					var responseHeader = client.responseType;
+					var responseText = client.responseText;
+					alert("TEXT" + responseText);
+
+					var responseJSON = this.response;
+					alert(responseJSON);
+				}
+			}
+
+		}
+     </script>
+</div>
+
+
+<div class="wrapper"> 	
+	<img src="./Leash-Images/Pet-Health-Insurance-Banner-Ad.jpg" height=100 width=220></a>        
+	<div class="box header">
+		<img src="./Leash-Images/leashtime-logo@3x.png" height=80 width=95></img> 
+		<img src="./Leash-Images/leashtime-logo-text@3x.png" height=80 width=320></img></img>	
+		<!--<h2>ALL THINGS LEASH<BR>Leashes, Collars, Tags, Pet Accessories</h2>-->
+	</div>
+  
+
+	<div class="box sidebar">
+	 	<p>
+
+	 		<a href="./Wellness-Dogs/Dog-Wellness-List.html" class="myButton">Dog Wellness</a>
+			<a href="./DogLiabilityInsurance/Dog-Bite-Insurance-Claims-2016.html" class="myButton">Dog Bite Stats</a>
+			<a href="./DogLiabilityInsurance/Dog-Bite-Insurance-Companies-Comparison.html" class="myButton">Canine Insurance</a>
+			<a href="./DogLiabilityInsurance/Dangerous-Breed-Bans.html" class="myButton">Breed Laws</a>
+			<a href="./Federal-Animal-Laws.html" class="myButton">Federal Animal Laws</a>
+			<a href="./PET-HEALTH-INSURANCE/pethealthinsurance.html" class="myButton">Pet Health Insurance</a>
+			<a href="./Dog-Bite-Lawyers.html" class="myButton">Dog Bite Lawyers</a>
+			<p>
+
+			<a href="./ECOMMERCE/LeashCommerce/LeashTime-commerce.html" class="buyButton">Leashes</a>
+			<a href="./ECOMMERCE/LeashCommerce/LeashTime-commerce.html" class="buyButton">Collars</a>
+			<a href="./ECOMMERCE/LeashCommerce/LeashTime-commerce.html" class="buyButton">Bark Collars</a>
+			<a href="./ECOMMERCE/LeashCommerce/LeashTime-commerce.html" class="buyButton">Muzzles</a>
+			<a href="./ECOMMERCE/LeashCommerce/LeashTime-commerce.html" class="buyButton">Poop products</a>
+			
+	</div>
+
+  	<div class="box content">
+  	<h1>Pet Law</h1>
+
+	  	<div class="container-questions">
+	  		<em>My dog bit our neighbor. What is our legal situation?</em>
+		  		<BR>
+		  	<a href="./dog-bit-someone.html">
+		  		Dog Bite Law
+		  	</a>
+		  	<p>
+		  	<em>We received a warning about noise ordinance violations because our dog was barking all day. What should we do?</em>
+		  		<BR>
+		  	<a href="./noise-ordinance.html">
+		  		Noise (Nuisance) Ordinances
+		  	</a>
+		  	<p>
+		  	<em>Our homeowner's insurance won't cover us because we own a pit bull.</em>
+		  		<BR>
+		  	<a href="./DogLiabilityInsurance/Dog-Bite-Insurance-Companies-Comparison">
+		  		Canine Liability Insurance options</a>
+		  	<p>
+		  	<em>My neighbor's dog bit me, how much can I win if I sue them?</em>
+		  		<BR>
+		  	<a href="./DogLiabilityInsurance/Dog-Bite-Insurance-Claims-2016.html"">
+		  		Personal Liability Attorneys
+		  	</a>
+	  	</div>
+
+		<p>Pets are wonderful to have in your life, however, with the great joy comes great responsibility. As a proud pet parent, you want to ensure that your pet and those who interact with your pet are safe. The most serious legal issue in pet law typically centers on dog bite law.
+
+		<ul>
+		<li><em>Leash Laws, Dog Bite Laws, Canine Liability Insurance</em> : Whether you are the victim of a dog bite or your dog initiated a dog bit incident, it will behoove you to be familiar with your state and municipality's dog bite laws. Dog bite liability can often result in personal liability judgments and settlements, therefore, proper insurance coverage is necessary. 
+		<p>
+		<li><em>Collar, Tags and Vaccinations </em>: One of the first encounters you have with regard to pet legal issues is annual licensing and vaccinations. If your dog barks frequently enough to agitate your neighbors, you will likely need a bark collar. 
+		<p>
+		<li><em>Dog waste, Off Leash Dog Parks</em> : If you are off your property, you will be responsible for picking up after the poo that your pet leaves behind.
+		<p>
+		<li><em>Other Legal</em> : Neutering, dangerous breeds, maximum number of dogs in household, tethering limits
+
+		</ul>
+
+		<h3>The Basics of Pet Law</h3>
+
+		<p>Dog Bite Liability is governed by state laws, however, the determination of liability for a dog bite incident can vary dramatically from one state to another. For instance, if a dog bites your neighbor after they came onto your lawn in Virginia and it is the first time the dog has bitten anyone, you likely will have absolutely zero liability. The same incident in California would hold you personally liable.
+
+		Significant elements of each state's law are often determined by laws implemented in your particular municipality. Further, some legal issues pertaining to pets are covered by Federal law (e.g. Americans with Disabilities Act for service designated dogs). It can intimidating and confusing to find the relevant legal information, much less interpret that information. ALL THINGS LEASH aims to be a resource providing you with information relevant to where you reside so that you can properly interpret laws governing ownership of your pet. 
+
+		<h3>Dog Bite Laws by the Number</h3>
+
+		<p>There were 4.3 million reported dog bite incidents in 2016, resulting in 18,123 claims settled by insurers for average of $33,230. Understand your legal position if the unfortunate should occur -- either your dog bites someone or you are bitten. The incident now thrusts you into the legal realm of pet law. Does your homeowners or renter's insurance cover dog bite claims? If so, what are the deductibles and payout limits? Some insurance companies do not cover dog bite liability if your dog is deemed a dangerous enough breed. Who can you turn to for canine liability coverage, particularly if you own a breed of dog deemed "dangerous" or "vicious"?
+
+	
+		<p>The scope of legal issues that you can face include:
+
+
+
+	
+		<h2>Dog Bite Law</h2>
+
+		<p>
+		If you are not fortunate enough to avoid being involved in a dog bite incident (either as a victim or accused), you will want to fully inform yourself about the legal consequences. 
+
+		<table class="layout display responsive">
+		<tr>
+			<td>
+				<a href="./DogBiteLaws/ALABAMA-dog-bite-laws.html" state="DC">AL</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/ARKANSAS-dog-bite-laws.html" state="AK">AK</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/ARIZONA-dog-bite-laws.html" state="AZ">AZ</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/ARKANSAS-dog-bite-laws.html" state="AR">AR</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/CALIFORNIA-dog-bite-laws.html" state="CA"><em>CA</em></a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/COLORADO-dog-bite-laws.html" state="CO">CO</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/CONNECTICUT-dog-bite-laws.html" state="CT">CT</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/DELAWARE-dog-bite-laws.html" state="DE">DE</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/FLORIDA-dog-bite-laws.html" state="FL"><em>FL</em></a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/GEORGIA-dog-bite-laws.html" state="GA"><em>GA</em></a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="./DogBiteLaws/HAWAII-dog-bite-laws.html" state="HI">HI</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/IDAHO-dog-bite-laws.html" state="ID">ID</a>
+			</td>
+
+			<td>
+				<a href="./DogBiteLaws/ILLINOIS-dog-bite-laws.html" state="IL"><em>IL</em></a>
+			</td>
+
+			<td>
+				<a href="./DogBiteLaws/INDIANA-dog-bite-laws.html" state="IN">IN</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/PENNSYLVANIA-dog-bite-laws.html" state="IA">IA</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/FLORIDA-dog-bite-laws.html" state="KS">KS</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/NORTH-CAROLINA-dog-bite-laws.html" state="KY">KY</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/NORTH-CAROLINA-dog-bite-laws.html" state="LA">LA</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/WASHINGTON-dog-bite-laws.html" state="WA">ME</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/ARIZONA-dog-bite-laws.html" state="AZ">MD</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="./DogBiteLaws/NEW-JERSEY-dog-bite-laws.html" state="NJ">MA</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/TEXAS-dog-bite-laws.html" state="TX">MI</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/COLORADO-dog-bite-laws.html" state="IL">MN</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/GEORGIA-dog-bite-laws.html" state="GA">MS</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/GEORGIA-dog-bite-laws.html" state="GA">MO</a>
+			</td>
+			<td>			
+				<a href="./DogBiteLaws/DC-dog-bite-laws.html" state="DC">MT</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/VIRGINIA-dog-bite-laws.html" state="VA">NE</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/ILLINOIS-dog-bite-laws.html" state="IL">NV</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/NEWYORK-dog-bite-laws.html" state="NY">NH</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/MARYLAND-dog-bite-laws.html" state="MD"><em>NJ</em></a>
+			</td>
+			
+		</tr>
+		<tr>
+			<td>
+				<a href="./DogBiteLaws/NEWYORK-dog-bite-laws.html" state="NY">NM</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/PENNSYLVANIA-dog-bite-laws.html" state="PA"><em>NY</em></a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/FLORIDA-dog-bite-laws.html" state="FL">NC</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/DC-dog-bite-laws.html" state="DC">ND</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/VIRGINIA-dog-bite-laws.html" state="VA"><em>OH</em></a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/ILLINOIS-dog-bite-laws.html" state="IL">OK</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/CALIFORNIA-dog-bite-laws.html" state="CA">OR</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/MARYLAND-dog-bite-laws.html" state="MD">PA</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/NEWYORK-dog-bite-laws.html" state="NY">RI</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/PENNSYLVANIA-dog-bite-laws.html" state="PA">SC</a>
+			</td>
+				
+		</tr>
+		<tr>
+			<td>
+				<a href="./DogBiteLaws/SOUTH-DAKOTA-dog-bite-laws.html" state="SD">SD</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/TENNESSEE-dog-bite-laws.html" state="TN">TN</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/TEXAS-dog-bite-laws.html" state="TX">TX</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/UTAH-dog-bite-laws.html" state="UT">UT</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/VERMONT-dog-bite-laws.html" state="VT">VT</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/VIRGINIA-dog-bite-laws.html" state="VA">VA</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/MASSACHUSETTS-dog-bite-laws.html" state="WA">WA</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/TEXAS-dog-bite-laws.html" state="TX">WV</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/WISCONSIN-dog-bite-laws.html" state="WI">WI</a>
+			</td>
+			<td>
+				<a href="./DogBiteLaws/WYOMING-dog-bite-laws.html" state="WY">WY</a>
+			</td>
+
+
+		</tr>
+		<tr>
+			<td><a href="./DogBiteLaws/DC-dog-bite-laws.html" state="DC">DC</a>	
+		</tr>
+		</table>
+		<p>Whether your dog has bitten someone or you have been bitten by a dog, the consequences and outcomes can vary greatly depending on the state and local jurisdiction where you reside. There are three main classifications of legal liability with regard to dog bites:
+
+		<ul>
+		<li><i>Contributory negligence</i>: if the victim has even 1% responsibilty for the dog bite incident, then dog bite law dictates that they cannot recover damages. Also known as the "one-bite" rule
+		<P>
+	
+		<li><i>Pure comparative falut</i>: apportions damages for dog bite incident based on the relative fault of the victim
+		<P>
+	
+		<li><i>51% bar</i>: if the victim is less than 51% at fault for the dog bite incident, then they are wholly absolved from any contributory negligence and can recover full civil damages
+		</ul>
+		<h2>Leash Laws</h2>
+
+		<p>Leash Laws are universal, however, you want to be aware of the specifics in your particular state and municipality. 
+
+		<table class="layout display responsive">
+		<tr>
+		<td>
+			<a href="./DogBiteLaws/DC-dog-bite-laws.html" state="DC">D.C.</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/VIRGINIA-dog-bite-laws.html" state="VA">VA</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/ILLINOIS-dog-bite-laws.html" state="IL">IL</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/CALIFORNIA-dog-bite-laws.html" state="CA">CA</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/MARYLAND-dog-bite-laws.html" state="MD">MD</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/NEWYORK-dog-bite-laws.html" state="NY">NY</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/PENNSYLVANIA-dog-bite-laws.html" state="PA">OH</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/FLORIDA-dog-bite-laws.html" state="FL">FL</a>
+		</td>
+		</tr>
+		<tr>
+		<td>
+			<a href="./DogBiteLaws/NORTH-CAROLINA-dog-bite-laws.html" state="NC">NC</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/WASHINGTON-dog-bite-laws.html" state="WA">WA</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/ARIZONA-dog-bite-laws.html" state="AZ">PA</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/NEW-JERSEY-dog-bite-laws.html" state="NJ">NJ</a>
+		</td>
+
+		<td>
+			<a href="./DogBiteLaws/MASSACHUSETTS-dog-bite-laws.html" state="MA">MA</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/TEXAS-dog-bite-laws.html" state="TX">TX</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/COLORADO-dog-bite-laws.html" state="IL">CO</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/GEORGIA-dog-bite-laws.html" state="GA">GA</a>
+		</td>
+		</tr>
+		</table>
+
+
+	<h2>Barking Ordinances</h2>
+
+	<table class="layout display responsive">
+		<tr>
+		<td>
+			<a href="./DogBiteLaws/DC-dog-bite-laws.html" state="DC">Albermarle</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/VIRGINIA-ARLINGTON-bark-ordinance.html" state="VA">Arlington</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/ILLINOIS-dog-bite-laws.html" state="IL">Alexandria</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/CALIFORNIA-dog-bite-laws.html" state="CA">Fairfax</a>
+		</td>
+		</tr>
+		<tr>
+		<td>
+			<a href="./DogBiteLaws/MARYLAND-dog-bite-laws.html" state="MD">Henrico</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/NEWYORK-dog-bite-laws.html" state="NY">Loudoun</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/PENNSYLVANIA-dog-bite-laws.html" state="PA">Richmond</a>
+		</td>
+		<td>
+			<a href="./DogBiteLaws/FLORIDA-dog-bite-laws.html" state="FL">Virginia Beach</a>
+		</td>
+		</tr>
+	</table>
+		
+		<p>Whether it is your desire to stop your neighbor's dog from barking or your neighbor's desire to stop your dog from barking, you will want to be armed with all the facts regarding your rights and responsibilities. Almost exclusively, your local jurisdiction (county, township, city) will have local ordinances concerning dog barking. Depending on the type of dwelling, you may have 
+
+
+	<h2>Off Leash Dog Parks</h2>
+
+	Rules and regulations regarding dog behavior in the parks in your area.
+
+	<h2>Emergency Vets</h2>
+
+	Hourse of operation, location (and map), fees for injuries typically sustained in a dog bite incident. 
+
+	<h2>Municipal Contact Information</h2>
+
+	County manager, non-emergency police, animal shelters
+	  
+
+</div>
+
+	<div class="box footer">
+		
+		<BR>
+			<!--<div class="container-tshirts">-->
+				<div style="text-align:center;line-height:90%;font-family:Arial;font-size:15px;">
+				<BR>
+					<a href="https://www.zazzle.com/z/yid3r?rf=238889186966520491" rel="nofollow">
+					<img src="./Leash-Images/see-some.png" width=180 height=180 alt="If u see some sh*tT-Shirt" style="border:2; border-color:#000000; border-width=4 /></a>
+				<br/>
+				<a href="https://www.zazzle.com/z/yid3r?rf=238889186966520491" rel="nofollow"><BR>T-Shirt<BR>$19.95</a>
+				</div>
+			<!--</div>-->
+
+			<br>
+			<!--<div class="container-tshirts">-->
+
+				<div style="text-align:center;line-height:90%;font-family:Arial;font-size:15px;color=#ffffff;">
+				<BR>
+				<a href="https://www.zazzle.com/z/yidcc?rf=238889186966520491" rel="nofollow">
+				<img src="./Leash-Images/GOT-TREAT.PNG" alt="GOT TREAT T-Shirt" width=160 height= 160 style="border:2;" />
+				</a>
+				<br/>
+				<a href="https://www.zazzle.com/z/yidcc?rf=238889186966520491" rel="nofollow">GOT TREAT<BR>T-Shirt ($19.95)</a>
+				</div>
+			<!--</div>-->
+
+			<br>
+			<!--<div class="container-tshirts">-->
+
+				<div style="text-align:center;line-height:90%;font-family:Arial;font-size:15px;color=#ffffff;">
+				<BR>
+				<BR>
+				<a href="https://www.zazzle.com/z/yidcc?rf=238889186966520491" rel="nofollow">
+				<img src="./Leash-Images/DOGPARK.PNG" alt="GOT TREAT T-Shirt" width=160 height= 160 style="border:2;" />
+				</a>
+				<br/>
+				<a href="https://www.zazzle.com/z/yidcc?rf=238889186966520491" rel="nofollow">GOT TREAT<BR>T-Shirt ($19.95)</a>
+				</div>
+			<!--</div>-->	
+	</div>
+
+</div>
+

@@ -23,19 +23,23 @@ var LT = (function() {
 			this.client_id = client_id;
 			this.petOwnerData = pet_owner_data;
 			this.numberOfPets = pet_info.length;
-			
 			this.petImages = [];
-			this.customFields = [];
 
+			//console.log(pet_owner_data);
 			this.parsePetInfo(pet_info);
 			this.parsePetOwnerData(pet_owner_data);
-
+			this.parseCustomFields(pet_owner_data)
 		}
 
 		parsePetOwnerData(pData) {
+			//let profileKeys = pData.keys();
+			//profileKeys.forEach((key) => {
+			//	console.log(key + ' --> ' + pData[key]);
+			//});
 			this.petOwnerName = pData['clientname'];
 			this.lname = pData['lname'];
 			this.fname = pData['fname'];
+			this.fname2 = pData['fname2'];
 			this.lname2 = pData['lname2'];
 			this.lat = pData['lat'];
 			this.lon = pData['lon'];
@@ -49,8 +53,10 @@ var LT = (function() {
 			this.cellphone = pData['cellphone'];
 			this.cellphone2 = pData['cellphone2'];
 			this.homephone = pData['homephone'];
+			this.workphone = pData['workphone'];
 			this.garagegatecode = pData['garagegatecode'];
 			this.alarmcompany = pData['alarmcompany'];
+			this.alarmcophone = pData['alarmcophone'];
 			this.alarminfo = pData['alarminfo'];
 			this.vetptr = pData['vetptr'];
 			this.notes = pData['cellphone'];
@@ -100,23 +106,8 @@ var LT = (function() {
 			this.neighbor_cellphone= this.neighbor_dict['cellphone'];
 			this.neighbor_note = this.neighbor_dict['note'];
 			this.neighbor_hasKey = this.neighbor_dict['haskey'];
-			let re = new RegExp('custom[0-9]+');
-			let keys = Object.keys(pData);
-			let customFieldsLocal = [];
-
-			keys.forEach(function(clientKey) {
-				if (re.exec(clientKey)) {
-					let custom_dictionary = pData[clientKey];
-					let custom_key_val = {};
-					if (custom_dictionary['value'] != null) {
-						custom_key_val[custom_dictionary['label']] = custom_dictionary['value'];
-						customFieldsLocal.push(custom_key_val);
-					}
-				}
-			})
-
-			this.customFields = customFieldsLocal;
 		}
+
 
 		parsePetInfo(pet_info) {
 			this.pets = [];
@@ -129,8 +120,30 @@ var LT = (function() {
 		}
 
 		parseCustomFields(custom_fields) {
+			this.customStuff = [];
+			let keys = Object.keys(custom_fields);
+			let re = new RegExp('(custom[0-9]+)');
+
+			keys.forEach((customField)=> {
+				let regexMatch = re.exec(customField);
+				if(regexMatch != null) {
+					let customDic = custom_fields[customField];
+					let keyCustom = customDic['label'];
+					let keyVal = customDic['value'];
+					let customObj = new CustomField(keyCustom, keyVal);
+					this.customStuff.push(customObj);
+				}
+			});
+		}
+	}
+	class CustomField {
+		constructor(customKey, customVal) {
+
+			this.customKey = customKey;
+			this.customVal  = customVal;
 
 		}
+
 	}
 	class Pet {
 		constructor(pet_data) {
@@ -144,19 +157,39 @@ var LT = (function() {
 			this.fixed = pet_data['fixed'];
 			this.description = pet_data['description'];
 			this.notes = pet_data['name'];
+			this.customPetFields = [];
+
+			let pet_keys = Object.keys(pet_data);
+			let re = new RegExp('(custom[0-9]+)');
+
+			pet_keys.forEach((field)=> {
+				let regexMatch = re.exec(field);
+				if(regexMatch != null) {
+					let customDic = pet_data[field];
+					let keyCustom = customDic['label'];
+					let keyVal = customDic['value'];
+					let customObj = new CustomField(keyCustom, keyVal);
+					this.customPetFields.push(customObj);
+				}
+			});				
 		}
 	}
 	class Visit {
 		constructor(visitDictionary) {
+			let visitKeys = Object.keys(visitDictionary);
+			visitKeys.forEach((key) => {
+				//console.log(key + ' ' + visitDictionary[key]);
+			});
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
 			this.service = visitDictionary['servicelabel'];
 			this.service_code = visitDictionary['servicecode'];
 
+			this.arrived = visitDictionary['arrived'];
+			this.completed = visitDictionary['completed'];
 			this.date = visitDictionary['date'];     						// YYYY-MM-DD
 			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
 			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
-			this.arrival_time = visitDictionary['arrived'];			 // YYYY-MM-DD HH:MM:SS
 			this.completion_time = visitDictionary['completed']; // YYYY-MM-DD HH:MM:SS
 			this.visitReport = visitDictionary['visit_report'];			// YYYY-MM-DD HH:MM:SS
 			this.visitNote = visitDictionary['note'];
@@ -288,11 +321,66 @@ var LT = (function() {
 	// *                                                                                                                                            *
 	// ***********************************************************************************
 
-	// Ajax calls
+	async function loginPetOwner() {
 
+		console.log('Regular login button pressed');
+		let username = document.getElementById('username');
+		let password = document.getElementById('password');
+
+		let loginURL = 'https://leashtime.com/client-login.php?username=' + username + '&password=' + password;
+		console.log(loginURL);
+		let options = { 
+			method : 'POST',
+			headers : {
+				'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+			}
+		}
+		let loginClientInfo = async () => { 
+			let response = await fetch(loginURL, options);
+			let loginJSON = await response.json();
+		}
+
+		loginClientInfo().then((data)=> {
+			console.log(data);
+		})
+
+	}
+
+	async function facebookLogin() {
+		console.log('Facebook login button');
+	}
+	// Ajax calls
+	async function loginPetOwnerPortalAjax(username, password) {
+	}
+
+	async function getClientProfileAjax(startDate, endDate) {
 	// VISIT DATA FOR PARTICULAR CLIENT (LOG IN AS CLIENT ID)
 	// https://leashtime.com/client-own-scheduler-data.php?
 	// parameters: &timesframes=1&surchargetypes=1&servicetypes=1&start=YYYY-MM-DD &end=YYYY-MM-DD
+
+		let clientURL = 'https://leashtime.com/client-own-scheduler-data.php?start='+startDate+'&end='+endDate+'&timeframe=1&serviceItems=1&visits=1';
+        let options = {
+            method : 'GET',
+            headers : {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            }
+        }
+
+        let getClientInfo = async () => {
+            let response = await fetch(clientURL,options);
+            let visitJSON = await response.json();
+            return visitJSON;
+        };
+
+        getClientInfo()
+        .then((data)=> {
+            petOwnerProfile = LT.getClientProfileInfo(data);
+
+        });
+
+	}
 
 	// CLIENT AND PET DATA FOR A PARTICULAR CLIENT
 	// https://leashtime.com/client-own-profile-data.php
@@ -303,8 +391,6 @@ var LT = (function() {
 
 
 	function getClientProfileInfo(client_dict) {
-		let clientKeys = Object.keys(client_dict);
-		let client_name = client_dict['clientname'];
 		let client_id = client_dict['clientid'];
 		let pet_info;
 		let petOwnerAndPets;
@@ -472,6 +558,10 @@ var LT = (function() {
 		sendUncancelRequest : sendUncancelRequest,
 		sendChangeVisitRequest : sendChangeVisitRequest,
 		sendRequestSchedule : sendRequestSchedule,
+		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
+		getClientProfileAjax : getClientProfileAjax,
+		loginPetOwner : loginPetOwner,
+		facebookLogin : facebookLogin
 	}
 	module.exports = {
 		visit_list : visit_list,

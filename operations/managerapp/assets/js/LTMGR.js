@@ -69,7 +69,7 @@ var LTMGR = (function() {
 			let visitInfoKeys = Object.keys(visitInfo);
 			visitInfoKeys.forEach((key)=> {
 
-				console.log(key + ' --> ' + visitInfo[key]);
+				//console.log(key + ' --> ' + visitInfo[key]);
 
 				if (key == 'report') {
 					let reportDic = visitInfo.report;
@@ -376,7 +376,6 @@ var LTMGR = (function() {
 			return error;
 		}
 	}
-
 	async  function getManagerVisits() {
 		let base_url = 'http://localhost:3300?type=gVisit';		
 		const response = await fetch(base_url);
@@ -487,16 +486,6 @@ var LTMGR = (function() {
 		};
 		let responseJSON = await fetch(url, options).then((response)=> {return response.json();});
 		return responseJSON;
-
-
-		/*let responseLogin = async ()=> {
-			let response = await fetch(url, options); //.then((response)=> {return response.json();});
-			let responseJSON = await response.json();
-			console.log('resonse login json: ' + responseJSON);
-			return responseJSON;
-		};
-		let returnData = await responseLogin()
-		return returnData;*/
 	}
 	async function getManagerSittersAjax() {
 		console.log('Get manager sitters ajax');
@@ -509,31 +498,6 @@ var LTMGR = (function() {
 			}
 		};
 
-		/*let getSittersAsync = async () => {
-			let getSitterResponse = await fetch(url);//.then((response)=> {return response.json();});
-			let sitterJSON = await getSitterResponse.json();
-			return sitterJSON;
-		};
-
-
-		let processSittersAsync = async () => {
-			let returnSitters = await getSittersAsync();
-			returnSitters.sitters.forEach((sitterDic)=> {
-				sitterList.push(new SitterProfile(sitterDic));
-			});
-			return sitterList;
-		}
-		return processSittersAsync();*/
-		//let sitterRequest = await fetch(url,options);
-		//let sitterJSON = await sitterRequest.json();
-		/*sitterJSON()
-		.then((jsonSitters)=> {
-			console.log(jsonSitters);
-			sitterJSON.sitters.forEach((sitter)=> {
-				console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
-				sitterList.push(new SitterProfile(sitter));
-			});
-		})*/
 		let sitterJSON = await fetch(url).then((response)=> {return response.json();});
 		sitterJSON.sitters.forEach((sitter)=> {
 			console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
@@ -546,14 +510,11 @@ var LTMGR = (function() {
 		let url = 'https://leashtime.com/mmd-visits.php';
 		let listSitterID = [];
 		sitterList.forEach((sitter) => {
-			console.log('Sitter status: ' + sitter.status);
-			//console.log('Sitter ID: ' + sitter.sitterID + ', Sitter name: ' + sitter.sitterName);
+
 			if(sitter.status == 1) {
-				console.log('Sitter ID: ' + sitter.sitterID + ', Sitter name: ' + sitter.sitterName);
 				listSitterID.push(sitter.sitterID);
 			 }
 		});
-		console.log('List sitter ID: ' + listSitterID);
 
 		const options = {
 			method: 'POST',
@@ -583,23 +544,6 @@ var LTMGR = (function() {
 		
 		return visitList;
 
-		/*let visitAsync = async () => {
-			let response = await fetch(url, options);
-			let visitJSON = await response.json();
-			return visitJSON;
-		};
-
-
-		let processVisitAsync = async () => {
-			let returnVisit = await visitAsync();
-			console.log(returnVisit);
-			returnVisit.forEach((visit) => {
-				console.log(visit);
-				visitList.push(new SitterVisit(visit));	
-			});
-			return visitList;
-		};
-		return processVisitAsync();*/
 	}
 	async function getManagerClientsAjax() {
 		let url = 'https://leashtime.com/mmd-clients.php';
@@ -645,7 +589,6 @@ var LTMGR = (function() {
 		});
 		return allClients;
 	}
-
 	async function getMasterVisitReportListAjax(startDate, endDate) {
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
 		let vrListRequest = await fetch(url);
@@ -695,10 +638,17 @@ var LTMGR = (function() {
 		return report;
 	}
 	function getVisitList() {
-
 		return visitList;
 	}
 	function getVisitsBySitterID(sitterID) {
+		let sitterVisitsBySitterID = [];
+		visitList.forEach((visit)=> {
+
+			if (sitterID == visit.sitterID) {
+				sitterVisitsBySitterID.push(visit);
+			}
+
+		});
 	}
 	function getVisitsBySitter(sitterID) {
 
@@ -785,8 +735,6 @@ var LTMGR = (function() {
 		}
 		return null;
 	}
-
-
 
 	return {
 

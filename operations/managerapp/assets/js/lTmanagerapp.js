@@ -10,7 +10,7 @@
         var allClients =[];
         var visitReportList = [];
 
-        var visitsBySitter =  {};
+        var visitsBySitter =  [];
         var mapMarkers = [];
         var visitButtonList = [];
         var displaySitters = {};
@@ -59,7 +59,6 @@
         var total_duration_all = 0;
         var onWhichDay = '';
 
-        var sitterIcons = ["marker1", "marker2","marker3","marker4"];
         const  dayArrStr = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
         const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
        
@@ -110,11 +109,74 @@
             .then((vListItems)=> { 
                 vListItems.forEach((item)=> {
                     visitReportList.push(item);
-                    console.log(item.visitID + ' -> ' + item.status);
+                    //console.log(item.visitID + ' -> ' + item.status);
                 });
                 flyToFirstVisit();
                 buildSitterButtons(allVisits, allSitters);
                 buildVisitButtons();
+            });
+        }
+
+        async function populateSitterAccordions(sitter) {
+
+            let sitterListDiv = document.getElementById('visitListBySitterAccordions');
+            let sitterAccordionDiv = `
+            <div class="sitter card panel"> 
+                <div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
+                    <header>${sitter.sitterID}</header>
+                    <div class="tools">
+                        <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+                    </div>
+                </div>    
+                <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
+                    <div class="card-body small-padding ">      
+                        <div class="visit panel-group" id="visitID">
+                            <div class="card panel">
+                                <div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
+                                    <header>VISIT</header>
+                                    <div class="tools">
+                                    <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+                                    </div>
+                                </div>
+                                <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="card-body">
+                                        <p>VISIT STUFF</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+
+
+            let sitterListElement = document.createElement('div');
+            sitterListElement.setAttribute("type", "div");
+            sitterListElement.setAttribute("id", "accordion-"+sitter.sitterID);
+            sitterListElement.setAttribute("class", "sitter card panel");
+            sitterListElement.setAttribute("style", "background-color: Green;");
+            sitterListElement.setAttribute("click", "expandSitterAccordionAndPopulateVisits(" +sitter.sitterID+")");
+            sitterListElement.innerHMTL = sitterAccordionDiv;
+            sitterListDiv.appendChild(sitterListElement);
+            console.log(sitterListDiv);
+        }
+        function expandSitterAccordionAndPopulateVisits(sitterID) {
+
+            let sitterIDForComponent = "accordion-"+sitterID;
+            let sitterButtonComponent = document.getElementById(sitterIDForComponent);
+            
+            allVisits.forEach((visit)=> {
+                if (visit.sitterID == sitterID) {
+                    let visitForSitterElement = document.createElement('button');
+                    visitForSitterElement.setAttribute('type', 'button');
+                    visitForSitterElement.setAttribute('id','accordion-visit-' + visit.visitID);
+                    visitForSitterElement.setAttribute("class", "btn btn-block sitterProfile");
+                    visitForSitterElement.setAttribute("style", "background-color: Green;");
+                    visitForSitterElement.innerHTML = visit.clientName;
+                    sitterButtonComponent.appendChild(visitForSitterElement);
+                    console.log(visit.clientName);
+                }
             });
         }
         async function loginPromise(loginDate) {
@@ -187,8 +249,6 @@
                 fullDate = loginDate;
             }
 
-
-
             let loginAjaxFetchResponse = await LTMGR.managerLoginAjax(username, password, userRole);
             allSitters = await LTMGR.getManagerSittersAjax();
             allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
@@ -201,53 +261,16 @@
                     console.log(item.visitID + ' -> ' + item.status);
                 });
                 buildSitterButtons(allVisits, allSitters);
+                
                 flyToFirstVisit();
             });
-
-                        /*const ajaxLoginResponse = async() => {
-                let loginResponse = await LTMGR.managerLoginAjax(username, password, userRole);
-                console.log(loginResponse);
-                return loginResponse;
-            }
-            const getSitters = async () => {
-                allSitters = await LTMGR.getManagerSittersAjax();
-                console.log(allSitters);
-            };
-            const getVisits = async () => {
-                allVisits = await LTMGR.getManagerVisitsAjax();
-                console.log(allVisits);
-            };
-            const getClients = async () => {
-                allClients = await LTMGR.getManagerClientsAjax();
-                console.log(allClients);
-            };
-            ajaxLoginResponse()
-            .then((loginResponseInfo) =>{
-                console.log(loginResponseInfo);
-            })
-            .then(()=> {
-                getSitters()
-            }).then(()=> {
-                getVisits().
-            }).then(()=> {
-                getClients();
-            })
-            .then(()=> {
-                masterVreportList()
-                .then((vListItems)=> { 
-                    vListItems.forEach((item)=> {
-                        visitReportList.push(item);
-                        //console.log(item.visitID + ' -> ' + item.status);
-                    });
-                    buildSitterButtons(allVisits, allSitters);
-                    flyToFirstVisit();
-                });
-            });*/       
+   
         }     
         function buildSitterButtons(allSitterVisits, allSittersInfo) {
                     
             totalVisitCount = parseInt(0);
             totalCancelVisitCount = parseInt(0);
+
 
             allSittersInfo.forEach((sitter)=> {
                 let hasVisits = false;
@@ -272,6 +295,7 @@
                 });
 
                 if (hasVisits) {
+                    populateSitterAccordions(sitter);
                     createSitterMapMarker(sitter, 'marker');
                     displaySitters[sitter.sitterID] = false ;
                     let sitterListDiv = document.getElementById("sitterList");
@@ -333,7 +357,7 @@
                     flyToVisit(visit);
                 });
                 visitButtonList.push(visitButton);
-                visitDiv.appendChild(visitButton);
+                //visitDiv.appendChild(visitButton);
             })
         }
         function showAllClients() {
@@ -1074,7 +1098,7 @@
         }
         function flyToFirstVisit() {
             allVisits.forEach((visit)=> {
-                console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
+                //console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
             })
             if (allVisits[1] != null) {
                  let lastVisit = allVisits[1];

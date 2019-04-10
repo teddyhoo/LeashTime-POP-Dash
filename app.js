@@ -93,6 +93,7 @@ http.createServer((req, res) => {
 	 		} else {
 
 	 			cookieVal = httpResponse.headers['set-cookie'];
+	 			console.log(cookieVal);
 	 			request.post({
 	 				url: 'https://leashtime.com/mmd-sitters.php',
 	 				headers: {
@@ -106,6 +107,7 @@ http.createServer((req, res) => {
 	 				} else {
 	 					let listSitterID;
 	 					sitterJSON = JSON.parse(body2);
+	 					console.log(sitterJSON);
 	 					sitterList = sitterJSON.sitters;
 			 			sitterList.forEach((sitter) => {
 							 if(sitter.active == 1) {

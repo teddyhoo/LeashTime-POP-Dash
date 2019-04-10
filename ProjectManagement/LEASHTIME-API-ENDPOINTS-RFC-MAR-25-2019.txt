@@ -1,0 +1,144 @@
+New API Endpoints
+
+PROPOSED (NEW)
+----------------------------
+https://leashtime.com/send-visit-report.php
+----------------------------
+param: appoitnment ID, manager-username, manager-password
+frontend: manager dashboard interface
+returns: {status : ok}
+
+PROPOSED (NEW)
+--------------------------------------------------------
+https://leashtime.com/pet-owner-login.php
+--------------------------------------------------------
+param: username, password
+frontend: access to the same login 
+returns: {status: ok}
+
+PROPOSED (NEW)
+--------------------------------------------------------
+https://leashtime.com/pet-owner-cancel-visits.php
+--------------------------------------------------------
+param: username, password, 
+[
+	{
+		visitid: id,
+		cancel_requested_on_date: <DATE>,
+		note: note
+	},
+	{},
+	{},
+]
+frontend: pet owner portal
+returns: {status: ok}
+
+PROPOSED (NEW)
+--------------------------------------------------------
+https://leashtime.com/pet-owner-change-visit.php
+--------------------------------------------------------
+param: username, password, 
+[
+	{
+		visitid: id,
+		change_requested_on_date: <DATE>,
+		note: note
+		type: <dateOfService | timeOfService | service>
+		change_to: <newDate | newTime | newService>
+	}
+]
+frontend: pet owner portal
+returns: {status: ok}
+
+PROPOSED (NEW)
+--------------------------------------------------------
+https://leashtime.com/pet-owner-request-visits.php
+--------------------------------------------------------
+param: username, password, 
+[
+	{
+		date: <DATE>,
+		date_requested : <DATE>,
+		timeWindow: <TIME WINDOW>,
+		service : <SERVICE ID>,
+		pets: [petID, petID...],
+		note: <note>
+		surcharge: [surchargeID, ...]
+	}
+]
+frontend: pet owner portal
+returns: {status: ok}
+
+
+PROPOSED (NEW)
+--------------------------------------------------------
+https://leashtime.com/pet-owner-photos.php
+--------------------------------------------------------
+param: username, password, beginDate, endDate
+frontend: async request to obtain list of photos for particular end user
+returns: 
+[
+	{
+		visitid: <num>,
+		linkToPhoto: <url>,
+		photoDate: <date>
+	}, 
+	{ },
+	{ }
+]
+
+PROPOSED (NEW)
+--------------------------------------------------------
+https://leashtime.com/pet-owner-update-profile.php
+--------------------------------------------------------
+param: username, password, 
+[
+	{
+		request_date: <date>
+		fieldname: <newValue>,
+		fieldname: <newValue>,
+		pets : [
+			{
+				type: [add, update]
+				petname: <string>,
+				....
+			}
+		]
+	}
+]
+
+
+MANAGER
+---------------
+ALREADY EXISTS
+https://leashtime.com/client-own-scheduler-data.php
+##############################################
+
+ALREADY EXISTS
+https://leashtime.com/mmd-login.php'
+##############################################
+
+ALREADY EXISTS
+https://leashtime.com/mmd-visits.php
+##############################################
+
+ALREADY EXISTS	
+https://leashtime.com/mmd-clients.php
+##############################################
+
+ALREADY EXISTS
+https://leashtime.com/mmd-sitters.php
+##############################################
+
+ALREADY EXISTS
+https://leashtime.com/mmd-environment.php
+##############################################
+
+ALREADY EXISTS
+https://leashtime.com/visit-report-list-ajax.php
+##############################################
+
+ALREADY EXISTS
+
+##############################################
+

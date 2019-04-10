@@ -36,37 +36,28 @@
 	    	var timeWindowList;
 	    	var event_visits = [];
 	    	var calendar; 
-
 			document.addEventListener('DOMContentLoaded', function() {
 	        	var calendarEl = document.getElementById('calendar');
-
 		        calendar = new FullCalendar.Calendar(calendarEl, {
-
 					plugins: [ 'dayGrid', 'interaction' ],
-
 					dateClick: function(info) {
 						let dateClick = info.date;
 						console.log(dateClick);
 						displayVisitRequest(dateClick);
 					},
-
 					eventClick: function(info) {
 						let eventClicked = info.event._def;
 						let eventProps = eventClicked.extendedProps;
 						console.log('Appointment ID: ' + eventClicked.publicId + ' Status: ' + eventProps.status);
 						
 					},
-
 					eventRender : function(info) {
-
-
 					},
 					eventDragStart : function(info) {
 					},
 					eventDrop : function(info) {
 					}
 				});
-
 				$(document).ready(function () {
 		            $.ajax({
 		                "url" : "http://localhost:3300",
@@ -101,7 +92,6 @@
 	                            <h4 class="modal-title" id="formModalLabel">SERVICE REQUEST</h4>
 	                        </div>
 	                        <form class="form-horizontal" role="form">
-
 	                            <div class="modal-body" id="servicePicker">
 	                                <div class="alert alert-warning text-lg" role="alert">
 	                                    <strong>Date:</strong> <span class="blue-text" id="dateToday">${dateString}</span>
@@ -143,15 +133,12 @@
 	                                <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestServiceButton">REQUEST</button>
 	                                <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
 	                            </div>
-
 	                        </form>
 	                    </div>
 	                </div>
 	            </div>`;
-
             let servicePickerModal = document.getElementById('formModal');
             servicePickerModal.innerHTML = visitRequestHTML;
-
             let sPicker = document.getElementById('chooseService');
             let childNodeServiceItems = sPicker.childNodes; 
             childNodeServiceItems.forEach((node)=> {
@@ -162,7 +149,6 @@
                     })
                 }
             });
-
             let pickPet = document.getElementById('petPicker');
             let childNodePet = pickPet.childNodes;
             childNodePet.forEach((node)=> {
@@ -173,7 +159,6 @@
                         let index = 0;
                         let popIndex = 0;
                         let isPetUnchose = false;
-
                         currentPetsChosen.forEach((chosenPet) => {
                             if (petNormal == chosenPet) {
                                 isPetUnchose = true;
@@ -181,7 +166,6 @@
                                 index = index+1;
                             }
                         })
-
                         if (!isPetUnchose) {
                             currentPetsChosen.push(petNormal);
                         } else {
@@ -190,12 +174,9 @@
                     });
                 }
             });
-
             let showModal = document.getElementById("formModal");
             showModal.setAttribute("class", "show");
-
         }
-
 		function displayChangePicker(withButtons) {
             const cancelChangePanel =  `
             <div class="modal-dialog">
@@ -218,11 +199,9 @@
                                     <label>Note: </label>
                             </div>
                             <div class="modal-footer grey lighten-2" id="cancelChangeButtonPanel">
-
                             ${withButtons.map( function(key) {
                                 return "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" id=\"" + key.buttonText + "\">Confirm Change Visit</button>"
                             })}
-
                             <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelChange" onclick=cancelChange()>Cancel</button>
                             
                             </div>
@@ -230,7 +209,6 @@
                     </div>
                 </div>
             </div>`
-
             let formModal = $('#formModal2').modal();
             formModal2.innerHTML = cancelChangePanel;
             let confirmChange = document.getElementById(withButtons[0].buttonText);
@@ -238,22 +216,17 @@
                 event.preventDefault();
                 let eventkeys = Object.keys(withButtons[0]);
             });
-
             let concelChange = document.getElementById(cancelChange);
             cancelChange.addEventListener('click', function(event) {
                 event.preventDefault();
             });        
     	}
-
-
 		function addCalendarEvents(eventData) {
 				console.log('Calling create events: ');
-
 				all_visits = LT.getVisits(eventData);
        	 		surchargeItems = LT.getSurchargeItems(eventData); 
         		serviceList = LT.getServiceItems(eventData);
         		timeWindowList = LT.getTimeWindows(eventData);
-
         		 all_visits.forEach((visit) => {
 		            let eventTitle = visit.service;
 		            if (visit.note != null) {
@@ -265,32 +238,20 @@
 		            let eventDateEnd = visit.date + ' ' + eventEnd;
 		            let visitColor = '';
 		            let visitURL = '';
-
 		            if(visit.status == 'canceled') {
-
 		                visitColor = 'red';
-
 		            } else if (visit.status == 'completed') {
-
 		                visitColor = 'green';
 		                visitURL ='<LINK TO VISIT REPORT>';
-
 		            } else if (visit.status  == 'future' || visit.status == 'INCOMPLETE' || visit.status == 'incomplete') {
-
 		                visitColor = 'blue';
-
 		            } else if (visit.status == 'late') {
-
 		                visitColor = 'orange';
-
 		            } else if (visit.status == 'pending') {
-
 		                visitColor = 'orange';
 		                eventTitle += ' (PENDING APPROVAL)'
 		                pendingVisits.push(visit);
-
             		}
-
 		            let event = {
 		                id : visit.appointmentid,
 		                title: eventTitle,
@@ -309,7 +270,6 @@
 		            calendar.addEvent(event);
 		        });
         	}*/
-
 	    </script>
   	</head>
 	<body class="header-fixed">
@@ -506,9 +466,7 @@
 
                     <div class="col-sm-3 no-padding">
                         <div class="transparent">
-
                             <div class="card-head" style="line-height: 20px;">
-
                                 <div class="text-light m-l-20 p-t-10">
                                     <small><strong style="font-weight: 800">PET</strong>CARE™ | SCHEDULE SERVICES</small>
                                     <button class="no-margin no-padding btn transparent thin ink-reaction" style="width:100%" data-toggle="modal" data-target="#bizModal" aria-expanded="true">
@@ -517,7 +475,6 @@
 
                                 </div>
                             </div>
-
                             <div class="small-padding">
 
                                 <style>
@@ -752,57 +709,12 @@
                             </div>
                         </div>
 
-            <ul class="timeline timeline-hairline collapse-lg" style="margin-bottom: 0;">
-            <li class="timeline-inverted">
-            <div class="timeline-circ circ-lg style-success"></div>
-            <div class="timeline-entry">
-            <div class="card style-success">
-            <div class="card-body small-padding">
-            <div class="pull-right text-sm"><small><span class="opacity-50">07/17 </span> 3PM</small></div>
-            <h4 class="no-padding no-margin">30 MINUTE WALK</h4>
-            <p class="no-padding no-margin">Sitter has Arrived</p>
-            <p class="no-padding no-margin text-right"><button style="background-color: transparent;">WATCH</button></p>
-            </div>
-            </div>
-            </div>
-            </li>
-            <li class="timeline-inverted">
-            <div class="timeline-circ style-warning"></div>
-            <div class="timeline-entry">
-            <div class="card style-primary">
-            <div class="card-body small-padding">
-
-            </div>
-            </div>
-            </div>
-            </li>
-                    <li class="timeline-inverted">
-                    <div class="timeline-circ style-danger"></div>
-                    <div class="timeline-entry">
-                    <div class="card style-primary">
-                    <div class="card-body small-padding">
-
-                    </div>
-                    </div>
-                    </div>
-                    </li>
-                    <li class="timeline-inverted">
-                    <div class="timeline-circ style-info"></div>
-                    <div class="timeline-entry">
-                    <div class="card style-primary">
-                    <div class="card-body small-padding">
-                    </div>
-                    </div>
-                    </div>
-                    </li>
-                    </ul>
-
-
-                    </div>
-
-                </div>
-            </div>
-        </section>
+            <ul id="timelineItems" class="timeline timeline-hairline collapse-lg" style="margin-bottom: 0;">
+            </ul>
+        </div>
+    </div>
+ </div>
+</section>
 
        <div class="offcanvas">
 

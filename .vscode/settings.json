@@ -1,7 +1,7 @@
 {
-    "editor.fontFamily": "Roboto",
-    "editor.fontSize": 16,
+    "editor.fontFamily": "Fira Code",
+    "editor.fontSize": 14,
     "editor.fontWeight": "400",
     "editor.fontLigatures": true,
-    "editor.cursorStyle": "block"
+    "editor.cursorStyle": "line-thin"
 }
