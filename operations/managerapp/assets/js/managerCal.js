@@ -31,22 +31,6 @@
     var password = '';
     var userRole = 'm';
 
-    const  dayArrStr = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-   
-
-    const masterVreportList = async () => {
-        if(!isAjax) {
-            let vReport = await LTMGR.getMasterVisitReportList(fullDate, fullDate);
-            return vReport;
-        }
-        else {
-            let vReport = await LTMGR.getMasterVisitReportListAjax(fullDate, fullDate);
-            return vReport;
-        }
-    };
-
-
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var calendarEl = document.getElementById('calendar');
@@ -94,133 +78,14 @@
 					}
 				}
         });
-        
-        let today = new Date();
-        let endDate = new Date();
-        login('dlifebri', 'pass','o',today,endDate);
 
-		
+        document.addEventListener()
     });
-
-    function login(loginDate) {
-
-        allVisits = [];
-        allSitters = [];
-        allClients =[];
-        visitsBySitter = [];
-        loginDate = '2019-04-07';
-        setupLoginSteps(loginDate, false);
-    }
-
-    async function setupLoginSteps(loginDate, isUpdate) {
-        if (!isUpdate) {
-            const managerLoginFetch =  loginPromise();
-            await managerLoginFetch;
-        }
-        const sitterListAfterLogin = LTMGR.getManagerData();
-        await sitterListAfterLogin.then((results)=> {
-            allSitters = results;
-        });
-        const visitListAfterLogin = LTMGR.getManagerVisits();
-        await visitListAfterLogin.then((results)=> {
-            allVisits = results;
-        })
-        const clientsAfterLogin = LTMGR.getManagerClients();
-        await clientsAfterLogin.then((results)=> {
-            allClients = results;
-        });
-
-        /*masterVreportList()
-        .then((vListItems)=> { 
-            vListItems.forEach((item)=> {
-                visitReportList.push(item);
-            });
-
-        });*/
-    }
-
-    async function loginPromise(loginDate) {
-
-        /*if (username == '') {
-            username = document.getElementById('userName').value;
-        }
-        if (password == '') {
-            password = document.getElementById('passWord').value;
-        }
-        if (document.getElementById('login').innerHTML == 'LOGIN') {
-            let usernameNode = document.getElementById('userName');
-            usernameNode.parentNode.removeChild(usernameNode);
-            let passwordNode = document.getElementById('passWord')
-            passwordNode.parentNode.removeChild(passwordNode);
-            document.getElementById('login').innerHTML = 'UPDATE';
-        }*/
-
-        fullDate = getFullDate();
-
-        username = 'dlifebri';
-        password = 'pass';
-
-        if (loginDate == null) {
-            fullDate = getFullDate();
-        } else {
-            fullDate = loginDate;
-        }
-
-        let url = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+userRole+'&startDate='+fullDate+'&endDate='+fullDate;
-        let loginFetchResponse;
-        let response;
-        try {
-            loginFetchResponse = await fetch(url);
-        } catch (error) {
-            return error;
-        }
-        try {
-            response = await loginFetchResponse.json();
-        } catch(error) {
-            console.log('Response error ');
-        }
-    }
-
-    function getFullDate() {
-        var todayDate = new Date();
-        onWhichDay = new Date(todayDate);
-        let todayMonth = todayDate.getMonth()+1;
-        let todayYear = todayDate.getFullYear();
-        let todayDay = todayDate.getDate();
-
-        let dayOfWeek = todayDate.getDay();
-
-        let dayWeekLabel = document.getElementById('dayWeek');
-        //dayWeekLabel.innerHTML = dayArrStr[dayOfWeek] + ', ';
-        let monthLabel = document.getElementById('month');
-        //monthLabel.innerHTML = monthsArrStr[todayMonth-1];
-        let dateLabel = document.getElementById("dateLabel");
-        //dateLabel.innerHTML = todayDay;
-        return todayYear+'-'+todayMonth+'-'+todayDay;
-    }
-
-    async function loginFetch(username,password,userRole,fullDate, endDate) {
-        let url = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+userRole+'&startDate='+fullDate+'&endDate='+fullDate;
-        let loginFetchResponse;
-        let response;
-        try {
-            loginFetchResponse = await fetch(url);
-        } catch (error) {
-            return error;
-            }
-        try {
-            response = await loginFetchResponse.json();
-        } catch(error) {
-            console.log('Response error ');
-        }
-    }
 
     async function addCalendarEvents(eventData) {
 
         all_visits = await LTMGR.getManagerVisits();
-            
-
-         all_visits.forEach((visit) => {
+        all_visits.forEach((visit) => {
             let eventTitle = visit.service;
             if (visit.note != null) {
                 eventTitle += '\n' + visit.note;

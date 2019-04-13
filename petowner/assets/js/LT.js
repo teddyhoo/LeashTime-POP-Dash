@@ -321,16 +321,38 @@ var LT = (function() {
 	// *                                                                                                                                            *
 	// ***********************************************************************************
 
-	async function loginPetOwner() {
+	async function loginPetOwner(event) {
+		console.log(event.location);
+		let uName = document.getElementById('username').value;
+		let pWord = document.getElementById('password').value;
+		let poDate = '2019-04-01';
+		let endpoDate = '2019-05-31';
 
+		let loginURL = 'http://localhost:3300?type=petOwnerLogin&username='+uName+'&password='+pWord+'&dateStart='+poDate+'&dateEnd='+endpoDate;
+		let loginRequest = await fetch(loginURL).then((response)=> {
+			console.log('Return response login request');
+			return response.json()
+		});
+		//let loginResponse = await loginRequest.json();
+
+		console.log('Redirecting to new page');
+		event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
+		console.log(event.location);
+	}
+
+	async function facebookLogin() {
+		console.log('Facebook login button');
+	}
+	// Ajax calls
+	async function loginPetOwnerPortalAjax(username, password) {
 		console.log('Regular login button pressed');
-		let username = document.getElementById('username');
-		let password = document.getElementById('password');
+		let uName = document.getElementById('username');
+		let pWord = document.getElementById('password');
 
-		let loginURL = 'https://leashtime.com/client-login.php?username=' + username + '&password=' + password;
+		let loginURL = 'https://leashtime.com/client-login.php?username=' + uName + '&password=' + pWord;
 		console.log(loginURL);
 		let options = { 
-			method : 'POST',
+			method : 'GET',
 			headers : {
 				'Accept': 'application/json',
                 'Content-Type' : 'application/json'
@@ -343,15 +365,7 @@ var LT = (function() {
 
 		loginClientInfo().then((data)=> {
 			console.log(data);
-		})
-
-	}
-
-	async function facebookLogin() {
-		console.log('Facebook login button');
-	}
-	// Ajax calls
-	async function loginPetOwnerPortalAjax(username, password) {
+		});
 	}
 
 	async function getClientProfileAjax(startDate, endDate) {

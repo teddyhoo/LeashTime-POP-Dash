@@ -3,6 +3,9 @@ const https = require('https');
 const url = require('url'); 
 var request = require('request');
 
+const port = 3300;
+const maxLength = 10;
+
 const url_Base_MGR = 'https://leashtime.com';
 const mmdLogin = 'mmd-login.php';
 const mmdSitters = 'mmd-sitters.php';
@@ -12,10 +15,6 @@ const mmdEnvironment = 'mmd-environment.php';
 
 var currentUser = '';
 var currentPass= '';
-
-const port = 3300;
-const maxLength = 10;
-
 var visitList =[];
 var sitterList = [];
 var clientList = [];
@@ -30,6 +29,7 @@ var timeFrames = [];
 var serviceTypes = [];
 var surchargeTypes = [];
 var clientOwnVisits = [];
+var petOwnerDataRaw = {};
 var cookieVal = '';
 
 var loginUsername;
@@ -365,6 +365,54 @@ http.createServer((req, res) => {
 
 			}
 		}); 
+	} else if(theType == 'petOwnerLogin') {
+
+		username = typeRequest.username;
+		password = typeRequest.password;
+		loginStartDate = typeRequest.dateStart;
+		loginEndDate = typeRequest.dateEnd;
+
+		console.log(loginStartDate + ' ' + loginEndDate);
+		let urlString = 'https://leashtime.com/pop-login.php?user_name='+username+'&user_pass='+password;
+
+	 	var j = request.jar();
+	 	request = request.defaults({jar: j});
+	 	request
+	 		.get(urlString)
+	 		.on('response', function(response) {
+	 			var petOwnerVisits = require('request');
+	 			var jj = petOwnerVisits.jar();
+	 			petOwnerVisits = petOwnerVisits.defaults({jar: jj});
+
+	 			cookieVal = response.headers['set-cookie'];
+	 			let clientVisitsURL = 'https://leashtime.com/client-own-scheduler-data.php?start=' +loginStartDate + '&end=' + loginEndDate + '&visits=1&servicetypes=1&surchargetypes=1&timewindows=1';
+				let petOwnerVisitsOptions = {
+	 				method : 'GET',
+	 				url : clientVisitsURL,
+	 				headers : {
+						'Accept' : 'application/json',
+						'Accept-Charset' : 'utf-8',
+						'Content-Type' : 'application/json',
+						'Allow-Control' : true,
+	 					'Cookie' : cookieVal
+	 				}
+	 			};
+
+	 			petOwnerVisits(petOwnerVisitsOptions,function(error,response,body) {
+					if (error != null) {
+						console.log('Error on the client visits request');
+					} else {
+						petOwnerVisits = JSON.parse(body);
+						let keys = Object.keys(petOwnerVisits);
+						keys.forEach((key)=> {
+							console.log(key + ' --> ' + petOwnerVisits[key]);
+						})
+						res.write(JSON.stringify({ "response" : "ok"}));
+						res.end();
+						//console.log(response);
+	 				}
+	 			});
+	 		});
 	} else if (theType == "petOwnerVisits") {
 		var clientRequest = require('request-promise');
 		//var clientGetRequest = require('request-promise');

@@ -40,7 +40,6 @@
       <div class="col-sm-12" style="margin: 10em auto;text-align: center;">
         
 			  <div class="contain-xs align-center lg-padding">
-			    <img src="assets/img/favicon-144.png" width="auto" height="auto" class="align-center" />
           <h3 class="text-primary-bright">LEASHTIME LOGIN</h3>
 			    
 			  </div>
@@ -99,21 +98,26 @@
 								<a href="facebookLogin()" class="btn btn-block btn-raised btn-info"><i class="fa fa-facebook pull-left"></i>Login with Facebook</a>
 						  </p></div>
              
+             <script>
+             	function login(event) {
+             		console.log('login functin called')
+             	}
+             </script>
               <div class="col-sm-6"><p>
-                <a href="#" class="btn btn-block btn-raised btn-info"><i class="fa fa-google pull-left"></i>Login with Google</a>
+                <a href="./online/pop-calender.html" class="btn btn-block btn-raised btn-info"><i class="fa fa-google pull-left"></i>Login with Google</a>
               </p></div>
 						<br><br>
 							<div class="text-divider"><span>LOGIN IN TO YOUR LEASHTIME ACCOUNT</span></div>	
 							<br/>
 							<span class="text-lg text-bold text-primary">LEASHTIME PET OWNER LOGIN</span>
 							<br/><br/>
-							<form class="form floating-label" action=" ./html/dashboards/dashboard.html" accept-charset="utf-8" method="post">
+							<form class="form floating-label" action="javascript:LT.loginPetOwner(this)" accept-charset="utf-8" method="get">
 								<div class="form-group">
-									<input type="text" class="form-control" id="username" name="username">
+									<input type="text" class="form-control" id="username" name="username" value="carbarone">
 									<label for="username">Username</label>
 								</div>
 								<div class="form-group">
-									<input type="password" class="form-control" id="password" name="password">
+									<input type="password" class="form-control" id="password" name="password" value="popit123">
 									<label for="password">Password</label>
 									<p class="help-block"><a href="#">Forgotten?</a></p>
 								</div>
@@ -127,7 +131,7 @@
 										</div>
 									</div><!--end .col -->
 									<div class="col-xs-6 text-right">
-										<button class="btn btn-primary-bright btn-raised" type="submit" onclick=LT.loginPetOwner()>Login</button>
+										<button class="btn btn-primary-bright btn-raised" type="submit">Login</button>
 									</div><!--end .col -->
 								</div><!--end .row -->
 							</form>
