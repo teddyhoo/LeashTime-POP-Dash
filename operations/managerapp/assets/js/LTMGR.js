@@ -68,9 +68,6 @@ var LTMGR = (function() {
 
 			let visitInfoKeys = Object.keys(visitInfo);
 			visitInfoKeys.forEach((key)=> {
-
-				//console.log(key + ' --> ' + visitInfo[key]);
-
 				if (key == 'report') {
 					let reportDic = visitInfo.report;
 					let reportKeys = Object.keys(reportDic);
@@ -81,7 +78,7 @@ var LTMGR = (function() {
 					})
 				}
 				if (key == 'performance') {
-					//console.log('----------------PERFORMANCE------------------')
+					console.log('----------------PERFORMANCE------------------')
 					let perfKeys = Object.keys(visitInfo.performance);
 					perfKeys.forEach((pKey)=> {
 						//console.log(pKey + ' --> ' + perfKeys.pKey);
@@ -498,7 +495,9 @@ var LTMGR = (function() {
 			}
 		};
 
-		let sitterJSON = await fetch(url).then((response)=> {return response.json();});
+		let sitterJSON = await fetch(url).then((response)=> {
+			return response.json();
+		});
 		sitterJSON.sitters.forEach((sitter)=> {
 			console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
 			sitterList.push(new SitterProfile(sitter));

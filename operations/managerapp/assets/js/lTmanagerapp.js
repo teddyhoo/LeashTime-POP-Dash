@@ -89,179 +89,149 @@
             setupLoginSteps(loginDate, false);
         }
 
-
-        function sitterGet(sitterID){
-          console.log("SITTER GET");
-          var sitterID = this.getElementById;
-          sitterID.showSitterVisits(sitterID);
-          
-        }
-
         function populateSitterAccordions(sitter) {
 
             let sitterListDiv = document.getElementById('visitListBySitterAccordions');
-//            let sitterAccordionDiv = `
-//            <div class="sitter card panel"> 
-//                <div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
-//                    <header>${sitter.sitterID}</header>
-//                    <div class="tools">
-//                        <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
-//                    </div>
-//                </div>    
-//                <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
-//                    <div class="card-body small-padding ">      
-//                        <div class="visit panel-group" id="visitID">
-//                            <div class="card panel">
-//                                <div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
-//                                    <header>VISIT</header>
-//                                    <div class="tools">
-//                                    <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
-//                                    </div>
-//                                </div>
-//                                <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
-//                                    <div class="card-body">
-//                                        <p>VISIT STUFF</p>
-//                                    </div>
-//                                </div>
-//                            </div>
-//                        </div>
-//                    </div>
-//                </div>
-//            </div>`;
-
+            //<div class="sitter card panel"> 
             let sitterListElement = document.createElement('div');
             sitterListElement.setAttribute("type", "div");
-            //sitterListElement.setAttribute("id", "accordion-"+sitter.sitterID);
+            sitterListElement.setAttribute("id","sitterListAccordions")
             sitterListElement.setAttribute("class", "sitter card panel");
             sitterListElement.setAttribute("style", "background-color: White;");
-            sitterListDiv.appendChild(sitterListElement);
-
+            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
             let sitterCardHead = document.createElement('div');
             sitterCardHead.setAttribute("type", "div");
             sitterCardHead.setAttribute("id", sitter.sitterID);
             sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
             sitterCardHead.setAttribute("data-toggle", "collapse");
-            sitterCardHead.setAttribute("data-parent", "#visitListBySitterAccordions");
+            sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
             sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
             sitterCardHead.setAttribute("aria-expanded", "false");
-            sitterListElement.appendChild(sitterCardHead);
-
+            // <header>${sitter.sitterID}</header>
             let headerElement = document.createElement('header');
             headerElement.setAttribute("type", "header");
             headerElement.setAttribute("id", "header-"+sitter.sitterID);
             headerElement.innerHTML = sitter.sitterName;
-            sitterCardHead.appendChild(headerElement);
-
+            // <div class="tools">
+            // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+            // </div>
             let toolDiv = document.createElement('div');
-            toolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID);
-            
+            toolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID);   
             let buttonTool = document.createElement('button');
             buttonTool.setAttribute("type","button");
             buttonTool.setAttribute("class", "btn btn-icon-toggle");
-            toolDiv.appendChild(buttonTool);
-
             let iTool = document.createElement('i')
             iTool.setAttribute("type","i");
             iTool.setAttribute("class","fa fa-angle-down");
+
+            sitterListDiv.appendChild(sitterListElement);
+            sitterListElement.appendChild(sitterCardHead);
+            sitterCardHead.appendChild(headerElement);
+            toolDiv.appendChild(buttonTool);
             toolDiv.appendChild(iTool);
             sitterCardHead.appendChild(toolDiv);
-
-            //toolDiv.innerHTML = '<a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i>
-
+            // <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
             let expandAccordion = document.createElement('div');
             expandAccordion.setAttribute("type", "div");
             expandAccordion.setAttribute("id", "accordion-"+sitter.sitterID);
             expandAccordion.setAttribute("class", "collapse");
             expandAccordion.setAttribute("style","height: 0px;");
             expandAccordion.setAttribute("aria-expanded", "false");
-
+            //      <div class="card-body small-padding ">      
             let cardBody = document.createElement('div');
             cardBody.setAttribute("type","div");
             cardBody.setAttribute("class", "card-body small-padding");
-            cardBody.setAttribute("id","visit-tool-accordion-"+sitter.sitterID);
-            expandAccordion.appendChild(cardBody);
-
+            cardBody.setAttribute("id","visitsBy-"+sitter.sitterID);
+            //      <div class="visit panel-group" id="visitID">
             let panelGroup = document.createElement('div');
             panelGroup.setAttribute("type","div");
             panelGroup.setAttribute("class","visit panel-group");
-            panelGroup.setAttribute("id","visit-accordion-panel-"+sitter.sitterID);
-            expandAccordion.appendChild(panelGroup);
+            panelGroup.setAttribute("id","visitAccordionPanel-"+sitter.sitterID);
 
+            cardBody.appendChild(panelGroup);
+            expandAccordion.appendChild(cardBody);
             sitterListElement.appendChild(expandAccordion);
 
             allVisits.forEach((visit)=> {
-
                 if(visit.sitterID == sitter.sitterID) {
-                    console.log("matched visit with client name: " + visit.clientName);
+                    //  <div class="card panel">
                     let panelItem = document.createElement('div');
                     panelItem.setAttribute("type","div");
                     panelItem.setAttribute("class","card panel");
-                    panelItem.setAttribute("id","visitGroup-"+ visit.visitID);
-                    expandAccordion.appendChild(panelItem);
-
+                    panelItem.setAttribute("id","visitDetailDiv-"+ visit.visitID);
+                    //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
                     let visitDiv = document.createElement('div');
                     visitDiv.setAttribute("type", "div");
                     visitDiv.setAttribute("id", "visit-"+visit.visitID);
                     visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
                     visitDiv.setAttribute("data-toggle", "collapse");
-                    visitDiv.setAttribute("data-parent", "#visitGroup-" + visit.visitID);
-                    visitDiv.setAttribute("data-target", visit.visitID);
+                    visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visit.visitID);
+                    visitDiv.setAttribute("data-target", "#visitDetails-"+visit.visitID);
                     visitDiv.setAttribute("aria-expanded", "false");
-                    visitDiv.setAttribute("style", "background-color: Yellow;")
-                    expandAccordion.appendChild(visitDiv);
-
+                    //visitDiv.setAttribute("style", "background-color: Yellow;")
                     let visitHeader = document.createElement("header");
-                    visitHeader.innerHTML = visit.clientName;
-                    visitDiv.appendChild(visitHeader);
 
+                    let visitSummaryHTML = `
+                        <P>${visit.pets} (${visit.clientName})
+                        <P>${visit.timeOfDay}
+                        <P>${visit.service}
+                    `;
+                    visitHeader.innerHTML = visitSummaryHTML;
+                    // <div class="tools">
+                    //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
                     let visitToolDiv = document.createElement('div');
-                    visitToolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID);
-                    visitToolDiv.innerHTML = '<a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>';
+                    visitToolDiv.setAttribute("id","tool-accordion-"+visit.visitID);
+                    let visitDetailButton = document.createElement('button');
+                    visitDetailButton.setAttribute("type","button");
+                    visitDetailButton.setAttribute("class", "btn btn-icon-toggle");
+                    let iVisit = document.createElement('i')
+                    iVisit.setAttribute("type","i");
+                    iVisit.setAttribute("class","fa fa-angle-down");
+                    //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
+                    let visitExpandAccordion = document.createElement('div');
+                    visitExpandAccordion.setAttribute("type", "div");
+                    visitExpandAccordion.setAttribute("id", "visitDetails-"+visit.visitID);
+                    visitExpandAccordion.setAttribute("class", "collapse");
+                    visitExpandAccordion.setAttribute("style","height: 0px;");
+                    visitExpandAccordion.setAttribute("aria-expanded", "false");
+                    //  <div class="card-body">
+                    let visitDetailCard = document.createElement("div");
+                    visitDetailCard.setAttribute("type", "div");
+                    visitDetailCard.setAttribute("class", "card-body small-padding");
+                    visitDetailCard.setAttribute("id","visitDetailCard-" + visit.visitID);
+                    visitDetailCard.setAttribute("style", "background-color: Yellow;")
+                   
+                    let visitDetailsHTML = ' ' ;
+
+                    allClients.forEach((client)=> {
+                        console.log(client.client_id);
+                        if (client.client_id == visit.clientID) {
+                                visitDetailsHTML = `
+                                <P>${client.street1}, ${client.city}, ${client.state} ${client.zip}</p>
+                                <P>ALARM CODE INFO: ${client.alarmcompany} : ${client.alarminfo}
+                                <P>CELL: ${client.cellphone}, ALT CELL: ${client.cellphone2}
+                                <P>EMAIL: ${client.email}
+                                <P>ALT EMAIL: ${client.email2}
+                                 `;
+                        }
+                    });
+                    if (visit.visitNote != null) {
+                        visitDetailsHTML = `<P>NOTE: ${visit.visitNote}` + visitDetailsHTML;
+                    }
+                    visitDetailCard.innerHTML = visitDetailsHTML;
+
+                    visitToolDiv.appendChild(visitDetailButton);
+                    visitToolDiv.appendChild(iVisit);
+                    visitDiv.appendChild(visitHeader);
                     visitDiv.appendChild(visitToolDiv);
-
-                    let visitDivDetail = document.createElement('div');
-                    visitDivDetail.setAttribute("type","div");
-                    visitDivDetail.setAttribute("id","visit-" + visit.visitID);
-                    visitDivDetail.setAttribute("class", "collapse");
-                    visitDivDetail.setAttribute("aria-expanded", "false");
-                    visitDivDetail.setAttribute("style", "height: 0px");
-                    visitDiv.appendChild(visitDivDetail);
-
-                    let visitInfoDiv = document.createElement("div");
-                    visitInfoDiv.setAttribute("type", "div");
-                    visitInfoDiv.setAttribute("id","visit-detail-" + visit.visitID);
-                    visitInfoDiv.innerHTML = "<p>VISIT STUFF</p>";
+                    visitExpandAccordion.appendChild(visitDetailCard);
+                    panelItem.appendChild(visitDiv);
+                    panelItem.appendChild(visitExpandAccordion);
+                    panelGroup.appendChild(panelItem);
 
                 }
             });
-
-            console.log(sitterListDiv);
-
-       }
-
-       function expandSitterAccordionAndPopulateVisits(sitterID) {
-         
-
-
-           let sitterIDForComponent = "accordion-"+sitterID;
-           let sitterButtonComponent = document.getElementById(sitterIDForComponent);
-
-           allVisits.forEach((visit)=> {
-               if (visit.sitterID == sitterID) {
-                   let visitForSitterElement = document.createElement('button');
-                   visitForSitterElement.setAttribute('type', 'button');
-                   visitForSitterElement.setAttribute('id','accordion-visit-' + visit.visitID);
-                   visitForSitterElement.setAttribute("class", "btn btn-block sitterProfile");
-                   visitForSitterElement.setAttribute("style", "background-color: Green;");
-                   visitForSitterElement.innerHTML = visit.clientName;
-                   sitterButtonComponent.appendChild(visitForSitterElement);
-                   console.log(visit.clientName);
-               }
-           });
-       }
-
-
-
+        }
 
         async function setupLoginSteps(loginDate, isUpdate) {
             if (!isUpdate) {
@@ -285,11 +255,10 @@
             .then((vListItems)=> { 
                 vListItems.forEach((item)=> {
                     visitReportList.push(item);
-                    console.log(item.visitID + ' -> ' + item.status);
+                    //console.log(item.visitID + ' -> ' + item.status);
                 });
                 flyToFirstVisit();
                 buildSitterButtons(allVisits, allSitters);
-                buildVisitButtons();
             });
         }
         async function loginPromise(loginDate) {
@@ -361,9 +330,6 @@
             } else {
                 fullDate = loginDate;
             }
-
-
-
             let loginAjaxFetchResponse = await LTMGR.managerLoginAjax(username, password, userRole);
             allSitters = await LTMGR.getManagerSittersAjax();
             allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
@@ -418,8 +384,7 @@
                     flyToFirstVisit();
                 });
             });*/       
-        }     
-        
+        }        
         function buildSitterButtons(allSitterVisits, allSittersInfo) {
                     
             totalVisitCount = parseInt(0);
@@ -447,8 +412,6 @@
                         }
                     }
                 });
-
-
                 if (hasVisits) {
                     createSitterMapMarker(sitter, 'marker');
                     displaySitters[sitter.sitterID] = false ;
@@ -486,55 +449,11 @@
                 populateSitterAccordions(sitter);
 
             });
+        }
 
-        }
-        function buildVisitButtons() {
-            let visitDiv = document.getElementById('visitList');
-            allVisits.forEach((visit)=> {
-                /*let visitButton = document.createElement('button');
-                visitButton.setAttribute("type","button");
-                visitButton.setAttribute("id",visit.visitID);
-                let visitStatusClass = 'visit-btn-'+visit.status;
-                let visitReportStatusClass = 'visit-btn-vr-'+visit.visitReportStatus; 
-                console.log(visitStatusClass + ' ' + visitReportStatusClass);
-                visitButton.setAttribute("class", "btn btn-block "+ visitStatusClass+" " +visitReportStatusClass);
-                let clientName = visit.clientName;
-                let petNames = visit.pets;
-                let statusVisit = visit.status;
-                let reportStat = visit.visitReportStatus;
-                if (visit.visitReportStatus == 'published') {
-                    visitReportList.forEach((vReport)=> {
-                        if (vReport.visitID == visit.visitID) {
-                            reportStat = reportStat + ': ' + vReport.reportPublishedDate + ' ' + vReport.reportPublishedTime;
-                        }
-                    });
-                } else if (visit.visitReportStatus == 'submitted') {
-                    visitReportList.forEach((vReport)=> {
-                        if (vReport.visitID == visit.visitID) {
-                            reportStat = reportStat + ': ' + vReport.reportsubmissiondate;
-                        }
-                    });
-
-                }
-                visitButton.innerHTML = "<p>" + clientName + ", " + petNames + "<p>" + statusVisit + " - " + reportStat;
-                visitButton.addEventListener("click", function () {
-                    flyToVisit(visit);
-                });
-                visitButtonList.push(visitButton);
-                visitDiv.appendChild(visitButton);*/
-            })
-        }
-        function showAllClients() {
-            removeAllMapMarkers();
-            removeVisitDivElements();
-            buildVisitButtons();
-            allVisits.forEach((visit)=> {
-                createMapMarker(visit,'marker');
-            })
-        }
         function createMapMarker(visitInfo, markerIcon) {
             let el = document.createElement('div');
-            console.log(visitInfo.status);
+            //console.log(visitInfo.status);
             if (visitInfo.status == 'future') {
                 el.setAttribute("class","marker-visit marker-visible marker-future");
 
@@ -967,8 +886,7 @@
             visitList.forEach((visit) => {
                 createMapMarker(visit, "");
             })
-        }
-        
+        }        
         function filterMapViewByVisitStatus(filterStatus) {
 
             console.log(filterStatus);
@@ -1265,7 +1183,7 @@
         }
         function flyToFirstVisit() {
             allVisits.forEach((visit)=> {
-                console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
+                //console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
             })
             if (allVisits[1] != null) {
                  let lastVisit = allVisits[1];
@@ -1296,6 +1214,13 @@
             dateLabel.innerHTML = todayDay;
             return todayYear+'-'+todayMonth+'-'+todayDay;
         }
+        function removeAccordionControls() {
+            let accordionVisits = document.getElementById('visitListBySitterAccordions');
+
+            while (accordionVisits.hasChildNodes()) {   
+              accordionVisits.removeChild(accordionVisits.firstChild);
+            }
+        }
         function prevDay() {
             onWhichDay.setDate(onWhichDay.getDate()-1)
             let monthDate = onWhichDay.getMonth() + 1;
@@ -1310,6 +1235,9 @@
             removeVisitDivElements();
         }
         function nextDay() {
+
+            removeAccordionControls();
+
             onWhichDay.setDate(onWhichDay.getDate()+1)
             let monthDate = onWhichDay.getMonth() + 1;
             let monthDay = onWhichDay.getDate();
@@ -1374,8 +1302,7 @@
             monthLabel.innerHTML = monthsArrStr[todayMonth-1];
             let dateLabel = document.getElementById("dateLabel");
             dateLabel.innerHTML = todayDay;*/
-        }
-        
+        }        
         function createPopupNoVisitReportView(visitInfo) {
             let arriveTime = visitInfo.arrived;
             let completeTime = visitInfo.completed;

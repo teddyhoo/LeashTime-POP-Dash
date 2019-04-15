@@ -48,8 +48,8 @@ http.createServer((req, res) => {
 
 	res.writeHead(200, { 'Content-Type': 'application/json','Access-Control-Allow-Origin':'*'});
  	if (theType == 'poVisits') {
-		console.log('VISIT DATA' + visitData);
-		res.write(JSON.stringify(visitData));
+		console.log('VISIT DATA' + petOwnerDataRaw);
+		res.write(JSON.stringify(petOwnerDataRaw));
 		res.end();
 	} else if (theType == 'poClients') {
 		console.log('CLIENT DATA'+ clientData);
@@ -402,89 +402,21 @@ http.createServer((req, res) => {
 					if (error != null) {
 						console.log('Error on the client visits request');
 					} else {
-						petOwnerVisits = JSON.parse(body);
-						let keys = Object.keys(petOwnerVisits);
+						petOwnerDataRaw = JSON.parse(body);
+						let keys = Object.keys(petOwnerDataRaw);
 						keys.forEach((key)=> {
-							console.log(key + ' --> ' + petOwnerVisits[key]);
+							console.log(key + ' --> ' + petOwnerDataRaw[key]);
 						})
 						res.write(JSON.stringify({ "response" : "ok"}));
 						res.end();
-						//console.log(response);
 	 				}
 	 			});
 	 		});
 	} else if (theType == "petOwnerVisits") {
-		var clientRequest = require('request-promise');
-		//var clientGetRequest = require('request-promise');
-		//llet clientOwnVisitURL = 'https://client-own-scheduler-data.php?timeframes=1';	
-		var clientJar = clientRequest.jar();
-		clientRequest = clientRequest.defaults({jar: clientJar});
-		//let username = typeRequest.username;
-		//let password = typeRequest.password;
-		let username = 'theodore';
-		let password = 'dlifPOP1';
-		let user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15';
-		let start_date = '2018-11-01';
-		let end_date = '2018-12-31';
 
-		clientRequest.post({
-			url : 'https://leashtime.com/login.php',
-			form: {user_name:username, user_pass:password, bizid : '', expected_role : 'c', juseragent : user_agent, redirect : '/login'},
-	 		headers: {
-				'Content-Type' : 'application/x-www-form-urlencoded',
-				'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15'
-			}
-		}, function(err, httpResponse, body) {
-			if(err != null) {
-	 			console.log(err);
-	 			res.end();
-	 		} else {
-	 			let cookieVal = httpResponse.headers['set-cookie'];
-	 			console.log('-----------------------------------');
-	 			console.log('RESPONSE COOKIE');
-	 			console.log('CLIENT --> Cookie value: ' + cookieVal);
+		res.write(JSON.stringify(petOwnerVisits));
+		res.end();
 
-	 			console.log('-----------------------------------');
-	 			console.log('-------HEADER RESPONSE-------------------');
-	 			console.log(httpResponse.headers);
-	 			console.log('-----------------------------------');
-	 			console.log('BODY');
-	 			console.log('-----------------------------------');
-	 			//console.log(body);
-
-	 			let options = {
-	 				method : 'GET',
-	 				uri : 'https://leashtime.com/client-own-scheduler-data.php',
-	 				json : true,
-	 				qs : { 
-	 						start : start_date,
-	 						end : end_date
-	 				},
-	 				headers : {
-	 					'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15',
-	 					'Cookie' : cookieVal,
-	 					'Upgrade-Insecure-Requests' : 1,
-	 					'Host': 'leashtime.com',
-	 					'Content-Type':     'application/x-www-form-urlencoded'
-	 				}
-	 			}
-
-
-				var clientJar2 = clientGetRequest.jar();
-	 			clientGetRequest =  clientGetRequest.defaults({jar: clientJar2});
-	 			clientGetRequest(options, function (error, response, body) {
-   					if (!error && response.statusCode == 200) {
-   						console.log('-----------------------------------');
-	 					console.log('-------HEADER RESPONSE-------------------');
-   						console.log(response.headers);
-   						console.log('-----------------------------------');
-
-        				// Print out the response body
-        				//console.log(body)
-    				}
-				})
-	 		}
-		});
 	} else if (theType == "cancel") {
 
 		res.write(JSON.stringify({ "response" : "ok"}));
