@@ -97,7 +97,7 @@
             sitterListElement.setAttribute("type", "div");
             sitterListElement.setAttribute("id","sitterListAccordions")
             sitterListElement.setAttribute("class", "sitter card panel");
-            sitterListElement.setAttribute("style", "background-color: White;");
+            //sitterListElement.setAttribute("style", "background-color: White;");
             //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
             let sitterCardHead = document.createElement('div');
             sitterCardHead.setAttribute("type", "div");
@@ -107,6 +107,10 @@
             sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
             sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
             sitterCardHead.setAttribute("aria-expanded", "false");
+
+            sitterCardHead.addEventListener('click', ()=> {
+
+            })
             // <header>${sitter.sitterID}</header>
             let headerElement = document.createElement('header');
             headerElement.setAttribute("type", "header");
@@ -154,6 +158,8 @@
 
             allVisits.forEach((visit)=> {
                 if(visit.sitterID == sitter.sitterID) {
+                    console.log(visit.status);
+
                     //  <div class="card panel">
                     let panelItem = document.createElement('div');
                     panelItem.setAttribute("type","div");
@@ -168,6 +174,26 @@
                     visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visit.visitID);
                     visitDiv.setAttribute("data-target", "#visitDetails-"+visit.visitID);
                     visitDiv.setAttribute("aria-expanded", "false");
+                    if(visit.status == 'completed') {
+                        panelItem.setAttribute("style","background-color: #0B6623");
+                        // check visit report sent status and adjust view
+                    } else if (visit.status == "late") {
+                        visitDiv.setAttribute("style","background-color: #FFD033");
+
+                    } else if (visit.status == "future") {
+                        visitDiv.setAttribute("style","background-color: #ADD8E6");
+
+                    } else if (visit.status == "canceled") {
+                        visitDiv.setAttribute("style","background-color: #A80000");
+
+                    } else if (visit.status == "arrived") {
+                        
+                    }
+                    visitDiv.addEventListener('click', (eventObj) => {
+
+                        console.log('event object: ' + eventObj.id);
+                        flyToVisit(visit);
+                    });
                     //visitDiv.setAttribute("style", "background-color: Yellow;")
                     let visitHeader = document.createElement("header");
 
@@ -204,7 +230,6 @@
                     let visitDetailsHTML = ' ' ;
 
                     allClients.forEach((client)=> {
-                        console.log(client.client_id);
                         if (client.client_id == visit.clientID) {
                                 visitDetailsHTML = `
                                 <P>${client.street1}, ${client.city}, ${client.state} ${client.zip}</p>
@@ -1222,6 +1247,7 @@
             }
         }
         function prevDay() {
+            removeAccordionControls();
             onWhichDay.setDate(onWhichDay.getDate()-1)
             let monthDate = onWhichDay.getMonth() + 1;
             let monthDay = onWhichDay.getDate();
