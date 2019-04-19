@@ -13,6 +13,7 @@ var LTMGR = (function() {
 	var vrList = [];
 	var vrListDic = {};
 
+
 	class SitterProfile {
 		constructor(sitterInfo) {
 			let sitterKeys = Object.keys(sitterInfo);
@@ -318,8 +319,6 @@ var LTMGR = (function() {
 		    this.VISITPHOTONUGGETURL = visitDictionary['VISITPHOTONUGGETURL'];
 		    this.moodButtons = visitDictionary['MOODBUTTON'];
 		    this.serviceLabel = 'Service';
-
-
 		}	
 	}
 	class DistanceMatrixPair {
@@ -332,15 +331,7 @@ var LTMGR = (function() {
 			this.distance = distance;
 			this.duration = duration;
 		}
-		getDistance() {
-		}
-		getDuration() {
-		}
-		getLatLon(forName) {
-		}
-		getName(forLatLon) {
-		}
-	};
+	}
 	
 	async function loginManager(username, password, role,startDate,endDate) {
 
@@ -351,6 +342,31 @@ var LTMGR = (function() {
 		
 		const response = await fetch(url);
 		const myJson = await response.json();
+	}
+	async function managerLoginAjax(username, password, role) {
+		sitterList = [];
+		visitList =[];
+		allClients =[];
+		let url = 'https://leashtime.com/mmd-login.php';
+		const options = {
+			method : 'POST',
+			body : JSON.stringify({
+				user_name : username,
+				user_pass: password,
+				expected_role : role
+			}),
+			headers : {
+				'Accept': 'application/json',
+				'Content-Type' : 'application/json',
+				'cache-control' : 'no-cache'
+			}
+		};
+		let responseJSON = await fetch(url, options)
+													.then((response)=> 
+														{
+															return response.json();
+														});
+		return responseJSON;
 	}
 	async function getManagerData() {
 		sitterList = [];
@@ -464,26 +480,7 @@ var LTMGR = (function() {
 
 		});
 	}
-	async function managerLoginAjax(username, password, role) {
-		sitterList = [];
-		visitList =[];
-		allClients =[];
-		let url = 'https://leashtime.com/mmd-login.php';
-		const options = {
-			method : 'POST',
-			body : JSON.stringify({
-				user_name : username,
-				user_pass: password,
-				expected_role : role
-			}),
-			headers : {
-				'Accept': 'application/json',
-				'Content-Type' : 'application/json'
-			}
-		};
-		let responseJSON = await fetch(url, options).then((response)=> {return response.json();});
-		return responseJSON;
-	}
+
 	async function getManagerSittersAjax() {
 		console.log('Get manager sitters ajax');
 		let url = 'https://leashtime.com/mmd-sitters.php';	
@@ -491,11 +488,12 @@ var LTMGR = (function() {
 			method : 'GET',
 			headers : {
 				'Accept': 'application/json',
-				'Content-Type' : 'application/json'
+				'Content-Type' : 'application/json',
+				'cache-control' : 'no-cache'
 			}
 		};
 
-		let sitterJSON = await fetch(url).then((response)=> {
+		let sitterJSON = await fetch(url,options).then((response)=> {
 			return response.json();
 		});
 		sitterJSON.sitters.forEach((sitter)=> {
@@ -524,6 +522,7 @@ var LTMGR = (function() {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type' : 'application/json',
+				'cache-control' : 'no-cache'
 			}
 		};
 
@@ -558,28 +557,9 @@ var LTMGR = (function() {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type' : 'application/json',
+				'cache-control' : 'no-cache'
 			}
 		};
-
-		/*
-		let clientDataAsync = async () => {
-			let response = await fetch(url,options);
-			let dataForClients = await response.json();
-			return dataForClients;
-		};
-
-		let processClientAsync = async () => {
-			let clientData = await clientDataAsync();
-			console.log(clientData);
-			clientData.clients.forEach((client) => {
-				let petOwner = new PetOwnerProfile(client);
-				allClients.push(petOwner);	
-			});
-			console.log('returning cllient list: ' + allClients);
-			return allClients;
-		};
-		
-		return processClientAsync();*/
 		let response = await fetch(url,options);
 		let clientData = await response.json();
 		clientData.clients.forEach((client) => {
@@ -590,8 +570,13 @@ var LTMGR = (function() {
 	}
 	async function getMasterVisitReportListAjax(startDate, endDate) {
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
-		let vrListRequest = await fetch(url);
-		let vrListJson = await vrListRequest.json();
+		//let vrListRequest 
+		let vrListJson = await fetch(url)
+													.then((response)=> {
+														console.log(response);
+														//return response.json();
+													});
+		//let vrListJson = await vrListRequest.json();
 		let report = {};
 		let reportList = [];
 		
@@ -615,6 +600,9 @@ var LTMGR = (function() {
 		console.log("SUCK IT: "+visitID);
 	}
 	async function getVisitReportListAjax(clientID, startDate, endDate, visitID) {
+
+		endDate = '2019-04-17';
+		startDate = '2019-04-17';
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?clientid=' + clientID + '&start='+startDate+'&end='+endDate+'&publishedonly=1';
 		let vrListRequest = await fetch(url);
 		let vrListResponse = await vrListRequest.json();

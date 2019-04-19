@@ -28,7 +28,6 @@
   <link href="./assets/css/manager-styles.css" rel="stylesheet" type="text/css">
   <!-- END STYLESHEETS -->
 
-  <script src='assets/js/LTMGR.js'></script>
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
   <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.js"></script>
@@ -144,14 +143,14 @@
         <li class="dropdown-header">Today's messages</li>
         <li>
           <a class="alert alert-callout alert-warning" href="javascript:void(0);">
-            <img class="pull-right img-circle dropdown-avatar" src="./img/avatar2.jpg?1404026449" alt="">
+            <!--<img class="pull-right img-circle dropdown-avatar" src="./img/avatar2.jpg?1404026449" alt="">-->
             <strong>Teddy Bun Panda</strong><br>
             <small>Testing functionality...</small>
           </a>
         </li>
         <li>
           <a class="alert alert-callout alert-info" href="javascript:void(0);">
-            <img class="pull-right img-circle dropdown-avatar" src="./img/avatar3.jpg?1404026799" alt="">
+            <!--<img class="pull-right img-circle dropdown-avatar" src="./img/avatar3.jpg?1404026799" alt="">-->
             <strong>Jody Sparkles</strong><br>
             <small>Reviewing last changes...</small>
           </a>
@@ -255,8 +254,7 @@
       <span  class="text-small">
         <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
         <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
-        <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=login()>LOGIN</button>
-<!--                            <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=loginAjax()>LOGIN</button>-->
+        <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=loginAjax()>LOGIN</button>
 
       </span>
    </div>
@@ -266,7 +264,7 @@
  <div class="panel-group" id="visitListBySitterAccordions">HERE
     </div>    
 
-<!-- VISIT LIST -->
+<!-- VISIT LIST 
 <section id="lt-visitList">
   <div class="offset-2">
     <ul class="list full-bleed">
@@ -276,12 +274,10 @@
 </section>     
 
 </div>
-                   
-
 </div>
 </div>      
 </div>
-   
+   -->
    
 <!-- RIGHT OFFCANVAS -->     
 <div class="offcanvas">
@@ -393,23 +389,12 @@
 <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
 <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
 <script src="../../assets/js/libs/moment/moment.min.js"></script>
-<!--<script src="../../assets/js/core/source/AppNavigation.js"></script>-->
-<!--<script src="../../assets/js/leashtime/LeashtimeOffcanvas.js"></script>-->
-
 
 <!-- BEGIN JAVASCRIPT -->
 <script src="./assets/js/leashtime/App.js"></script>
-<!--
-		<script src="./assets/js/leashtime/AppNavigation.js"></script>
--->
 <script src="./assets/js/leashtime/AppOffcanvas.js"></script>
 <script src="./assets/js/leashtime/AppCard.js"></script>
-<!--
-		<script src="./assets/js/leashtime/AppForm.js"></script>
-		<script src="./assets/js/leashtime/AppNavSearch.js"></script>
-		<script src="./assets/js/leashtime/AppVendor.js"></script>
-<script src="./assets/js/leashtime/lt-cards.js"></script>-->
-
+<script src='assets/js/LTMGR.js'></script>
 <script src="assets/js/lTmanagerapp.js"></script>
       
   </body>

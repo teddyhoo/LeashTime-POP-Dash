@@ -12,6 +12,7 @@ var LT = (function() {
 	var time_windows_list= [];
 	var petOwnerAndPets;
 
+
 	// ********************************************************************************************
 	// *       CLASS OBJECTS REPRESENTING DATA COMPONENTS
 	// ********************************************************************************************
@@ -333,40 +334,33 @@ var LT = (function() {
 			console.log('Return response login request');
 			return response.json()
 		});
-		//let loginResponse = await loginRequest.json();
-
-		console.log('Redirecting to new page');
 		event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
-		console.log(event.location);
 	}
 
 	async function facebookLogin() {
 		console.log('Facebook login button');
 	}
 	// Ajax calls
-	async function loginPetOwnerPortalAjax(username, password) {
-		console.log('Regular login button pressed');
-		let uName = document.getElementById('username');
-		let pWord = document.getElementById('password');
-
-		let loginURL = 'https://leashtime.com/client-login.php?username=' + uName + '&password=' + pWord;
-		console.log(loginURL);
-		let options = { 
-			method : 'GET',
-			headers : {
-				'Accept': 'application/json',
-                'Content-Type' : 'application/json'
-			}
-		}
-		let loginClientInfo = async () => { 
-			let response = await fetch(loginURL, options);
-			let loginJSON = await response.json();
-		}
-
-		loginClientInfo().then((data)=> {
-			console.log(data);
+	async function loginPetOwnerPortalAjax(event) {
+		let uName = document.getElementById('username').value;
+		let pWord = document.getElementById('password').value;
+		let loginURL = 'https://leashtime.com/pop-login.php?user_name=' + uName + '&user_pass=' + pWord;
+		let loginRequest = await fetch(loginURL).then((response)=> {
+			console.log('Successful login');
+			return response.json()
 		});
+		event.location = "./online/pop-calendar.html";
+
 	}
+
+	async function getPetOwnerVisitsAjax(event, startDate, endDate) {
+		let clientVisitsURL = 'https://leashtime.com/client-own-scheduler-data.php?start=' +startDate + '&end=' + endDate + '&visits=1&servicetypes=1&surchargetypes=1&timewindows=1';
+		console.log(clientVisitsURL);
+		let visitPORequest = await fetch(clientVisitsURL)
+													.then((response)=> {
+														return JSON.parse(response);
+													});
+	}	
 
 	async function getClientProfileAjax(startDate, endDate) {
 	// VISIT DATA FOR PARTICULAR CLIENT (LOG IN AS CLIENT ID)
@@ -573,6 +567,7 @@ var LT = (function() {
 		sendChangeVisitRequest : sendChangeVisitRequest,
 		sendRequestSchedule : sendRequestSchedule,
 		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
+		getPetOwnerVisitsAjax : getPetOwnerVisitsAjax,
 		getClientProfileAjax : getClientProfileAjax,
 		loginPetOwner : loginPetOwner,
 		facebookLogin : facebookLogin

@@ -17,7 +17,7 @@
 	var pendingVisits = [];
 	var dragBeginDate;
     var dragEndDate;
-
+    var isAjax = 'true';
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var calendarEl = document.getElementById('calendar');
@@ -66,7 +66,11 @@
 				}
 		});
 
-		$(document).ready(function () {
+		if(isAjax) {
+			let visitData = LT.getPetOwnerVisitsAjax(this, '2019-04-01', '2019-05-31');
+			addCalendarEvents(visitData);
+		} else {
+			$(document).ready(function () {
 			$.ajax({
 				"url" : "http://localhost:3300",
 				"type" : "GET",
@@ -88,6 +92,8 @@
                });
 			});
 		});
+		}
+
 	});
 
 	function isValidDate(startDate, endDate) {

@@ -1,9 +1,10 @@
+//(function (namespace) {
         const base_url = 'https://leashtime.com';
         var fullDate;
         var username = '';
         var password = '';
         var userRole = 'm';
-        var isAjax = false;
+        var isAjax = true;
 
         var allVisits = [];
         var allSitters= [];
@@ -97,7 +98,6 @@
             sitterListElement.setAttribute("type", "div");
             sitterListElement.setAttribute("id","sitterListAccordions")
             sitterListElement.setAttribute("class", "sitter card panel");
-            //sitterListElement.setAttribute("style", "background-color: White;");
             //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
             let sitterCardHead = document.createElement('div');
             sitterCardHead.setAttribute("type", "div");
@@ -109,12 +109,13 @@
             sitterCardHead.setAttribute("aria-expanded", "false");
 
             sitterCardHead.addEventListener('click', ()=> {
-
+                console.log('tapped sitter accordion item');
             })
             // <header>${sitter.sitterID}</header>
             let headerElement = document.createElement('header');
             headerElement.setAttribute("type", "header");
             headerElement.setAttribute("id", "header-"+sitter.sitterID);
+
             headerElement.innerHTML = sitter.sitterName;
             // <div class="tools">
             // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
@@ -156,10 +157,10 @@
             expandAccordion.appendChild(cardBody);
             sitterListElement.appendChild(expandAccordion);
 
+            let visitCount = 0;
             allVisits.forEach((visit)=> {
                 if(visit.sitterID == sitter.sitterID) {
-                    console.log(visit.status);
-
+                    visitCount = visitCount +1;
                     //  <div class="card panel">
                     let panelItem = document.createElement('div');
                     panelItem.setAttribute("type","div");
@@ -178,7 +179,7 @@
                         panelItem.setAttribute("style","background-color: #0B6623");
                         // check visit report sent status and adjust view
                     } else if (visit.status == "late") {
-                        visitDiv.setAttribute("style","background-color: #FFD033");
+                        visitDiv.setAttribute("style","background-color: #FDD033");
 
                     } else if (visit.status == "future") {
                         visitDiv.setAttribute("style","background-color: #ADD8E6");
@@ -190,29 +191,27 @@
                         
                     }
                     visitDiv.addEventListener('click', (eventObj) => {
-
                         console.log('event object: ' + eventObj.id);
                         flyToVisit(visit);
                     });
-                    //visitDiv.setAttribute("style", "background-color: Yellow;")
                     let visitHeader = document.createElement("header");
-
                     let visitSummaryHTML = `
                         <P>${visit.pets} (${visit.clientName})
-                        <P>${visit.timeOfDay}
-                        <P>${visit.service}
+                        <P>${visit.service} (${visit.timeOfDay})
                     `;
                     visitHeader.innerHTML = visitSummaryHTML;
                     // <div class="tools">
-                    //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
                     let visitToolDiv = document.createElement('div');
                     visitToolDiv.setAttribute("id","tool-accordion-"+visit.visitID);
+
+                    //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
                     let visitDetailButton = document.createElement('button');
                     visitDetailButton.setAttribute("type","button");
                     visitDetailButton.setAttribute("class", "btn btn-icon-toggle");
                     let iVisit = document.createElement('i')
                     iVisit.setAttribute("type","i");
                     iVisit.setAttribute("class","fa fa-angle-down");
+
                     //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
                     let visitExpandAccordion = document.createElement('div');
                     visitExpandAccordion.setAttribute("type", "div");
@@ -220,6 +219,7 @@
                     visitExpandAccordion.setAttribute("class", "collapse");
                     visitExpandAccordion.setAttribute("style","height: 0px;");
                     visitExpandAccordion.setAttribute("aria-expanded", "false");
+
                     //  <div class="card-body">
                     let visitDetailCard = document.createElement("div");
                     visitDetailCard.setAttribute("type", "div");
@@ -256,6 +256,9 @@
 
                 }
             });
+
+            headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
+
         }
 
         async function setupLoginSteps(loginDate, isUpdate) {
@@ -266,25 +269,32 @@
             const sitterListAfterLogin = LTMGR.getManagerData();
             await sitterListAfterLogin.then((results)=> {
                 allSitters = results;
+                console.log(allSitters);
             });
             const visitListAfterLogin = LTMGR.getManagerVisits();
             await visitListAfterLogin.then((results)=> {
                 allVisits = results;
+                console.log(allVisits);
             })
             const clientsAfterLogin = LTMGR.getManagerClients();
             await clientsAfterLogin.then((results)=> {
                 allClients = results;
+                console.log(allClients);
             });
 
-            masterVreportList()
+            buildSitterButtons(allVisits, allSitters);
+
+            /*masterVreportList()
             .then((vListItems)=> { 
-                vListItems.forEach((item)=> {
-                    visitReportList.push(item);
-                    //console.log(item.visitID + ' -> ' + item.status);
-                });
-                flyToFirstVisit();
-                buildSitterButtons(allVisits, allSitters);
-            });
+                if (vrListItems != null) {
+                    vListItems.forEach((item)=> {
+                        visitReportList.push(item);
+                        //console.log(item.visitID + ' -> ' + item.status);
+                    });
+                    flyToFirstVisit();
+                    buildSitterButtons(allVisits, allSitters);
+                }
+            });*/
         }
         async function loginPromise(loginDate) {
 
@@ -322,7 +332,7 @@
                 console.log('Response error ');
             }
         }
-        function loginAjax(loginDate) {
+        function loginAjax() {
             isAjax = true;
             removeSittersFromSitterList();
             removeAllMapMarkers();
@@ -333,9 +343,9 @@
             allClients =[];
             visitsBySitter = [];
             mapMarkers = [];
-            loginPromiseAjax(loginDate);
+            loginPromiseAjax();
         }
-        async function loginPromiseAjax(loginDate) {
+        async function loginPromiseAjax() {
             if (username == '') {
                 username = document.getElementById('userName').value;
             }
@@ -350,17 +360,14 @@
                 document.getElementById('login').innerHTML = 'UPDATE';
             }
 
-            if (loginDate == null) {
-                fullDate = getFullDate();
-            } else {
-                fullDate = loginDate;
-            }
+            fullDate = getFullDate();
+
             let loginAjaxFetchResponse = await LTMGR.managerLoginAjax(username, password, userRole);
             allSitters = await LTMGR.getManagerSittersAjax();
             allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
             allClients = await LTMGR.getManagerClientsAjax();
-
-            masterVreportList()
+            buildSitterButtons(allVisits, allSitters);
+            /*masterVreportList()
             .then((vListItems)=> { 
                 vListItems.forEach((item)=> {
                     visitReportList.push(item);
@@ -368,7 +375,7 @@
                 });
                 buildSitterButtons(allVisits, allSitters);
                 flyToFirstVisit();
-            });
+            });*/
 
                         /*const ajaxLoginResponse = async() => {
                 let loginResponse = await LTMGR.managerLoginAjax(username, password, userRole);
@@ -452,17 +459,7 @@
                     } else {
                         sitterFilterButton.setAttribute("style", "background-color: Tomato;")
                     }
-
-                    /*sitterFilterButton.innerHTML = sitter.sitterName + ' (' + sitterCount + ')';
-                    sitterListDiv.appendChild(sitterFilterButton);
-
-                    document.getElementById(sitter.sitterID).addEventListener("click", removeVisitDivElements);  
-                    document.getElementById(sitter.sitterID).addEventListener("click", removeAllMapMarkers);
-                    document.getElementById(sitter.sitterID).addEventListener("click",function() {showVisitBySitter(sitter);});
-                    visitsBySitter[sitter.sitterID] = sitterCount;*/
-
                     activeSitters.push(sitter);
-
                 }
             });
 
@@ -470,9 +467,7 @@
             visitCounter.innerHTML = 'TOTAL VISITS: ' + totalVisitCount + ' CANCELED: ' + totalCancelVisitCount;
 
             activeSitters.forEach((sitter)=> {
-
                 populateSitterAccordions(sitter);
-
             });
         }
 
@@ -1035,10 +1030,10 @@
             }
         }
         function removeVisitDivElements() {
-            var element = document.getElementById("visitListByClient");
+            /*var element = document.getElementById("visitListByClient");
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
-            }
+            }*/
         }
         function removeSittersFromSitterList() {
 
@@ -1477,3 +1472,4 @@
             </div>`;
             return popupBasicInfo;
         }
+//}(this.materialadmin)); 
