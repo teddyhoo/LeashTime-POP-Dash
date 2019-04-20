@@ -368,119 +368,14 @@ var LTMGR = (function() {
 														});
 		return responseJSON;
 	}
-	async function getManagerData() {
-		sitterList = [];
-		visitList =[];
-		allClients =[];
 
-		let base_url = 'http://localhost:3300?type=gSit';		
-		let response;
-		try {
-			response = await fetch(base_url);
-			const myJson = await response.json();
-
-			myJson.forEach((sitterProfile) => {
-				let nSitterProfile = new SitterProfile(sitterProfile);
-				sitterList.push(nSitterProfile);
-			});
-			return sitterList;
-		} catch(error) {
-			console.log('ERROR:' + error);
-			return error;
-		}
-	}
-	async  function getManagerVisits() {
-		let base_url = 'http://localhost:3300?type=gVisit';		
-		const response = await fetch(base_url);
-		const myJson = await response.json();
-		myJson.forEach((visit) => {
-			let nVisitProfile = new SitterVisit(visit);
-			let visitKeys = Object.keys(visit);
-			visitKeys.forEach((key)=> {
-				if (key == 'report') {
-					parseVisitReport(visit[key])
-				}
-			})
-			visitList.push(nVisitProfile);	
-		});
-		return visitList;		
-	}
-	async function getManagerClients() {
-		let base_url = 'http://localhost:3300?type=gClients';		
-		const response = await fetch(base_url);
-		const myJson = await response.json();
-		myJson.forEach((client) => {
-			let petOwner = new PetOwnerProfile(client);
-			allClients.push(petOwner);	
-		});
-		return allClients;
-	}
-	async function getMasterVisitReportList(startDate, endDate) {
-		let url = 'http://localhost:3300?type=masterReportList&startDate='+startDate+'&endDate='+endDate;
-		let vrListRequest = await fetch(url);
-		let vrListJson = await vrListRequest.json();
-		let report = {};
-		let reportList = []
-
-		if (vrListJson['visitReport'] == 'none') {
-			console.log('Returning none');
-			return vrListJson;
-		} else {
-			if(vrListJson != null ) {
-				vrListJson.forEach((vrItem) => {
-					let vrKeys = Object.keys(vrItem);
-					let vrObject = new VisitReportVisitDetails(vrItem);
-					reportList.push(vrObject)
-				});
-			} else {
-				console.log('Returning null to ltmngr');
-				reportList[0] = 'none';
-			}
-		}
-		return reportList;
-	}
-	async function getVisitReportList(clientID, startDate, endDate, visitID) {
-		let url = 'http://localhost:3300?type=visitReportList&clientID='+clientID+'&startDate='+startDate+'&endDate='+endDate;
-		let vrListRequest = await fetch(url);
-		let vrListJson = await vrListRequest.json();
-		let report = {};
-
-		if (vrListJson['visitReport'] == 'none') {
-			console.log('Returning none');
-			return vrListJson;
-		} else {
-			if(vrListJson != null ) {
-				vrListJson.forEach((vrItem) => {
-					console.log('Visit report item: ' + vrItem);
-					if (vrItem['appointmentid'] == visitID) {
-						let visitReportItem = new VisitReportVisitDetails(vrItem);
-						report['report'] = visitReportItem
-					}
-				});
-			} else {
-				console.log('Returning null to ltmngr');
-				report['report'] = 'none';
-			}
-		}
-		return report;
-	}
-	async function getVisitReport(visitID, visitReportDetailObj) {
-		let dictionaryComplete = {}; 
-		let url = 'http://localhost:3300?type=visitReport&getURL='+visitID;
-		let vrDetailResponse = await fetch(url);
-		let rawDetails =await vrDetailResponse.json();
-		visitReportDetailObj.addVisitDetail(rawDetails);
-		dictionaryComplete['vrDetail'] = visitReportDetailObj;
-		return dictionaryComplete;
-	}
 	function parseVisitReport(visitReportDict) {
 
 		let visitReportKeys = Object.keys(visitReportDict);
 		visitReportKeys.forEach((key) => {
 
 		});
-	}
-
+	}''
 	async function getManagerSittersAjax() {
 		console.log('Get manager sitters ajax');
 		let url = 'https://leashtime.com/mmd-sitters.php';	
@@ -569,14 +464,21 @@ var LTMGR = (function() {
 		return allClients;
 	}
 	async function getMasterVisitReportListAjax(startDate, endDate) {
+
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
-		//let vrListRequest 
-		let vrListJson = await fetch(url)
-													.then((response)=> {
-														console.log(response);
-														//return response.json();
-													});
-		//let vrListJson = await vrListRequest.json();
+		let options = {
+			method : 'GET',
+			headers : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json',
+				'credentials' : 'same-origin'
+			}
+		}
+		let vrListJson = await fetch(url,options)
+											.then((response)=> {
+												return response.json();
+											});
+		
 		let report = {};
 		let reportList = [];
 		
@@ -601,11 +503,18 @@ var LTMGR = (function() {
 	}
 	async function getVisitReportListAjax(clientID, startDate, endDate, visitID) {
 
-		endDate = '2019-04-17';
-		startDate = '2019-04-17';
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?clientid=' + clientID + '&start='+startDate+'&end='+endDate+'&publishedonly=1';
-		let vrListRequest = await fetch(url);
+		let options = {
+			method : 'GET',
+			headers : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json',
+				'credentials' : 'same-origin'
+			}
+		}
+		let vrListRequest = await fetch(url,options);
 		let vrListResponse = await vrListRequest.json();
+		console.log('getVisitListAjax -> ' + vrListResponse);
 		let report = {};
 		if (vrListResponse['visitReport'] == 'none') {
 			return vrListResponse;
@@ -721,6 +630,111 @@ var LTMGR = (function() {
 			return matrixDistance;
 		}
 		return null;
+	}
+	async function getManagerData() {
+		sitterList = [];
+		visitList =[];
+		allClients =[];
+
+		let base_url = 'http://localhost:3300?type=gSit';		
+		let response;
+		try {
+			response = await fetch(base_url);
+			const myJson = await response.json();
+
+			myJson.forEach((sitterProfile) => {
+				let nSitterProfile = new SitterProfile(sitterProfile);
+				sitterList.push(nSitterProfile);
+			});
+			return sitterList;
+		} catch(error) {
+			console.log('ERROR:' + error);
+			return error;
+		}
+	}
+	async  function getManagerVisits() {
+		let base_url = 'http://localhost:3300?type=gVisit';		
+		const response = await fetch(base_url);
+		const myJson = await response.json();
+		myJson.forEach((visit) => {
+			let nVisitProfile = new SitterVisit(visit);
+			let visitKeys = Object.keys(visit);
+			visitKeys.forEach((key)=> {
+				if (key == 'report') {
+					parseVisitReport(visit[key])
+				}
+			})
+			visitList.push(nVisitProfile);	
+		});
+		return visitList;		
+	}
+	async function getManagerClients() {
+		let base_url = 'http://localhost:3300?type=gClients';		
+		const response = await fetch(base_url);
+		const myJson = await response.json();
+		myJson.forEach((client) => {
+			let petOwner = new PetOwnerProfile(client);
+			allClients.push(petOwner);	
+		});
+		return allClients;
+	}
+	async function getMasterVisitReportList(startDate, endDate) {
+		let url = 'http://localhost:3300?type=masterReportList&startDate='+startDate+'&endDate='+endDate;
+		let vrListRequest = await fetch(url);
+		let vrListJson = await vrListRequest.json();
+		let report = {};
+		let reportList = []
+
+		if (vrListJson['visitReport'] == 'none') {
+			console.log('Returning none');
+			return vrListJson;
+		} else {
+			if(vrListJson != null ) {
+				vrListJson.forEach((vrItem) => {
+					let vrKeys = Object.keys(vrItem);
+					let vrObject = new VisitReportVisitDetails(vrItem);
+					reportList.push(vrObject)
+				});
+			} else {
+				console.log('Returning null to ltmngr');
+				reportList[0] = 'none';
+			}
+		}
+		return reportList;
+	}
+	async function getVisitReportList(clientID, startDate, endDate, visitID) {
+		let url = 'http://localhost:3300?type=visitReportList&clientID='+clientID+'&startDate='+startDate+'&endDate='+endDate;
+		let vrListRequest = await fetch(url);
+		let vrListJson = await vrListRequest.json();
+		let report = {};
+
+		if (vrListJson['visitReport'] == 'none') {
+			console.log('Returning none');
+			return vrListJson;
+		} else {
+			if(vrListJson != null ) {
+				vrListJson.forEach((vrItem) => {
+					console.log('Visit report item: ' + vrItem);
+					if (vrItem['appointmentid'] == visitID) {
+						let visitReportItem = new VisitReportVisitDetails(vrItem);
+						report['report'] = visitReportItem
+					}
+				});
+			} else {
+				console.log('Returning null to ltmngr');
+				report['report'] = 'none';
+			}
+		}
+		return report;
+	}
+	async function getVisitReport(visitID, visitReportDetailObj) {
+		let dictionaryComplete = {}; 
+		let url = 'http://localhost:3300?type=visitReport&getURL='+visitID;
+		let vrDetailResponse = await fetch(url);
+		let rawDetails =await vrDetailResponse.json();
+		visitReportDetailObj.addVisitDetail(rawDetails);
+		dictionaryComplete['vrDetail'] = visitReportDetailObj;
+		return dictionaryComplete;
 	}
 
 	return {

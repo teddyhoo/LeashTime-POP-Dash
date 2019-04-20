@@ -284,7 +284,7 @@
 
             buildSitterButtons(allVisits, allSitters);
 
-            /*masterVreportList()
+            masterVreportList()
             .then((vListItems)=> { 
                 if (vrListItems != null) {
                     vListItems.forEach((item)=> {
@@ -292,9 +292,9 @@
                         //console.log(item.visitID + ' -> ' + item.status);
                     });
                     flyToFirstVisit();
-                    buildSitterButtons(allVisits, allSitters);
+                    //buildSitterButtons(allVisits, allSitters);
                 }
-            });*/
+            });
         }
         async function loginPromise(loginDate) {
 
@@ -367,7 +367,7 @@
             allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
             allClients = await LTMGR.getManagerClientsAjax();
             buildSitterButtons(allVisits, allSitters);
-            /*masterVreportList()
+            masterVreportList()
             .then((vListItems)=> { 
                 vListItems.forEach((item)=> {
                     visitReportList.push(item);
@@ -375,9 +375,9 @@
                 });
                 buildSitterButtons(allVisits, allSitters);
                 flyToFirstVisit();
-            });*/
+            });
 
-                        /*const ajaxLoginResponse = async() => {
+            /*const ajaxLoginResponse = async() => {
                 let loginResponse = await LTMGR.managerLoginAjax(username, password, userRole);
                 console.log(loginResponse);
                 return loginResponse;

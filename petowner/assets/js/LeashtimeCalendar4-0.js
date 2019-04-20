@@ -21,7 +21,6 @@
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var calendarEl = document.getElementById('calendar');
-
 		calendar = new FullCalendar.Calendar(calendarEl, {
 			plugins: [ 'dayGrid', 'interaction' ],
 				editable : true,
@@ -67,34 +66,39 @@
 		});
 
 		if(isAjax) {
-			let visitData = LT.getPetOwnerVisitsAjax(this, '2019-04-01', '2019-05-31');
-			addCalendarEvents(visitData);
+
+			getVisits();
+		
 		} else {
 			$(document).ready(function () {
-			$.ajax({
-				"url" : "http://localhost:3300",
-				"type" : "GET",
-				"data" : {"type" : "poVisits"},
-				"dataTYPE" : "JSON"
-			})
-			.done((data)=> {
 				$.ajax({
 					"url" : "http://localhost:3300",
 					"type" : "GET",
-					"data" : {"type" : "poClients"},
+					"data" : {"type" : "poVisits"},
 					"dataTYPE" : "JSON"
-				}).done((clientdata)=>{
-					addCalendarEvents(data);
-					petOwnerProfile = LT.getClientProfileInfo(clientdata);
-					calendar.render();
-					populateTimeline();
-
-               });
+				})
+				.done((data)=> {
+					$.ajax({
+						"url" : "http://localhost:3300",
+						"type" : "GET",
+						"data" : {"type" : "poClients"},
+						"dataTYPE" : "JSON"
+					}).done((clientdata)=>{
+						addCalendarEvents(data);
+						petOwnerProfile = LT.getClientProfileInfo(clientdata);
+						calendar.render();
+						populateTimeline();
+	               });
+				});
 			});
-		});
 		}
-
 	});
+
+	async function getVisits() {
+		let visitData = await LT.getPetOwnerVisitsAjax(this, '2019-04-01', '2019-05-31');
+		console.log(visitData);
+		addCalendarEvents(visitData);
+	}
 
 	function isValidDate(startDate, endDate) {
 		let todayDate = new Date();
@@ -108,7 +112,6 @@
 			return true;
 		}
 	}
-
 	function convertDate(dateItem) {
 
 		let convertDate = new Intl.DateTimeFormat('en-US').format(dateItem);
@@ -118,7 +121,6 @@
 		formatter.formatToParts(dateItem);
 		console.log(formatter.weekday);
 		return convertDate
-
 	}
 
    	function displayVisitRequest(dateString) {
@@ -268,7 +270,8 @@
         		serviceList = LT.getServiceItems(eventData);
         		timeWindowList = LT.getTimeWindows(eventData);
 
-        		 all_visits.forEach((visit) => {
+        		 //all_visits.forEach((visit) => {
+        		 eventData.forEach((visit)=> {
 		            let eventTitle = visit.service;
 		            if (visit.note != null) {
 		                eventTitle += '\n' + visit.note;
@@ -281,28 +284,18 @@
 		            let visitURL = '';
 
 		            if(visit.status == 'canceled') {
-
 		                visitColor = 'red';
-
 		            } else if (visit.status == 'completed') {
-
 		                visitColor = 'green';
 		                visitURL ='<LINK TO VISIT REPORT>';
-
 		            } else if (visit.status  == 'future' || visit.status == 'INCOMPLETE' || visit.status == 'incomplete') {
-
 		                visitColor = 'blue';
-
 		            } else if (visit.status == 'late') {
-
-		                visitColor = 'orange';
-
+		                visitColor = 'yellow';
 		            } else if (visit.status == 'pending') {
-
 		                visitColor = 'orange';
 		                eventTitle += ' (PENDING APPROVAL)'
 		                pendingVisits.push(visit);
-
             		}
 
 		            let event = {
@@ -324,8 +317,6 @@
 		        });
 	}
 	function displayUncancel(calEvent, datePicked) {
-
-
         const uncancelHTML = `
             <div class="modal-dialog">
                 <div class="modal-content">

@@ -12,7 +12,6 @@ var LT = (function() {
 	var time_windows_list= [];
 	var petOwnerAndPets;
 
-
 	// ********************************************************************************************
 	// *       CLASS OBJECTS REPRESENTING DATA COMPONENTS
 	// ********************************************************************************************
@@ -144,7 +143,6 @@ var LT = (function() {
 			this.customVal  = customVal;
 
 		}
-
 	}
 	class Pet {
 		constructor(pet_data) {
@@ -248,11 +246,6 @@ var LT = (function() {
 			return this.totalVisitCharges;
 		}
 	};
-	class SitterVisit {
-		constructor(visitid, lat, lon) {
-
-		}
-	}
 	class ServiceItem {
 		constructor(serviceItemName, serviceCode, serviceCharge, serviceHours, serviceTax, serviceFormattedHours) {
 
@@ -295,7 +288,6 @@ var LT = (function() {
 			this.surchargeDate = surchargeDictionary['date'];
 
 		}
-
 	}
 
 	// ********************************************************************************************
@@ -336,7 +328,6 @@ var LT = (function() {
 		});
 		event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
 	}
-
 	async function facebookLogin() {
 		console.log('Facebook login button');
 	}
@@ -345,48 +336,46 @@ var LT = (function() {
 		let uName = document.getElementById('username').value;
 		let pWord = document.getElementById('password').value;
 		let loginURL = 'https://leashtime.com/pop-login.php?user_name=' + uName + '&user_pass=' + pWord;
+		
 		let loginRequest = await fetch(loginURL).then((response)=> {
-			console.log('Successful login');
+			response.headers.forEach(function(val, key) { 
+				console.log(key + ' -> ' + val); 
+			 });
 			return response.json()
 		});
 		event.location = "./online/pop-calendar.html";
-
 	}
-
 	async function getPetOwnerVisitsAjax(event, startDate, endDate) {
 		let clientVisitsURL = 'https://leashtime.com/client-own-scheduler-data.php?start=' +startDate + '&end=' + endDate + '&visits=1&servicetypes=1&surchargetypes=1&timewindows=1';
 		console.log(clientVisitsURL);
-		let visitPORequest = await fetch(clientVisitsURL)
-													.then((response)=> {
-														return JSON.parse(response);
-													});
+		let options = {
+			method : 'GET',
+			headers : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json',
+				'credentials' : 'same-origin'
+			}
+		}
+		let visitPORequest = await fetch(clientVisitsURL,options);
+		let visitListResponse = await visitPORequest.json();
+
+		if (visitListResponse.visits != null) {
+			visit_list = visitListResponse.visits;
+			console.log('Visit list: ' + visit_list);
+		}
+		if (visitListResponse.servicetypes != null) {
+			service_list = visitListResponse.servicetypes;
+		}
+		if (visitListResponse.surchargetypes != null) {
+			surcharge_list = visitListResponse.surchargetypes;
+		}
+		if (visitListResponse.timewindows != null) {
+			time_windows_list = visitListResponse.timewindows;
+		}
+		return visit_list;
 	}	
 
 	async function getClientProfileAjax(startDate, endDate) {
-	// VISIT DATA FOR PARTICULAR CLIENT (LOG IN AS CLIENT ID)
-	// https://leashtime.com/client-own-scheduler-data.php?
-	// parameters: &timesframes=1&surchargetypes=1&servicetypes=1&start=YYYY-MM-DD &end=YYYY-MM-DD
-
-		let clientURL = 'https://leashtime.com/client-own-scheduler-data.php?start='+startDate+'&end='+endDate+'&timeframe=1&serviceItems=1&visits=1';
-        let options = {
-            method : 'GET',
-            headers : {
-                'Accept': 'application/json',
-                'Content-Type' : 'application/json'
-            }
-        }
-
-        let getClientInfo = async () => {
-            let response = await fetch(clientURL,options);
-            let visitJSON = await response.json();
-            return visitJSON;
-        };
-
-        getClientInfo()
-        .then((data)=> {
-            petOwnerProfile = LT.getClientProfileInfo(data);
-
-        });
 
 	}
 
@@ -582,7 +571,6 @@ var LT = (function() {
 		Pet: Pet,
 		ServiceItem : ServiceItem,
 		SurchargeItem : SurchargeItem,
-		TimeWindowItem : TimeWindowItem,
-		SitterVisit : SitterVisit
+		TimeWindowItem : TimeWindowItem
 	}
 } ());
