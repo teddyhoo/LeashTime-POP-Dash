@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang='en'>
+  	<head>
+	    <meta charset='utf-8' />
+
+	    <link href='../../assets/js/libs/fullcalendar-4.0.0/packages/core/main.css' rel='stylesheet' />
+	    <link href='../../assets/js/libs/fullcalendar-4.0.0/packages/daygrid/main.css' rel='stylesheet' />
+
+
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="keywords" content="per_sitting_businesses">
+	    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+
+	    <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+	    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+	    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+	    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+	    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+	    
+	    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+	    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+	    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+	    <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
+
+	    <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/core/main.js'></script>
+		<script src='../../assets/js/libs/fullcalendar-4.0.0/packages/interaction/main.js'></script>
+		<script src='../../assets/js/libs/fullcalendar-4.0.0/packages/list/main.js'></script>
+	    <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/daygrid/main.js'></script>
+
+  	</head>
+	<body class="header-fixed">
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: [ 'dayGrid', 'interaction' ],
+                editable : true,
+                defaultView : 'dayGridMonth',
+            });
+            calendar.render();
+        });
+        </script>
+
+		<div id='calendar'></div>
+    </body>
+       	<script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+        <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+        <script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+        <script src="../../assets/js/libs/spin.js/spin.min.js"></script>
+        <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+        <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+
+        <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+
+        <script src="../../assets/js/core/source/App.js"></script>
+        <script src="../../assets/js/core/source/AppNavigation.js"></script>
+        <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
+        <script src="../../assets/js/core/source/AppCard.js"></script>
+        <script src="../../assets/js/core/source/AppForm.js"></script>
+        <script src="../../assets/js/core/source/AppNavSearch.js"></script>
+        <script src="../../assets/js/core/source/AppVendor.js"></script>
+
+</html>

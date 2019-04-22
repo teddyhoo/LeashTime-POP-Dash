@@ -10,32 +10,48 @@
 	var event_visits = [];
 	var calendar; 
     var currentServiceChosen;
+    var isAjax = true;
   
 
     $(document).ready(function () {
-			$.ajax({
-				"url" : "http://localhost:3300",
-				"type" : "GET",
-				"data" : {"type" : "poVisits"},
-				"dataTYPE" : "JSON"
-			})
-			.done((data)=> {
-				$.ajax({
-					"url" : "http://localhost:3300",
-					"type" : "GET",
-					"data" : {"type" : "poClients"},
-					"dataTYPE" : "JSON"
-				}).done((clientdata)=>{
-					petOwnerProfile = LT.getClientProfileInfo(clientdata);
+        if (isAjax) {
+
+            getPetOwnerProfile();
+
+        } else {
+            $.ajax({
+                "url" : "http://localhost:3300",
+                "type" : "GET",
+                "data" : {"type" : "poVisits"},
+                "dataTYPE" : "JSON"
+            })
+            .done((data)=> {
+                $.ajax({
+                    "url" : "http://localhost:3300",
+                    "type" : "GET",
+                    "data" : {"type" : "poClients"},
+                    "dataTYPE" : "JSON"
+                }).done((clientdata)=>{
+                    petOwnerProfile = LT.getClientProfileInfo(clientdata);
                     populateProfileFields();
                     populateHomeInfo();
                     populatePets();
                     //populateCustom();
                     addEditEvents();
-
-               });
-			});
+                });
+            });
+        }
     });
+
+    async function getPetOwnerProfile() {
+        petOwnerProfile = await LT.getClientProfileAjax();
+        populateProfileFields();
+        populateHomeInfo();
+        populatePets();
+        //populateCustom();
+        addEditEvents();
+
+    }
 
     function addEditEvents() {
 

@@ -24,8 +24,10 @@
 		calendar = new FullCalendar.Calendar(calendarEl, {
 			plugins: [ 'dayGrid', 'interaction' ],
 				editable : true,
+				defaultView : 'dayGridMonth',
 				dateClick: function(info) {
 						clickedDate = info.date;
+						console.log(petOwnerProfile.pets);
 						displayVisitRequest(clickedDate);
 				},
 
@@ -65,10 +67,12 @@
 				}
 		});
 
+		calendar.render();
+
 		if(isAjax) {
 
 			getVisits();
-		
+			
 		} else {
 			$(document).ready(function () {
 				$.ajax({
@@ -96,8 +100,60 @@
 
 	async function getVisits() {
 		let visitData = await LT.getPetOwnerVisitsAjax(this, '2019-04-01', '2019-05-31');
-		console.log(visitData);
-		addCalendarEvents(visitData);
+		let calData;
+		visitData.forEach((visit)=> {
+			let eventData = createCalendarEvent(visit);
+			calendar.addEvent(eventData);
+		});
+
+		petOwnerProfile = await LT.getClientProfileAjax();
+		
+	}
+
+	function createCalendarEvent(visit) {
+ 		let eventTitle = visit.service;
+		if (visit.note != null) {
+			eventTitle += '\n' + visit.note;
+		}
+		let eventStart = visit.time_window_start;
+		let eventEnd = visit.time_window_end;
+		let eventDateStart = visit.date + ' ' + eventStart;
+		let eventDateEnd = visit.date + ' ' + eventEnd;
+		let visitColor = '';
+		let visitURL = '';
+
+		if(visit.status == 'canceled') {
+			visitColor = 'red';
+		} else if (visit.status == 'completed') {
+			visitColor = 'green';
+			visitURL ='<LINK TO VISIT REPORT>';
+		} else if (visit.status  == 'future' || visit.status == 'INCOMPLETE' || visit.status == 'incomplete') {
+			visitColor = 'blue';
+		} else if (visit.status == 'late') {
+			visitColor = 'yellow';
+		} else if (visit.status == 'pending') {
+			visitColor = 'orange';
+			eventTitle += ' (PENDING APPROVAL)'
+			pendingVisits.push(visit);
+		}
+
+		let event = {
+			id : visit.appointmentid,
+			title: eventTitle,
+			note: visit.visitNote,
+			timeWindow : visit.time_window_start + ' - ' + visit.time_window_end,
+			start : eventDateStart,
+			end : eventDateEnd,
+			arrivalTime : visit.arrival_time,
+			completionTime: visit.completion_time,
+			color : visitColor,
+			status : visit.status,
+			sitter: visit.sitter,
+			isPending: false
+		};
+		event_visits.push(event);
+		return event;
+
 	}
 
 	function isValidDate(startDate, endDate) {
@@ -124,7 +180,7 @@
 	}
 
    	function displayVisitRequest(dateString) {
-	        
+   		console.log('clicked on date: ' + dateString);
 		const visitRequestHTML = `
 	                <div class="modal-dialog">
 	                    <div class="modal-content">
@@ -265,56 +321,7 @@
 	}
 	function addCalendarEvents(eventData) {
 
-				all_visits = LT.getVisits(eventData);
-       	 		surchargeItems = LT.getSurchargeItems(eventData); 
-        		serviceList = LT.getServiceItems(eventData);
-        		timeWindowList = LT.getTimeWindows(eventData);
 
-        		 //all_visits.forEach((visit) => {
-        		 eventData.forEach((visit)=> {
-		            let eventTitle = visit.service;
-		            if (visit.note != null) {
-		                eventTitle += '\n' + visit.note;
-		            }
-		            let eventStart = visit.time_window_start;
-		            let eventEnd = visit.time_window_end;
-		            let eventDateStart = visit.date + ' ' + eventStart;
-		            let eventDateEnd = visit.date + ' ' + eventEnd;
-		            let visitColor = '';
-		            let visitURL = '';
-
-		            if(visit.status == 'canceled') {
-		                visitColor = 'red';
-		            } else if (visit.status == 'completed') {
-		                visitColor = 'green';
-		                visitURL ='<LINK TO VISIT REPORT>';
-		            } else if (visit.status  == 'future' || visit.status == 'INCOMPLETE' || visit.status == 'incomplete') {
-		                visitColor = 'blue';
-		            } else if (visit.status == 'late') {
-		                visitColor = 'yellow';
-		            } else if (visit.status == 'pending') {
-		                visitColor = 'orange';
-		                eventTitle += ' (PENDING APPROVAL)'
-		                pendingVisits.push(visit);
-            		}
-
-		            let event = {
-		                id : visit.appointmentid,
-		                title: eventTitle,
-		                note: visit.visitNote,
-		                timeWindow : visit.time_window_start + ' - ' + visit.time_window_end,
-		                start : eventDateStart,
-		                end : eventDateEnd,
-		                arrivalTime : visit.arrival_time,
-		                completionTime: visit.completion_time,
-		                color : visitColor,
-		                status : visit.status,
-		                sitter: visit.sitter,
-		                isPending: false
-		            };
-		            event_visits.push(event);
-		            calendar.addEvent(event);
-		        });
 	}
 	function displayUncancel(calEvent, datePicked) {
         const uncancelHTML = `

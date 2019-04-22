@@ -16,19 +16,17 @@ var LT = (function() {
 	// *       CLASS OBJECTS REPRESENTING DATA COMPONENTS
 	// ********************************************************************************************
 	class PetOwner {
-		constructor(client_id,
-			pet_owner_data,
-			pet_info) {
+		constructor(pet_owner_data) {
 
-			this.client_id = client_id;
+
+			this.client_id = pet_owner_data.clientid;
 			this.petOwnerData = pet_owner_data;
-			this.numberOfPets = pet_info.length;
 			this.petImages = [];
-
-			//console.log(pet_owner_data);
-			this.parsePetInfo(pet_info);
+			this.pets = [];
 			this.parsePetOwnerData(pet_owner_data);
-			this.parseCustomFields(pet_owner_data)
+			this.parsePetInfo(pet_owner_data.pets);
+			this.parseCustomFields(pet_owner_data);
+
 		}
 
 		parsePetOwnerData(pData) {
@@ -108,13 +106,12 @@ var LT = (function() {
 			this.neighbor_hasKey = this.neighbor_dict['haskey'];
 		}
 
-
 		parsePetInfo(pet_info) {
-			this.pets = [];
 			let number_pets = pet_info.length;
 			for (let p = 0; p < number_pets; p++) {
 				let newPet = pet_info[p];
 				let clientPet = new Pet(newPet);
+				console.log('new pet data: ' + newPet + ' with PET object: ' + clientPet.petName);
 				this.pets.push(clientPet);
 			}
 		}
@@ -347,7 +344,6 @@ var LT = (function() {
 	}
 	async function getPetOwnerVisitsAjax(event, startDate, endDate) {
 		let clientVisitsURL = 'https://leashtime.com/client-own-scheduler-data.php?start=' +startDate + '&end=' + endDate + '&visits=1&servicetypes=1&surchargetypes=1&timewindows=1';
-		console.log(clientVisitsURL);
 		let options = {
 			method : 'GET',
 			headers : {
@@ -358,25 +354,38 @@ var LT = (function() {
 		}
 		let visitPORequest = await fetch(clientVisitsURL,options);
 		let visitListResponse = await visitPORequest.json();
-
 		if (visitListResponse.visits != null) {
-			visit_list = visitListResponse.visits;
-			console.log('Visit list: ' + visit_list);
+				visitListResponse.visits.forEach((visitDict)=> {
+					const visit = new Visit(visitDict);
+					visit_list.push(visit);
+				});
 		}
-		if (visitListResponse.servicetypes != null) {
-			service_list = visitListResponse.servicetypes;
+		/*if (visitListResponse.servicetypes != null) {
+			getServiceItems(visitListResponse.servicetypes);
 		}
 		if (visitListResponse.surchargetypes != null) {
-			surcharge_list = visitListResponse.surchargetypes;
+			getSurchargeItems(visitListResponse.surchargetypes);
 		}
 		if (visitListResponse.timewindows != null) {
-			time_windows_list = visitListResponse.timewindows;
-		}
+			getTimeWindows(visitListResponse.timewindows);
+		}*/
 		return visit_list;
 	}	
 
-	async function getClientProfileAjax(startDate, endDate) {
-
+	async function getClientProfileAjax() {
+		let clientProfileURL = 'https://leashtime.com/client-own-profile-data.php';
+		let options = {
+			method : 'GET',
+			headers : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json',
+				'credentials' : 'same-origin'
+			}
+		}
+		let profileRequest = await fetch(clientProfileURL,options);
+		let profileResponse = await profileRequest.json();
+		petOwnerAndPets = new PetOwner(profileResponse);
+		return petOwnerAndPets;
 	}
 
 	// CLIENT AND PET DATA FOR A PARTICULAR CLIENT
@@ -400,8 +409,11 @@ var LT = (function() {
 	function getVisits(visitsDictionary)  {
 		recursiveGetProperty(visitsDictionary, "visits", function(obj) {
 			let num_visits = obj.length;
+			console.log('number of visits: ' + num_visits);
+			console.log(obj);
 			for (let i =0; i < num_visits; i++) {
 				let visit_dict = obj[i];
+				console.log(visit_dict);
 				const visit = new Visit(visit_dict);
 				visit_list.push(visit);
 			}
@@ -410,8 +422,6 @@ var LT = (function() {
 				visit_item.checkSurcharge(surcharge_list);
 			}
 		});
-
-		return visit_list;
 	}
 	function getServiceItems(serviceDictionary) {
 		recursiveGetProperty(serviceDictionary, "servicetypes", function(sObj) {
@@ -551,6 +561,7 @@ var LT = (function() {
 		getTimeWindows: getTimeWindows,
 		getSurchargeItems: getSurchargeItems,
 		getClientProfileInfo : getClientProfileInfo,
+		getClientProfileAjax : getClientProfileAjax,
 		sendCancelVisitRequest : sendCancelVisitRequest,
 		sendUncancelRequest : sendUncancelRequest,
 		sendChangeVisitRequest : sendChangeVisitRequest,
@@ -566,6 +577,7 @@ var LT = (function() {
 		service_list : service_list,
 		surcharge_list : surcharge_list,
 		time_windows_list : time_windows_list,
+		petOwnerAndPets : petOwnerAndPets,
 		Visit : Visit,
 		PetOwner : PetOwner,
 		Pet: Pet,
