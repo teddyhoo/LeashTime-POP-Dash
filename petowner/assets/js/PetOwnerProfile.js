@@ -48,7 +48,7 @@
         populateProfileFields();
         populateHomeInfo();
         populatePets();
-        //populateCustom();
+        populateCustom();
         addEditEvents();
 
     }
@@ -86,7 +86,7 @@
         let customHTML = `<dl class="dl-horizontal" style="margin-top:24px;">`;
         clientProfileCustom.forEach((customObj)=> {
             if (customObj.customVal == '1') {
-                customHTML += `<dt class="editField" id="${petProfile.petID}">${customObj.customKey}</dt><dd><span class="badge style-success">YES</span></dd>`;
+                customHTML += `<dt>${customObj.customKey}</dt><dd><span class="badge style-success">YES</span></dd>`;
 
             } else if (customObj.customVal == '0') {
                 customHTML += `<dt>${customObj.customKey}</dt><dd><span class="badge style-danger">NO</span></dd>`;
