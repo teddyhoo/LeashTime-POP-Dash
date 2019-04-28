@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>LeashTime Manager Dashboard</title>
+
+  <!-- BEGIN META -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="per_sitting_businesses">
+  <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+  <!-- END META -->
+
+  <!-- BEGIN FRAMEWORK STYLESHEETS -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+
+  <!-- BEGIN PLUGIN STYLESHEETS -->
+  <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar-leashtime.css">
+
+  <!-- BEGIN LEASHTIME STYLESHEETS -->
+  <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+  <!--<link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">-->
+  <link href="./assets/css/manager-styles.css" rel="stylesheet" type="text/css">
+  <!-- END STYLESHEETS -->
+
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.js"></script>
+  <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+  
+</head>
+
+<!--<body class="header-fixed">-->
+
+<body class="menubar-hoverable header-fixed menubar-pin ">
+
+
+<!--/////////////// BEGIN HEADER ///////////////-->
+<header id="" class="">
+  <div class="headerbar blue ">
+    
+      <!-- HEADER BRANDING -->
+      <div class="">
+        <ul class="header-nav header-nav-options">
+          <li style="float: left;">
+            <a class="btn btn-icon-toggle text-center" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
+              <i class="fa fa-paw white-text fa-2x"></i>
+            </a>
+
+          </li>
+          <li style="line-height:1;padding:24px 0">
+            <div class="brand-holder hidden-on-mobile">
+              <span class="text-lg white-text">MOBILE<strong> OPERATIONS</strong>™
+                <span style="font-weight: 100;opacity: .8"> | SITTER MONITOR</span></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+<!-- HEADER TOOLS -->
+<div class="headerbar-right"> 
+     
+<!-- CALENDAR NAV -->
+<div class="lt-calendar-nav small-padding no-margin">
+  <a id="prev" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="prevDay()"><i class="fa fa-angle-left"></i></a>
+  <div class="cal-date text-center text-xs">
+    <span id="dayWeek"></span>
+    <span id="month">...Login...</span>
+    <span id="dateLabel"></span>
+    <br>
+  </div>
+    <a id="next" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="nextDay()"><i class="fa fa-angle-right"></i></a>
+</div>  
+       
+<ul class="header-nav header-nav-options">
+   
+   <li id="calendar">
+      <form class="navbar-search" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
+        </div>
+        <button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
+      </form>
+    </li>
+   
+    <li id="status" class="dropdown hidden-xs">
+      <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-area-chart white-text"></i><sup class="badge style-info"></sup>
+      </a>
+      <ul class="dropdown-menu animation-expand">
+        <li class="dropdown-header">SERVICE REPORT
+        </li>
+        
+        <li class="dropdown-progress">
+          <a href="javascript:void(0);">
+            <div class="dropdown-label">
+              <span id="numVisits" class="text-light">Total Visits <strong>TODAY</strong></span>
+              <strong class="pull-right">55%</strong>
+            </div>
+            <div class="progress"><div class="progress-bar progress-bar-info" style="width: 74%"></div></div>
+          </a>
+        </li><!--end .dropdown-progress -->
+        <li class="dropdown-progress">
+          <a href="javascript:void(0);">
+            <div class="dropdown-label">
+              <span class="text-light">LATE VISITS <strong>TODAY</strong></span>
+              <strong class="pull-right">74%</strong>
+            </div>
+            <div class="progress"><div class="progress-bar progress-bar-warning" style="width: 44%"></div></div>
+          </a>
+        </li><!--end .dropdown-progress -->
+        <li class="dropdown-progress">
+          <a href="javascript:void(0);">
+            <div class="dropdown-label">
+              <span class="text-light">Services Goals <strong>CANCELLED</strong></span>
+              <strong class="pull-right">13%</strong>
+            </div>
+            <div class="progress"><div class="progress-bar progress-bar-danger" style="width: 13%"></div></div>
+          </a>
+        </li><!--end .dropdown-progress -->
+        <li class="dropdown-progress">
+          <a href="javascript:void(0);">
+            <div class="dropdown-label">
+              <span class="text-light">Service Reports <strong>SEND TODAY</strong></span>
+              <strong class="pull-right">30%</strong>
+            </div>
+            <div class="progress"><div class="progress-bar progress-bar-success" style="width: 30%"></div></div>
+          </a>
+        </li><!--end .dropdown-progress -->
+      </ul><!--end .dropdown-menu -->
+    </li><!--end .dropdown -->
+    
+    <li id="messages" class="dropdown hidden-xs">
+      <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-bell white-text"></i>
+      </a>
+      <ul class="dropdown-menu animation-expand">
+        <li class="dropdown-header">Today's messages</li>
+        <li>
+          <a class="alert alert-callout alert-warning" href="javascript:void(0);">
+            <!--<img class="pull-right img-circle dropdown-avatar" src="./img/avatar2.jpg?1404026449" alt="">-->
+            <strong>Teddy Bun Panda</strong><br>
+            <small>Testing functionality...</small>
+          </a>
+        </li>
+        <li>
+          <a class="alert alert-callout alert-info" href="javascript:void(0);">
+            <!--<img class="pull-right img-circle dropdown-avatar" src="./img/avatar3.jpg?1404026799" alt="">-->
+            <strong>Jody Sparkles</strong><br>
+            <small>Reviewing last changes...</small>
+          </a>
+        </li>
+        <li class="dropdown-header">Options</li>
+        <li><a href="#">View all messages <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+        <li><a href="#">Mark as read <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
+      </ul><!--end .dropdown-menu -->
+    </li><!--end .dropdown -->
+
+    <li id="protect"> 
+      <a class="btn btn-icon-toggle btn-default ink-reaction" href="#offcanvas-pet-protect" data-toggle="offcanvas" data-backdrop="false">
+       <i class="md md-local-hospital fa-2x white-text"></i></a>
+    </li>
+    
+    <li id="menu">
+      <a class="btn btn-icon-toggle btn-default" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
+      <i class="fa fa-ellipsis-v white-text"></i></a>
+    </li>
+    
+</ul>
+
+</div>
+ 
+  </div>
+</header>
+<!-- END HEADER NAV-->
+
+<!-- PAGE CONTENT -->
+<div id="base" class="" style="padding-left:0;">
+
+<!-- LEFT OFFCANVAS -->
+<div class="offcanvas">
+  
+  <div id="offcanvas-sitters" class="offcanvas-pane width-8 style-default-dark">
+  
+  <!-- TITLE -->
+  <div class="offcanvas-head ">
+    <header><small><strong>PET SITTERS</strong></small></header>
+    <div class="offcanvas-tools">
+      <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+        <i class="md md-close"></i>
+      </a>
+    </div>
+  </div>
+  
+  <div class="offcanvas-body no-padding">
+
+    <div class="panel-group" id="visitListBySitterAccordions">
+    
+    </div>
+
+  </div>
+</div>
+  
+</div>
+
+
+<!-- ////////////////// BEGIN MAIN CONTENT  ////////////////////-->
+<div id="content" style="margin-top:-64px">
+    <!-- BEGIN BASIC MAP -->
+    <div class="row">
+
+<!-- FILTER BTNS -->
+<div id="filterOptions" class="filterStatus">
+  <div class="btn-group btn-group-info btn-group-justified" role="group" aria-label="Filter View" style="background-color:rgba(0,0,0,.5)">
+     
+       <a class="btn" role="button">
+        <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('late')">LATE</button>
+      </a>
+      <a class="btn" role="button">
+        <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('published')">VR SENT</button>
+      </a>
+      <a class="btn" role="button">
+        <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('submitted')">VR REVIEW</button>
+      </a>
+      <a class="btn" role="button">
+        <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('noreportdatareceived')">VR NONE</button>
+      </a>
+      
+  </div>
+</div>
+
+<div class="col-xs-12 full-bleed no-margin Full-height">
+
+
+<!-- MAP -->
+<div class="transparent no-margin no-padding">
+  <div id='map' class="mapView stick-bottom-left stick-bottom-right" style="height:100vh;"></div>
+</div>
+
+<div class="overlay overlay-shade-top stick-top-left height-3 opacity-50"></div>                         
+                                                         
+                                                                                                               
+<div class="stick-top-right m-t-20 m-r-20">               
+ 
+<!-- LOGIN  -->   
+<section id="lt-loginPanel" class="ltLogin m-t-0 section-info">
+ <div class="section-body">
+   <div class="card style-info force-padding">
+      <span  class="text-small">
+        <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
+        <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
+        <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=loginAjax()>LOGIN</button>
+
+      </span>
+   </div>
+ </div>
+</section>
+
+ <div class="panel-group" id="visitListBySitterAccordions">HERE
+    </div>    
+
+<!-- VISIT LIST 
+<section id="lt-visitList">
+  <div class="offset-2">
+    <ul class="list full-bleed">
+      <div id="visitListByClient" class="visitListViewSitterClient"></div>
+    </ul>
+  </div>
+</section>     
+
+</div>
+</div>
+</div>      
+</div>
+   -->
+   
+<!-- RIGHT OFFCANVAS -->     
+<div class="offcanvas">
+
+<!-- BEGIN OFFCANVAS PETPRO™ -->
+<div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
+    <!-- TITLE -->
+    <div class="offcanvas-head ">
+        <header><small style="color:#b43d3d"><strong style="font-weight: 800">PET</strong>PROTECT™</small></header>
+        <div class="offcanvas-tools">
+            <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+            <i class="md md-close"></i>
+          </a>
+        </div>
+    </div>
+    <div class="offcanvas-body no-padding">
+        <!-- PET PROTECT ESSENTIAL PANEL CARD -->
+        <div class="">
+            <div class="no-padding">
+                <ul class="list  white-text text-lighten-5">
+                    <li class="tile pp-tile">
+                        <a href="#!" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="md md-local-hospital fa-2x"></i>
+                            </div>
+                            <div class="tile-text">
+                                EMERGENCY CARE
+                                <small>(123) 456-7890</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="tile pp-sidebar">
+                        <a href="#!" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="md md-location-on"></i>
+                            </div>
+                            <div class="tile-text">
+                                LOST DOG SEARCH
+                                <small>Leashtime</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="tile pp-sidebar">
+                        <a href="#!" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="md md-account-balance"></i>
+                            </div>
+                            <div class="tile-text">
+                                LOCAL LEASH LAWS
+                                <small>City of Something</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="tile pp-sidebar">
+                        <a href="#!" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="md md-account-balance"></i>
+                            </div>
+                            <div class="tile-text">
+                                DOG BITE LAW
+                                <small>Resources</small>
+                            </div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <!--end .card-body -->
+        </div>
+        <!--END PETPROTECT PANEL CARD -->
+</div>
+
+</div>
+
+
+<!--
+  <div id="offcanvas-date" class="offcanvas-pane width-8" style="background-color: #f18686">
+   <div class="col-sm-2 full-bleed small-padding">
+
+        <ul class="list small-padding">
+            <div id="visitListByClient" class="visitListViewSitterClient"></div>
+          </ul>
+
+           <div class="full-bleed">
+
+            <section class="ltLogin">
+               <hr>
+              <span class="text-small">
+                  <input type="text" value="dlife" id="userName" name="username" class="full-bleed">
+                  <input type="text" value="pass" id="passWord" name="password" class="full-bleed">
+                  <button type = "button" style="background-color:lightgreen" id="login" class="btn btn-block transparent"  onClick=login()>LOGIN</button>
+              </span>
+             </section>
+
+            </div>
+        </div>
+  </div>
+-->
+
+</div>
+
+</div> <!-- END BASE -->
+
+<!-- JAVASCRIPT -->
+<script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+<script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+<script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script> 
+<script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+<script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+<script src="../../assets/js/libs/moment/moment.min.js"></script>
+
+<!-- BEGIN JAVASCRIPT -->
+<script src="./assets/js/leashtime/App.js"></script>
+<script src="./assets/js/leashtime/AppOffcanvas.js"></script>
+<script src="./assets/js/leashtime/AppCard.js"></script>
+<script src='assets/js/LTMGR.js'></script>
+<script src="assets/js/lTmanagerapp.js"></script>
+      
+  </body>
+</html>

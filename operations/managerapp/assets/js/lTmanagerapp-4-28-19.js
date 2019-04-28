@@ -95,12 +95,12 @@
             let sitterListDiv = document.getElementById('visitListBySitterAccordions');
             //<div class="sitter card panel"> 
             let sitterListElement = document.createElement('div');
-//            sitterListElement.setAttribute("type", "div"); CPA REMOVED
-//            sitterListElement.setAttribute("id","sitterListAccordions") //These IDs must be unique to thre HTML page 
+            sitterListElement.setAttribute("type", "div");
+            sitterListElement.setAttribute("id","sitterListAccordions")
             sitterListElement.setAttribute("class", "sitter card panel");
             //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
             let sitterCardHead = document.createElement('div');
-//            sitterCardHead.setAttribute("type", "div");
+            sitterCardHead.setAttribute("type", "div");
             sitterCardHead.setAttribute("id", sitter.sitterID);
             sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
             sitterCardHead.setAttribute("data-toggle", "collapse");
@@ -121,8 +121,7 @@
             // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
             // </div>
             let toolDiv = document.createElement('div');
-            toolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID); 
-          toolDiv.setAttribute("class","tools");
+            toolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID);   
             let buttonTool = document.createElement('button');
             buttonTool.setAttribute("type","button");
             buttonTool.setAttribute("class", "btn btn-icon-toggle");
@@ -138,19 +137,19 @@
             sitterCardHead.appendChild(toolDiv);
             // <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
             let expandAccordion = document.createElement('div');
-//            expandAccordion.setAttribute("type", "div");
+            expandAccordion.setAttribute("type", "div");
             expandAccordion.setAttribute("id", "accordion-"+sitter.sitterID);
             expandAccordion.setAttribute("class", "collapse");
             expandAccordion.setAttribute("style","height: 0px;");
             expandAccordion.setAttribute("aria-expanded", "false");
             //      <div class="card-body small-padding ">      
             let cardBody = document.createElement('div');
-//            cardBody.setAttribute("type","div");
-            cardBody.setAttribute("class", "card-body no-padding");
+            cardBody.setAttribute("type","div");
+            cardBody.setAttribute("class", "card-body small-padding");
             cardBody.setAttribute("id","visitsBy-"+sitter.sitterID);
             //      <div class="visit panel-group" id="visitID">
             let panelGroup = document.createElement('div');
-//            panelGroup.setAttribute("type","div");
+            panelGroup.setAttribute("type","div");
             panelGroup.setAttribute("class","visit panel-group");
             panelGroup.setAttribute("id","visitAccordionPanel-"+sitter.sitterID);
 
@@ -164,36 +163,29 @@
                     visitCount = visitCount +1;
                     //  <div class="card panel">
                     let panelItem = document.createElement('div');
-//                    panelItem.setAttribute("type","div");
+                    panelItem.setAttribute("type","div");
                     panelItem.setAttribute("class","card panel");
                     panelItem.setAttribute("id","visitDetailDiv-"+ visit.visitID);
                     //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
                     let visitDiv = document.createElement('div');
-//                    visitDiv.setAttribute("type", "div");
+                    visitDiv.setAttribute("type", "div");
                     visitDiv.setAttribute("id", "visit-"+visit.visitID);
-//                    visitDiv.setAttribute("class", "card-head card-head-sm collapsed"); CPA
-                  visitDiv.setAttribute("class", "card-head card-head-xs collapsed");
+                    visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
                     visitDiv.setAttribute("data-toggle", "collapse");
                     visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visit.visitID);
                     visitDiv.setAttribute("data-target", "#visitDetails-"+visit.visitID);
                     visitDiv.setAttribute("aria-expanded", "false");
-                  
                     if(visit.status == 'completed') {
-//                        panelItem.setAttribute("style","background-color: #0B6623");
-                      visitDiv.classList.add("style-success");
-                      
+                        panelItem.setAttribute("style","background-color: #0B6623");
                         // check visit report sent status and adjust view
                     } else if (visit.status == "late") {
-//                        visitDiv.setAttribute("style","background-color: #FDD033");
-                      visitDiv.classList.add("bg-warning");
-                      
+                        visitDiv.setAttribute("style","background-color: #FDD033");
+
                     } else if (visit.status == "future") {
-//                        visitDiv.setAttribute("style","background-color: #ADD8E6");
-                      visitDiv.classList.add("bg-info");
+                        visitDiv.setAttribute("style","background-color: #ADD8E6");
 
                     } else if (visit.status == "canceled") {
-//                        visitDiv.setAttribute("style","background-color: #A80000");
-                      visitDiv.classList.add("bg-danger");
+                        visitDiv.setAttribute("style","background-color: #A80000");
 
                     } else if (visit.status == "arrived") {
                         
@@ -202,20 +194,15 @@
                         console.log('event object: ' + eventObj.id);
                         flyToVisit(visit);
                     });
-                  
                     let visitHeader = document.createElement("header");
-//                  let visitSummaryHTML = `
-//                        <p>${visit.pets} (${visit.clientName})
-//                        <p>${visit.service} (${visit.timeOfDay})
-//                    `;
                     let visitSummaryHTML = `
-                        ${visit.timeOfDay}
+                        <P>${visit.pets} (${visit.clientName})
+                        <P>${visit.service} (${visit.timeOfDay})
                     `;
                     visitHeader.innerHTML = visitSummaryHTML;
                     // <div class="tools">
                     let visitToolDiv = document.createElement('div');
                     visitToolDiv.setAttribute("id","tool-accordion-"+visit.visitID);
-                    visitToolDiv.setAttribute("class","tools");
 
                     //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
                     let visitDetailButton = document.createElement('button');
@@ -227,7 +214,7 @@
 
                     //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
                     let visitExpandAccordion = document.createElement('div');
-//                    visitExpandAccordion.setAttribute("type", "div");
+                    visitExpandAccordion.setAttribute("type", "div");
                     visitExpandAccordion.setAttribute("id", "visitDetails-"+visit.visitID);
                     visitExpandAccordion.setAttribute("class", "collapse");
                     visitExpandAccordion.setAttribute("style","height: 0px;");
@@ -235,27 +222,26 @@
 
                     //  <div class="card-body">
                     let visitDetailCard = document.createElement("div");
-//                    visitDetailCard.setAttribute("type", "div");
+                    visitDetailCard.setAttribute("type", "div");
                     visitDetailCard.setAttribute("class", "card-body small-padding");
                     visitDetailCard.setAttribute("id","visitDetailCard-" + visit.visitID);
-                    visitDetailCard.setAttribute("style", "background-color: #e1e1e1;")
+                    visitDetailCard.setAttribute("style", "background-color: Yellow;")
                    
                     let visitDetailsHTML = ' ' ;
 
                     allClients.forEach((client)=> {
                         if (client.client_id == visit.clientID) {
                                 visitDetailsHTML = `
-                                <p>${visit.pets} | ${visit.service}<br>
-                                ${client.street1}, ${client.city}, ${client.state} ${client.zip}<br>
-                                ALARM CODE INFO: ${client.alarmcompany} : ${client.alarminfo} <br>
-                                CELL: ${client.cellphone}, ALT CELL: ${client.cellphone2} <br>
-                                EMAIL: ${client.email} <br>
-                                ALT EMAIL: ${client.email2} </p>
+                                <P>${client.street1}, ${client.city}, ${client.state} ${client.zip}</p>
+                                <P>ALARM CODE INFO: ${client.alarmcompany} : ${client.alarminfo}
+                                <P>CELL: ${client.cellphone}, ALT CELL: ${client.cellphone2}
+                                <P>EMAIL: ${client.email}
+                                <P>ALT EMAIL: ${client.email2}
                                  `;
                         }
                     });
                     if (visit.visitNote != null) {
-                        visitDetailsHTML = `<p>NOTE: ${visit.visitNote}` + visitDetailsHTML;
+                        visitDetailsHTML = `<P>NOTE: ${visit.visitNote}` + visitDetailsHTML;
                     }
                     visitDetailCard.innerHTML = visitDetailsHTML;
 

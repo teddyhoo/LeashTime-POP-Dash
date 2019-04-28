@@ -413,22 +413,17 @@ http.createServer((req, res) => {
 	 			});
 	 		});
 	} else if (theType == "petOwnerVisits") {
-
 		res.write(JSON.stringify(petOwnerVisits));
 		res.end();
-
 	} else if (theType == "cancel") {
-
 		res.write(JSON.stringify({ "response" : "ok"}));
 		visitCancel(typeRequest.visitid, typeRequest.note);
 		res.end();
 	} else if (theType == "uncancel") {
-
 		res.write(JSON.stringify({ "response" : "ok"}));
 		visitUncancel(typeRequest.visitid, typeRequest.note);
 		res.end();
 	} else if (theType == "change") {
-
 		res.write(JSON.stringify({ "response" : "ok"}));
 		visitChange(typeRequest.visitid, typeRequest.note);
 		res.end();
