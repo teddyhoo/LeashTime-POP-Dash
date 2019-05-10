@@ -44,6 +44,31 @@
   border-radius: 50%;
   cursor: pointer;
 }
+.marker-late {
+  background-image: url('../img/location-marker-late.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.marker-complete {
+  background-image: url('../img/check-mark-green@3x.png');
+  background-size: 85%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: forestgreen;
+}
+.marker-canceled {
+  background-image: url('../img/red-dot@3x.png');
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
 .marker-noreportreceived{
   background-image: url('../img/location-marker-complete-noreport.png');
   background-size: cover;
@@ -69,21 +94,14 @@
   cursor: pointer;
 }
 .marker-submitted {
-  background-image: url('../img/location-marker-submitted-review.png');
+  background-image: url('../img/vr-review.png');
   background-size: cover;
   width: 32px;
   height: 32px;
   border-radius: 50%;
   cursor: pointer;
 }
-.marker-late {
-  background-image: url('../img/location-marker-late.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
+
 .map-marker {
   border-radius: 100%;
   margin: 10px 0;
@@ -92,31 +110,7 @@
 i {
   font-family: Roboto 'sans-serif';
 }
-.marker-complete {
-  background-image: url('../.../img/icon-late.png');
-  background-size: 85%;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  background-color: forestgreen;
-}
-.marker-canceled {
-  background-image: url('../img/red-dot@3x.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.marker-visitreport {
-  background-image: url('../img/note-icon@3x.png');
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-}
+
 .button {
   display: inline-block;
   border: none;

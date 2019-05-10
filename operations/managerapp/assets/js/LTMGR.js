@@ -67,6 +67,7 @@ var LTMGR = (function() {
 	class SitterVisit {
 		constructor(visitInfo) {
 
+			this.vrStatus = '';
 			let visitInfoKeys = Object.keys(visitInfo);
 			visitInfoKeys.forEach((key)=> {
 				if (key == 'report') {
@@ -79,7 +80,6 @@ var LTMGR = (function() {
 					})
 				}
 				if (key == 'performance') {
-					console.log('----------------PERFORMANCE------------------')
 					let perfKeys = Object.keys(visitInfo.performance);
 					perfKeys.forEach((pKey)=> {
 						//console.log(pKey + ' --> ' + perfKeys.pKey);
@@ -89,7 +89,8 @@ var LTMGR = (function() {
 
 			let visitReportInfo = visitInfo.report;
 			if (visitReportInfo != null) {
-				this.visitReportStatus = visitReportInfo.status;
+				this.vrStatus = visitReportInfo.status;
+				console.log('SITTER VISIT OBJECT CREATED WITH visit report status: ' + this.vrStatus);
 			}
 
 			this.visitID = visitInfo.appointmentid;
@@ -333,16 +334,6 @@ var LTMGR = (function() {
 		}
 	}
 	
-	async function loginManager(username, password, role,startDate,endDate) {
-
-		sitterList = [];
-		visitList =[];
-		allClients =[];
-		let url = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+role+'&startDate='+startDate+'&endDate='+endDate;
-		
-		const response = await fetch(url);
-		const myJson = await response.json();
-	}
 	async function managerLoginAjax(username, password, role) {
 		sitterList = [];
 		visitList =[];
@@ -368,14 +359,6 @@ var LTMGR = (function() {
 														});
 		return responseJSON;
 	}
-
-	function parseVisitReport(visitReportDict) {
-
-		let visitReportKeys = Object.keys(visitReportDict);
-		visitReportKeys.forEach((key) => {
-
-		});
-	}''
 	async function getManagerSittersAjax() {
 		console.log('Get manager sitters ajax');
 		let url = 'https://leashtime.com/mmd-sitters.php';	
@@ -436,7 +419,6 @@ var LTMGR = (function() {
 		});
 		
 		return visitList;
-
 	}
 	async function getManagerClientsAjax() {
 		let url = 'https://leashtime.com/mmd-clients.php';
@@ -497,10 +479,6 @@ var LTMGR = (function() {
 		}
 		return reportList;
 	}
-	async function getVisitReportAjax(visitID, visitReportDetailObj) {
-		
-		console.log("SUCK IT: "+visitID);
-	}
 	async function getVisitReportListAjax(clientID, startDate, endDate, visitID) {
 
 		let url = 'https://leashtime.com/visit-report-list-ajax.php?clientid=' + clientID + '&start='+startDate+'&end='+endDate+'&publishedonly=1';
@@ -533,103 +511,16 @@ var LTMGR = (function() {
 		}
 		return report;
 	}
-	function getVisitList() {
-		return visitList;
-	}
-	function getVisitsBySitterID(sitterID) {
-		let sitterVisitsBySitterID = [];
-		visitList.forEach((visit)=> {
 
-			if (sitterID == visit.sitterID) {
-				sitterVisitsBySitterID.push(visit);
-			}
+	async function loginManager(username, password, role,startDate,endDate) {
 
-		});
-	}
-	function getVisitsBySitter(sitterID) {
-
-		let visitListForSitter = [];
-
-		visitList.forEach((visitDetails) => {
-
-			if (visitDetails.sitterID == sitterID) {
-				visitListForSitter.push(visitDetails);
-			}
-
-		});
-
-		return visitListForSitter;
-	}
-	function addDistanceMatrixPair(distanceMatrixInfo, waypoints) {
-
-		let route_legs = distanceMatrixInfo.legs;
-        let num_legs = distanceMatrixInfo.legs.length;
-        let total_num_legs = num_legs;
-		let total_dist_check = 0;
-		let total_duration_check= 0;
-		let route_index = 0;
-		let total_distance = distanceMatrixInfo.distance/1000;
-		total_distance = total_distance * .62137;
-		let total_duration = distanceMatrixInfo.duration/60;
-
-		console.log('route legs: ' + num_legs + ' waypoints: ' + waypoints.length);
-		let matrixData = window.localStorage.getItem("distanceMatrix");
-		matrixDistance = JSON.parse(matrixData);
-		if (matrixDistance != null) {
-
-			matrixDistance.forEach((matrix)=> {
-				console.log('Reading matrix: ' + matrix.beginName);
-			})
-			//})
-		} else {
-			matrixDistance = [];
-		}
- 
-		waypoints.forEach((waypointInfo)=>{
-			let waypointInfoPrior;
-			let startCoord;
-			let endCoord;
-			let startName;
-			let endName;
-			let distance;
-			let duration;
-			let durationHours;
-			let convertDistance;
-
-			if (route_index > 0) {
-				console.log('Route index: ' + route_index);
-				let leg = route_legs[route_index];
-				endName = waypointInfo.name;
-				endCoord = waypointInfo.location;
-				waypointInfoPrior = waypoints[route_index-1]
-				startName = waypointInfoPrior.name;
-				startCoord = waypointInfoPrior.location;
-				if (leg != null){
-					distance = leg.distance;
-					duration = leg.duration;
-					durationHours = duration/60;
-				 	convertDistance = (distance / 1000);
-					let matrixItem = new DistanceMatrixPair(startCoord, endCoord, startName, endName, convertDistance, durationHours);
-					matrixDistance.push(matrixItem);
-				}
-			}
-			
-			route_index = route_index + 1;
-            num_legs = num_legs - 1;
-		});
-		window.localStorage.setItem("distanceMatrix", JSON.stringify(matrixDistance));
-	}
-	function getDistanceMatrix() {
-		matrixDistance = [];
-		let matrixData = window.localStorage.getItem("distanceMatrix");
-		matrixDistance = JSON.parse(matrixData);
-		if (matrixDistance != null) {
-			matrixDistance.forEach((matrix)=> {
-				//console.log('Getting from local... ' + matrix.beginName + ' ' + matrix.endName + ' (distance: ' + matrix.distance + ' miles, duration: ' + matrix.duration + ' ) ' + matrix.beginCoordinate + ' ' + matrix.endCoordinate);
-			})
-			return matrixDistance;
-		}
-		return null;
+		sitterList = [];
+		visitList =[];
+		allClients =[];
+		let url = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+role+'&startDate='+startDate+'&endDate='+endDate;
+		
+		const response = await fetch(url);
+		const myJson = await response.json();
 	}
 	async function getManagerData() {
 		sitterList = [];
@@ -737,6 +628,116 @@ var LTMGR = (function() {
 		return dictionaryComplete;
 	}
 
+
+	function getVisitList() {
+
+		return visitList;
+	}
+	function getVisitsBySitterID(sitterID) {
+		let sitterVisitsBySitterID = [];
+		visitList.forEach((visit)=> {
+
+			if (sitterID == visit.sitterID) {
+				sitterVisitsBySitterID.push(visit);
+			}
+
+		});
+	}
+	function getVisitsBySitter(sitterID) {
+
+		let visitListForSitter = [];
+
+		visitList.forEach((visitDetails) => {
+
+			if (visitDetails.sitterID == sitterID) {
+				visitListForSitter.push(visitDetails);
+			}
+
+		});
+
+		return visitListForSitter;
+	}
+
+	function parseVisitReport(visitReportDict) {
+
+		let visitReportKeys = Object.keys(visitReportDict);
+		visitReportKeys.forEach((key) => {
+
+		});
+	}
+	function addDistanceMatrixPair(distanceMatrixInfo, waypoints) {
+
+		let route_legs = distanceMatrixInfo.legs;
+        let num_legs = distanceMatrixInfo.legs.length;
+        let total_num_legs = num_legs;
+		let total_dist_check = 0;
+		let total_duration_check= 0;
+		let route_index = 0;
+		let total_distance = distanceMatrixInfo.distance/1000;
+		total_distance = total_distance * .62137;
+		let total_duration = distanceMatrixInfo.duration/60;
+
+		console.log('route legs: ' + num_legs + ' waypoints: ' + waypoints.length);
+		let matrixData = window.localStorage.getItem("distanceMatrix");
+		matrixDistance = JSON.parse(matrixData);
+		if (matrixDistance != null) {
+
+			matrixDistance.forEach((matrix)=> {
+				console.log('Reading matrix: ' + matrix.beginName);
+			})
+			//})
+		} else {
+			matrixDistance = [];
+		}
+ 
+		waypoints.forEach((waypointInfo)=>{
+			let waypointInfoPrior;
+			let startCoord;
+			let endCoord;
+			let startName;
+			let endName;
+			let distance;
+			let duration;
+			let durationHours;
+			let convertDistance;
+
+			if (route_index > 0) {
+				console.log('Route index: ' + route_index);
+				let leg = route_legs[route_index];
+				endName = waypointInfo.name;
+				endCoord = waypointInfo.location;
+				waypointInfoPrior = waypoints[route_index-1]
+				startName = waypointInfoPrior.name;
+				startCoord = waypointInfoPrior.location;
+				if (leg != null){
+					distance = leg.distance;
+					duration = leg.duration;
+					durationHours = duration/60;
+				 	convertDistance = (distance / 1000);
+					let matrixItem = new DistanceMatrixPair(startCoord, endCoord, startName, endName, convertDistance, durationHours);
+					matrixDistance.push(matrixItem);
+				}
+			}
+			
+			route_index = route_index + 1;
+            num_legs = num_legs - 1;
+		});
+		window.localStorage.setItem("distanceMatrix", JSON.stringify(matrixDistance));
+	}
+	function getDistanceMatrix() {
+		matrixDistance = [];
+		let matrixData = window.localStorage.getItem("distanceMatrix");
+		matrixDistance = JSON.parse(matrixData);
+		if (matrixDistance != null) {
+			matrixDistance.forEach((matrix)=> {
+				//console.log('Getting from local... ' + matrix.beginName + ' ' + matrix.endName + ' (distance: ' + matrix.distance + ' miles, duration: ' + matrix.duration + ' ) ' + matrix.beginCoordinate + ' ' + matrix.endCoordinate);
+			})
+			return matrixDistance;
+		}
+		return null;
+	}
+
+
 	return {
 
 		getVisitList : getVisitList,
@@ -756,7 +757,6 @@ var LTMGR = (function() {
 		getManagerVisitsAjax : getManagerVisitsAjax,
 		getManagerClientsAjax :getManagerClientsAjax,
 		getVisitReportListAjax : getVisitReportListAjax,
-		getVisitReportAjax: getVisitReportAjax,
 		getMasterVisitReportListAjax : getMasterVisitReportListAjax
 	}
 

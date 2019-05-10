@@ -48,11 +48,11 @@ http.createServer((req, res) => {
 
 	res.writeHead(200, { 'Content-Type': 'application/json','Access-Control-Allow-Origin':'*'});
  	if (theType == 'poVisits') {
-		console.log('VISIT DATA' + petOwnerDataRaw);
+		//console.log('VISIT DATA' + petOwnerDataRaw);
 		res.write(JSON.stringify(petOwnerDataRaw));
 		res.end();
 	} else if (theType == 'poClients') {
-		console.log('CLIENT DATA'+ clientData);
+		//console.log('CLIENT DATA'+ clientData);
 		res.write(JSON.stringify(clientData));
 		res.end();
 	} else if(theType == 'mmdLogin') {
@@ -94,6 +94,7 @@ http.createServer((req, res) => {
 
 	 			cookieVal = httpResponse.headers['set-cookie'];
 	 			console.log(cookieVal);
+	 			console.log(body);
 	 			request.post({
 	 				url: 'https://leashtime.com/mmd-sitters.php',
 	 				headers: {
@@ -107,14 +108,14 @@ http.createServer((req, res) => {
 	 				} else {
 	 					let listSitterID;
 	 					sitterJSON = JSON.parse(body2);
-	 					console.log(sitterJSON);
+	 					let sitterJSONKeys = Object.keys(sitterJSON);
+	 					console.log(sitterJSONKeys);
 	 					sitterList = sitterJSON.sitters;
 			 			sitterList.forEach((sitter) => {
 							 if(sitter.active == 1) {
 								listSitterID += sitter.id + ',';
 							 }
 			 			});
-			 			console.log(sitterJSON);
 						request.post({
 							url: 'https://leashtime.com/mmd-visits.php',
 							form: {'start' : start_date, 'end': end_date, 'sitterids':listSitterID},
@@ -146,7 +147,7 @@ http.createServer((req, res) => {
 										console.log(err4);
 									} else {
 										let allClientInfo = JSON.parse(body4);	
-										console.log(allClientInfo);
+										//console.log(allClientInfo);
 										clientList = allClientInfo.clients;
 								 		res.write(JSON.stringify({managerData : "ok"}));
 								 		res.end();
@@ -159,13 +160,13 @@ http.createServer((req, res) => {
 	 		}
 	 	});
  	} else if (theType == "masterReportList") {
-		console.log('Master report list');
+		//console.log('Master report list');
 		let username = loginUsername;
 		let password = loginPassword;
 		let user_role = loginRole;
 		let start_date = typeRequest.startDate;
 		let end_date = typeRequest.endDate;
-		console.log('Start date: ' + typeRequest.startDate + ' End date: ' + typeRequest.endDate);
+		//console.log('Start date: ' + typeRequest.startDate + ' End date: ' + typeRequest.endDate);
 		var j = request.jar();
 	 	request = request.defaults({jar: j});
 
@@ -203,12 +204,12 @@ http.createServer((req, res) => {
 				};
 
 				vrListRequest(options,function(error, httpResponse, body) {
-					console.log(body);
+					//console.log(body);
 					if (error != null) {
 						console.log('Error on the visit report list reques: ' + error);
 					} else {
 						let vrList = JSON.parse(body);
-						console.log(vrList);
+						//console.log(vrList);
 						if(vrList.error != null) {
 							res.write(JSON.stringify({ "visitReport" : "none"}));				
 						} else {
@@ -260,7 +261,7 @@ http.createServer((req, res) => {
 				let clientID = typeRequest.clientID;
 				let start = typeRequest.startDate;
 				let end = typeRequest.endDate;
-				console.log('CLIENT ID: ' + clientID);
+				//console.log('CLIENT ID: ' + clientID);
 				let vrListRequest = require('request');
 				let vrListJar = vrListRequest.jar();
 				vrListRequest = vrListRequest.defaults({jar: vrListJar});
@@ -330,7 +331,7 @@ http.createServer((req, res) => {
 	} else if(theType == "visitReport") {
 		console.log('VISIT REPORT DETAILS');
 		let externalURLval = detailVisitReportList[typeRequest.getURL];
-		console.log(typeRequest.getURL + ' ' + externalURLval);
+		//console.log(typeRequest.getURL + ' ' + externalURLval);
 
 		var vrDetailsRequest = require('request');
 		//var vrDetailsJar = vrDetailsRequest.jar();

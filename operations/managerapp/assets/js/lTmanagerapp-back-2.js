@@ -4,7 +4,7 @@
         var username = '';
         var password = '';
         var userRole = 'm';
-        var isAjax = false;
+        var isAjax = true;
 
         var allVisits = [];
         var allSitters= [];
@@ -33,21 +33,34 @@
             }
         };
         var moodButtonMap = {
-            'poo' : 'icon-mood-poo-color@3x.png',
-            'pee' : 'icon-mood-pee-color@3x.png',
-            'play' : 'icon-mood-play-color@3x.png',
-            'bath' : 'icon-mood-bath-color@3x.png',
-            'food' : 'icon-mood-food-color@3x.png',
-            'groom' : 'icon-mood-groom-color@3x.png',
-            'medication' : 'icon-mood-meds-color@3x.png',
-            'injection' : 'icon-mood-shot-color@3x.png',
-            'treat' : 'icon-mood-treat-color@3x.png',
-            'water' : 'icon-mood-water-color@3x.png'
+            'poo' : 'dog-poo@3x.png',
+            'pee' : 'dog-pee-firehydrant@3x.png',
+            'play' : 'play-icon-red@3x.png',
+            'happy' : 'happy-icon-red@3x.png',
+            'shy' : 'shy-icon-red@3x.png',
+            'sad' : 'sad-dog-red@3x.png',
+            'sick' : 'sick-icon-red@3x.png',
+            'litter' : 'kitty-litter@3x.png',
+            'angry' : 'angry-icon-red@3x.png',
+            'cat' : 'catsit-black-red@3x.png',
+            'hungry' : 'hungry-icon-red@3x.png'
+        };
+        var statusVisit = {
+            'late' : 'on',
+            'completed' : 'on',
+            'completeSentVisitReport' : 'off',
+            'completeReviewVisitReport' : 'off',
+            'completeNoVisitReportReceived' : 'off',
+            'arrived' : 'on',
+            'future' : 'on',
+            'canceled' : 'off'
         };
 
         var total_miles = 0;
         var total_duration_all = 0;
         var onWhichDay = '';
+
+        var sitterIcons = ["marker1", "marker2","marker3","marker4"];
         const  dayArrStr = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
         const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
        
@@ -64,7 +77,6 @@
         });
 
         function login(loginDate) {
-            console.log('Logging in');
             removeSittersFromSitterList();
             removeAllMapMarkers();
             removeVisitDivElements();
@@ -77,8 +89,179 @@
 
             setupLoginSteps(loginDate, false);
         }
+
+        function populateSitterAccordions(sitter) {
+
+            let sitterListDiv = document.getElementById('visitListBySitterAccordions');
+            //<div class="sitter card panel"> 
+            let sitterListElement = document.createElement('div');
+            sitterListElement.setAttribute("type", "div");
+            sitterListElement.setAttribute("id","sitterListAccordions")
+            sitterListElement.setAttribute("class", "sitter card panel");
+            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
+            let sitterCardHead = document.createElement('div');
+            sitterCardHead.setAttribute("type", "div");
+            sitterCardHead.setAttribute("id", sitter.sitterID);
+            sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
+            sitterCardHead.setAttribute("data-toggle", "collapse");
+            sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
+            sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
+            sitterCardHead.setAttribute("aria-expanded", "false");
+
+            sitterCardHead.addEventListener('click', ()=> {
+                console.log('tapped sitter accordion item');
+            })
+            // <header>${sitter.sitterID}</header>
+            let headerElement = document.createElement('header');
+            headerElement.setAttribute("type", "header");
+            headerElement.setAttribute("id", "header-"+sitter.sitterID);
+
+            headerElement.innerHTML = sitter.sitterName;
+            // <div class="tools">
+            // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+            // </div>
+            let toolDiv = document.createElement('div');
+            toolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID);   
+            let buttonTool = document.createElement('button');
+            buttonTool.setAttribute("type","button");
+            buttonTool.setAttribute("class", "btn btn-icon-toggle");
+            let iTool = document.createElement('i')
+            iTool.setAttribute("type","i");
+            iTool.setAttribute("class","fa fa-angle-down");
+
+            sitterListDiv.appendChild(sitterListElement);
+            sitterListElement.appendChild(sitterCardHead);
+            sitterCardHead.appendChild(headerElement);
+            toolDiv.appendChild(buttonTool);
+            toolDiv.appendChild(iTool);
+            sitterCardHead.appendChild(toolDiv);
+            // <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
+            let expandAccordion = document.createElement('div');
+            expandAccordion.setAttribute("type", "div");
+            expandAccordion.setAttribute("id", "accordion-"+sitter.sitterID);
+            expandAccordion.setAttribute("class", "collapse");
+            expandAccordion.setAttribute("style","height: 0px;");
+            expandAccordion.setAttribute("aria-expanded", "false");
+            //      <div class="card-body small-padding ">      
+            let cardBody = document.createElement('div');
+            cardBody.setAttribute("type","div");
+            cardBody.setAttribute("class", "card-body small-padding");
+            cardBody.setAttribute("id","visitsBy-"+sitter.sitterID);
+            //      <div class="visit panel-group" id="visitID">
+            let panelGroup = document.createElement('div');
+            panelGroup.setAttribute("type","div");
+            panelGroup.setAttribute("class","visit panel-group");
+            panelGroup.setAttribute("id","visitAccordionPanel-"+sitter.sitterID);
+
+            cardBody.appendChild(panelGroup);
+            expandAccordion.appendChild(cardBody);
+            sitterListElement.appendChild(expandAccordion);
+
+            let visitCount = 0;
+            allVisits.forEach((visit)=> {
+                if(visit.sitterID == sitter.sitterID) {
+                    visitCount = visitCount +1;
+                    //  <div class="card panel">
+                    let panelItem = document.createElement('div');
+                    panelItem.setAttribute("type","div");
+                    panelItem.setAttribute("class","card panel");
+                    panelItem.setAttribute("id","visitDetailDiv-"+ visit.visitID);
+                    //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
+                    let visitDiv = document.createElement('div');
+                    visitDiv.setAttribute("type", "div");
+                    visitDiv.setAttribute("id", "visit-"+visit.visitID);
+                    visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
+                    visitDiv.setAttribute("data-toggle", "collapse");
+                    visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visit.visitID);
+                    visitDiv.setAttribute("data-target", "#visitDetails-"+visit.visitID);
+                    visitDiv.setAttribute("aria-expanded", "false");
+                    if(visit.status == 'completed') {
+                        panelItem.setAttribute("style","background-color: #0B6623");
+                        // check visit report sent status and adjust view
+                    } else if (visit.status == "late") {
+                        visitDiv.setAttribute("style","background-color: #FDD033");
+
+                    } else if (visit.status == "future") {
+                        visitDiv.setAttribute("style","background-color: #ADD8E6");
+
+                    } else if (visit.status == "canceled") {
+                        visitDiv.setAttribute("style","background-color: #A80000");
+
+                    } else if (visit.status == "arrived") {
+                        
+                    }
+                    visitDiv.addEventListener('click', (eventObj) => {
+                        console.log('event object: ' + eventObj.id);
+                        flyToVisit(visit);
+                    });
+                    let visitHeader = document.createElement("header");
+                    let visitSummaryHTML = `
+                        <P>${visit.pets} (${visit.clientName})
+                        <P>${visit.service} (${visit.timeOfDay})
+                    `;
+                    visitHeader.innerHTML = visitSummaryHTML;
+                    // <div class="tools">
+                    let visitToolDiv = document.createElement('div');
+                    visitToolDiv.setAttribute("id","tool-accordion-"+visit.visitID);
+
+                    //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+                    let visitDetailButton = document.createElement('button');
+                    visitDetailButton.setAttribute("type","button");
+                    visitDetailButton.setAttribute("class", "btn btn-icon-toggle");
+                    let iVisit = document.createElement('i')
+                    iVisit.setAttribute("type","i");
+                    iVisit.setAttribute("class","fa fa-angle-down");
+
+                    //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
+                    let visitExpandAccordion = document.createElement('div');
+                    visitExpandAccordion.setAttribute("type", "div");
+                    visitExpandAccordion.setAttribute("id", "visitDetails-"+visit.visitID);
+                    visitExpandAccordion.setAttribute("class", "collapse");
+                    visitExpandAccordion.setAttribute("style","height: 0px;");
+                    visitExpandAccordion.setAttribute("aria-expanded", "false");
+
+                    //  <div class="card-body">
+                    let visitDetailCard = document.createElement("div");
+                    visitDetailCard.setAttribute("type", "div");
+                    visitDetailCard.setAttribute("class", "card-body small-padding");
+                    visitDetailCard.setAttribute("id","visitDetailCard-" + visit.visitID);
+                    visitDetailCard.setAttribute("style", "background-color: Yellow;")
+                   
+                    let visitDetailsHTML = ' ' ;
+
+                    allClients.forEach((client)=> {
+                        if (client.client_id == visit.clientID) {
+                                visitDetailsHTML = `
+                                <P>${client.street1}, ${client.city}, ${client.state} ${client.zip}</p>
+                                <P>ALARM CODE INFO: ${client.alarmcompany} : ${client.alarminfo}
+                                <P>CELL: ${client.cellphone}, ALT CELL: ${client.cellphone2}
+                                <P>EMAIL: ${client.email}
+                                <P>ALT EMAIL: ${client.email2}
+                                 `;
+                        }
+                    });
+                    if (visit.visitNote != null) {
+                        visitDetailsHTML = `<P>NOTE: ${visit.visitNote}` + visitDetailsHTML;
+                    }
+                    visitDetailCard.innerHTML = visitDetailsHTML;
+
+                    visitToolDiv.appendChild(visitDetailButton);
+                    visitToolDiv.appendChild(iVisit);
+                    visitDiv.appendChild(visitHeader);
+                    visitDiv.appendChild(visitToolDiv);
+                    visitExpandAccordion.appendChild(visitDetailCard);
+                    panelItem.appendChild(visitDiv);
+                    panelItem.appendChild(visitExpandAccordion);
+                    panelGroup.appendChild(panelItem);
+
+                }
+            });
+
+            headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
+
+        }
+
         async function setupLoginSteps(loginDate, isUpdate) {
-            console.log('setup login steps');
             if (!isUpdate) {
                 const managerLoginFetch =  loginPromise();
                 await managerLoginFetch;
@@ -86,31 +269,30 @@
             const sitterListAfterLogin = LTMGR.getManagerData();
             await sitterListAfterLogin.then((results)=> {
                 allSitters = results;
+                console.log(allSitters);
             });
             const visitListAfterLogin = LTMGR.getManagerVisits();
             await visitListAfterLogin.then((results)=> {
                 allVisits = results;
+                console.log(allVisits);
             })
             const clientsAfterLogin = LTMGR.getManagerClients();
             await clientsAfterLogin.then((results)=> {
                 allClients = results;
+                console.log(allClients);
             });
 
+            buildSitterButtons(allVisits, allSitters);
+
             masterVreportList()
-            .then((items)=> { 
-                console.log('MASTER VISIT REPORT LIST ITEMS RECEIVED');
-                if (items != null) {
-                    items.forEach((item)=> {
+            .then((vListItems)=> { 
+                if (vrListItems != null) {
+                    vListItems.forEach((item)=> {
                         visitReportList.push(item);
-                        console.log('visit report id: ' + item.visitID + ' with status: ' + item.status);
+                        //console.log(item.visitID + ' -> ' + item.status);
                     });
-                    console.log('FLY TO FIRST VISIT WITH VISIT REPORT ITEM COUNT: ');
-
                     flyToFirstVisit();
-
-                    console.log('CALL BUILD SITTER BUTTONS');
-
-                    buildSitterButtons(allVisits, allSitters);
+                    //buildSitterButtons(allVisits, allSitters);
                 }
             });
         }
@@ -150,7 +332,6 @@
                 console.log('Response error ');
             }
         }
-
         function loginAjax() {
             isAjax = true;
             removeSittersFromSitterList();
@@ -185,26 +366,19 @@
             allSitters = await LTMGR.getManagerSittersAjax();
             allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
             allClients = await LTMGR.getManagerClientsAjax();
-
+            buildSitterButtons(allVisits, allSitters);
             masterVreportList()
-            .then((vItems)=> { 
-                vItems.forEach((item)=> {
+            .then((vListItems)=> { 
+                vListItems.forEach((item)=> {
                     visitReportList.push(item);
                     console.log(item.visitID + ' -> ' + item.status);
                 });
                 buildSitterButtons(allVisits, allSitters);
                 flyToFirstVisit();
             });
-        }       
+        }        
         function buildSitterButtons(allSitterVisits, allSittersInfo) {
-            console.log('BUILD SITTER BUTTONS');
-
-            allSitterVisits.forEach((visit)=> {
-
-                console.log(visit.status + ' -> ' + visit.vrStatus);
-            });
-
-
+                    
             totalVisitCount = parseInt(0);
             totalCancelVisitCount = parseInt(0);
             let activeSitters = [];
@@ -231,7 +405,7 @@
                     }
                 });
                 if (hasVisits) {
-                    createSitterMapMarker(sitter);
+                    createSitterMapMarker(sitter, 'marker');
                     displaySitters[sitter.sitterID] = false ;
                     let sitterListDiv = document.getElementById("sitterList");
 
@@ -249,40 +423,50 @@
                 }
             });
 
+            let visitCounter = document.getElementById('numVisits');
+            visitCounter.innerHTML = 'TOTAL VISITS: ' + totalVisitCount + ' CANCELED: ' + totalCancelVisitCount;
+
             activeSitters.forEach((sitter)=> {
                 populateSitterAccordions(sitter);
             });
-
-            updateSummaryGraph(activeSitters, allSitterVisits);
         }
-        function createMapMarker(visitInfo) {
-
+        function createMapMarker(visitInfo, markerIcon) {
             let el = document.createElement('div');
             if (visitInfo.status == 'future') {
                 el.setAttribute("class","marker-visit marker-visible marker-future");
+
             } else if (visitInfo.status == 'arrived') {
                 el.setAttribute("class","marker-visit marker-visible marker-arrived");
+
             } else if (visitInfo.status == 'late') {
                 el.setAttribute("class","marker-visit marker-visible marker-late");
+
             } else if (visitInfo.status == 'completed') {
-                if(visitInfo.vrStatus == 'submitted') {
-                    el.setAttribute("class","marker-visit marker-visible marker-submitted");
-                }  else if (visitInfo.vrStatus == 'published') {
-                    el.setAttribute("class","marker-visit marker-visible marker-published");
-                } else {
-                    el.setAttribute("class", "marker-visit marker-visible marker-complete");
-                }
-            } 
+                visitReportList.forEach((visitReportItem) => {
+                    if(visitInfo.visitID == visitReportItem.visitID) {
+                        console.log('Matched visit report item list: ' + visitReportItem.status);
+                        if (visitReportItem.status == 'noreportdatareceived' || visitReportItem.status == 'maporphotoreceived') {
+                            el.setAttribute("class","marker-visit marker-visible marker-noreportreceived");
+                        } else if (visitReportItem.status == 'maporphotoreceived') {
+                            el.setAttribute("class","marker-visit marker-visible marker-maporphotoreceived");
+                        } else if (visitReportItem.status == 'published') {
+                            el.setAttribute("class","marker-visit marker-visible marker-published");
+                        } else if (visitReportItem.status == 'submitted') {
+                            el.setAttribute("class","marker-visit marker-visible marker-submitted");
+                        }
+                    }
+                });
+            } else {
+                el.setAttribute("class", "marker");
+            }
             el.setAttribute("id", visitInfo.appointmentid);
 
             let latitude = parseFloat(visitInfo.lat);
             let longitude = parseFloat(visitInfo.lon);
             let marker = new mapboxgl.Marker(el);
             let popup = new mapboxgl.Popup({offset : 25})
-            marker.setPopup(popup);
-
+            marker.setPopup(popup);                                         
             if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
-
                 if (latitude > 90 || latitude < -90 ) {
                     console.log("Lat error");
                 } else {
@@ -339,323 +523,120 @@
                 });
             }
         }
-        function populateSitterAccordions(sitter) {
-
-            let sitterListDiv = document.getElementById('visitListBySitterAccordions');
-            //<div class="sitter card panel"> 
-            let sitterListElement = document.createElement('div');
-            //          sitterListElement.setAttribute("type", "div"); CPA REMOVED
-            //          sitterListElement.setAttribute("id","sitterListAccordions") //These IDs must be unique to thre HTML page 
-            sitterListElement.setAttribute("class", "sitter card panel");
-            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
-            let sitterCardHead = document.createElement('div');
-            //      sitterCardHead.setAttribute("type", "div");
-            sitterCardHead.setAttribute("id", sitter.sitterID);
-            sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
-            sitterCardHead.setAttribute("data-toggle", "collapse");
-            sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
-            sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
-            sitterCardHead.setAttribute("aria-expanded", "false");
-
-            sitterCardHead.addEventListener('click', ()=> {
-                console.log('tapped sitter accordion item');
-            })
-            // <header>${sitter.sitterID}</header>
-            let headerElement = document.createElement('header');
-            headerElement.setAttribute("type", "header");
-            headerElement.setAttribute("id", "header-"+sitter.sitterID);
-
-            headerElement.innerHTML = sitter.sitterName;
-            // <div class="tools">
-            // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
-            // </div>
-            let toolDiv = document.createElement('div');
-            toolDiv.setAttribute("id","tool-accordion-"+sitter.sitterID); 
-            toolDiv.setAttribute("class","tools");
-            let buttonTool = document.createElement('button');
-            buttonTool.setAttribute("type","button");
-            buttonTool.setAttribute("class", "btn btn-icon-toggle");
-            let iTool = document.createElement('i')
-            iTool.setAttribute("type","i");
-            iTool.setAttribute("class","fa fa-angle-down");
-
-            sitterListDiv.appendChild(sitterListElement);
-            sitterListElement.appendChild(sitterCardHead);
-            sitterCardHead.appendChild(headerElement);
-            toolDiv.appendChild(buttonTool);
-            toolDiv.appendChild(iTool);
-            sitterCardHead.appendChild(toolDiv);
-            // <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
-            let expandAccordion = document.createElement('div');
-            //            expandAccordion.setAttribute("type", "div");
-            expandAccordion.setAttribute("id", "accordion-"+sitter.sitterID);
-            expandAccordion.setAttribute("class", "collapse");
-            expandAccordion.setAttribute("style","height: 0px;");
-            expandAccordion.setAttribute("aria-expanded", "false");
-            //      <div class="card-body small-padding ">      
-            let cardBody = document.createElement('div');
-            //            cardBody.setAttribute("type","div");
-            cardBody.setAttribute("class", "card-body no-padding");
-            cardBody.setAttribute("id","visitsBy-"+sitter.sitterID);
-            //      <div class="visit panel-group" id="visitID">
-            let panelGroup = document.createElement('div');
-            //            panelGroup.setAttribute("type","div");
-            panelGroup.setAttribute("class","visit panel-group");
-            panelGroup.setAttribute("id","visitAccordionPanel-"+sitter.sitterID);
-
-            cardBody.appendChild(panelGroup);
-            expandAccordion.appendChild(cardBody);
-            sitterListElement.appendChild(expandAccordion);
-
-            let visitCount = 0;
-            allVisits.forEach((visit)=> {
-                if(visit.sitterID == sitter.sitterID) {
-                    visitCount = visitCount +1;
-                    //  <div class="card panel">
-                    let panelItem = document.createElement('div');
-                    //                    panelItem.setAttribute("type","div");
-                    panelItem.setAttribute("class","card panel");
-                    panelItem.setAttribute("id","visitDetailDiv-"+ visit.visitID);
-                    //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
-                    let visitDiv = document.createElement('div');
-                    //  visitDiv.setAttribute("type", "div");
-                    visitDiv.setAttribute("id", "visit-"+visit.visitID);
-                    //visitDiv.setAttribute("class", "card-head card-head-sm collapsed"); CPA
-                    visitDiv.setAttribute("class", "card-head card-head-xs collapsed");
-                    visitDiv.setAttribute("data-toggle", "collapse");
-                    visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visit.visitID);
-                    visitDiv.setAttribute("data-target", "#visitDetails-"+visit.visitID);
-                    visitDiv.setAttribute("aria-expanded", "false");
-                  
-                    if(visit.status == 'completed') {
-                    //  panelItem.setAttribute("style","background-color: #0B6623");
-                    visitDiv.classList.add("style-success");
-                      
-                    // check visit report sent status and adjust view
-                    } else if (visit.status == "late") {
-                        //visitDiv.setAttribute("style","background-color: #FDD033");
-                         visitDiv.classList.add("bg-warning");
-                      
-                    } else if (visit.status == "future") {
-                    //                        visitDiv.setAttribute("style","background-color: #ADD8E6");
-                      visitDiv.classList.add("bg-info");
-
-                    } else if (visit.status == "canceled") {
-                    //                        visitDiv.setAttribute("style","background-color: #A80000");
-                      visitDiv.classList.add("bg-danger");
-
-                    } else if (visit.status == "arrived") {
-                        
-                    }
-                    visitDiv.addEventListener('click', (eventObj) => {
-                        console.log('event object: ' + eventObj.id);
-                        flyToVisit(visit);
-                    });
-                  
-                    let visitHeader = document.createElement("header");
-                    let visitSummaryHTML = `
-                        ${visit.timeOfDay}
-                    `;
-                    visitHeader.innerHTML = visitSummaryHTML;
-                    // <div class="tools">
-                    let visitToolDiv = document.createElement('div');
-                    visitToolDiv.setAttribute("id","tool-accordion-"+visit.visitID);
-                    visitToolDiv.setAttribute("class","tools");
-
-                    //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
-                    let visitDetailButton = document.createElement('button');
-                    visitDetailButton.setAttribute("type","button");
-                    visitDetailButton.setAttribute("class", "btn btn-icon-toggle");
-                    let iVisit = document.createElement('i')
-                    iVisit.setAttribute("type","i");
-                    iVisit.setAttribute("class","fa fa-angle-down");
-
-                    //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
-                    let visitExpandAccordion = document.createElement('div');
-                    //                    visitExpandAccordion.setAttribute("type", "div");
-                    visitExpandAccordion.setAttribute("id", "visitDetails-"+visit.visitID);
-                    visitExpandAccordion.setAttribute("class", "collapse");
-                    visitExpandAccordion.setAttribute("style","height: 0px;");
-                    visitExpandAccordion.setAttribute("aria-expanded", "false");
-
-                    //  <div class="card-body">
-                    let visitDetailCard = document.createElement("div");
-                    //                    visitDetailCard.setAttribute("type", "div");
-                    visitDetailCard.setAttribute("class", "card-body small-padding");
-                    visitDetailCard.setAttribute("id","visitDetailCard-" + visit.visitID);
-                    visitDetailCard.setAttribute("style", "background-color: #e1e1e1;")
-                   
-                    let visitDetailsHTML = ' ' ;
-
-                    allClients.forEach((client)=> {
-                        if (client.client_id == visit.clientID) {
-                                visitDetailsHTML = `
-                                <p>${visit.pets} | ${visit.service}<br>
-                                ${client.street1}, ${client.city}, ${client.state} ${client.zip}<br>
-                                ALARM CODE INFO: ${client.alarmcompany} : ${client.alarminfo} <br>
-                                CELL: ${client.cellphone}, ALT CELL: ${client.cellphone2} <br>
-                                EMAIL: ${client.email} <br>
-                                ALT EMAIL: ${client.email2} </p>
-                                 `;
+        function createSitterMapMarker(sitterInfo) {
+            let el = document.createElement('div');
+            let latitude = parseFloat(sitterInfo.sitterLat);
+            let longitude = parseFloat(sitterInfo.sitterLon);
+            let popupView;
+            if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
+                popupView = createSitterPopup(sitterInfo);
+                el.class = 'sitter';
+                el.id = 'sitter';
+                el.addEventListener("click", ()=> {
+                    allVisits.forEach((visit) => { 
+                        if(visit.sitterID == sitterInfo.sitterID) {
+                            createMapMarker(visit, 'marker');
                         }
-                    });
-                    if (visit.visitNote != null) {
-                        visitDetailsHTML = `<p>NOTE: ${visit.visitNote}` + visitDetailsHTML;
-                    }
-                    visitDetailCard.innerHTML = visitDetailsHTML;
-
-                    visitToolDiv.appendChild(visitDetailButton);
-                    visitToolDiv.appendChild(iVisit);
-                    visitDiv.appendChild(visitHeader);
-                    visitDiv.appendChild(visitToolDiv);
-                    visitExpandAccordion.appendChild(visitDetailCard);
-                    panelItem.appendChild(visitDiv);
-                    panelItem.appendChild(visitExpandAccordion);
-                    panelGroup.appendChild(panelItem);
-
-                }
-            });
-
-            headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
-        }
-        function updateSummaryGraph(activeSitterList, sittersVisits) {
-
-            let totalVisitCount = 0;
-            let lateVisitCount = 0;
-            let canceledVisitCount = 0;
-            let completedVisitCount =0;
-            let visitReportCountSent = 0;
-            let visitReportCountNeedReview = 0;
-
-            let totalVisitBar = document.getElementById('numTotal');
-            let lateVisitBar = document.getElementById('numLatePercent');
-            let progLateBar = document.getElementById('progLate');
-            let cancelVisitBar = document.getElementById('cancelPercent');
-            let progCancelBar = document.getElementById('progCancel');
-            let visitReportBar = document.getElementById('numVRpercent');
-            let progVisitReportReviewBar = document.getElementById('vrReviewBar');
-            let progVisitReportSentBar = document.getElementById('vrSentBar');
-
-
-            let visitReportSentBar = document.getElementById('numVRsentPercent');
-
-           activeSitterList.forEach((sitter) => {
-                sittersVisits.forEach((visit)=> {
-                    if(visit.sitterID == sitter.sitterID) {
-                        totalVisitCount = totalVisitCount + 1;
-                        if (visit.status == 'late') {
-                            lateVisitCount = lateVisitCount + 1;
-                        } else if(visit.status == 'canceled') {
-                            canceledVisitCount = canceledVisitCount + 1;
-                        }else if (visit.status == 'completed') {
-                            completedVisitCount = completedVisitCount  + 1;
-                            if(visit.vrStatus == 'submitted') {
-                                visitReportCountNeedReview = visitReportCountNeedReview + 1;
-                            } else if (visit.vrStatus == 'published') {
-                                visitReportCountSent = visitReportCountSent + 1;
-                            }
-                        } 
-                    }
-                });
-           });
-                
-            totalVisitBar.innerHTML = totalVisitCount;
-
-            let lateByTotal = lateVisitCount / totalVisitCount;
-            lateByTotal = lateByTotal * 100;
-            let lateVisitFloat =  Math.floor(lateByTotal);
-
-            progLateBar.setAttribute("style", "width: " + lateVisitFloat + "%");
-
-            let cancelByTotal = canceledVisitCount / totalVisitCount;
-            cancelByTotal = cancelByTotal * 100;
-            let cancelFloat = Math.floor(cancelByTotal);
-
-            let visitReportReviewByTotal = visitReportCountNeedReview / totalVisitCount;
-            visitReportReviewByTotal = visitReportReviewByTotal * 100;
-            let vReviewFloat = Math.floor(visitReportReviewByTotal);
-            progVisitReportReviewBar.setAttribute("style", "width: " + vReviewFloat + "%");
-
-            let visitReportSendByTotal = visitReportCountSent / totalVisitCount;
-            visitReportSendByTotal = visitReportSendByTotal * 100;
-            let vSentFloat = Math.floor(visitReportSendByTotal);
-            progVisitReportSentBar.setAttribute("style","width: " + vSentFloat +"%");
-
-            lateVisitBar.innerHTML = lateVisitFloat + '%';
-            cancelVisitBar.innerHMTL = cancelFloat + '%'; //cancelFloat + '%';
-            visitReportBar.innerHTML = vReviewFloat + '%';
-            visitReportSentBar.innerHTML = vSentFloat + '%';
-        }
-
-        function filterAccordionByStatus(filterType) {
-            console.log('Filter accordion type: ' + filterType);
-            let sitterListDiv = document.getElementById('visitListBySitterAccordions');
-            allSitters.forEach((sitter)=>  {
-                allVisits.forEach((visit)=> {
-                    console.log(visit.status);
-                });
-            })
-            //listSittersAndVisits.forEach((sitterVisitList) => {
-                /*let sitterListElement = document.createElement('div');
-                sitterListElement.setAttribute("class", "sitter card panel");
-
-                let sitterCardHead = document.createElement('div');
-                sitterCardHead.setAttribute("id", sitter.sitterID);
-                sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
-                sitterCardHead.setAttribute("data-toggle", "collapse");
-                sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
-                sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
-                sitterCardHead.setAttribute("aria-expanded", "false");
-
-                sitterCardHead.addEventListener('click', ()=> {
-                    console.log('tapped sitter accordion item');
+                    })
                 })
-                let headerElement = document.createElement('header');
-                headerElement.setAttribute("type", "header");
-                headerElement.setAttribute("id", "header-"+sitter.sitterID);
 
-                headerElement.innerHTML = sitter.sitterName;*/
+                let popup = new mapboxgl.Popup({offset : 25})
+                    .setHTML(popupView);
 
-            //});
+                if (latitude > 90 || latitude < -90 ) {
+                    console.log("Lat error");
+                } else {
+                    let marker = new mapboxgl.Marker(el)
+                        .setLngLat([longitude,latitude])
+                        .setPopup(popup)
+                        .addTo(map);
+
+                    mapMarkers.push(marker);
+                }
+            }
         }
-        function filterMapViewByVisitStatus(filterStatus) {
+        function showSitterVisits(sitterID) {
 
-            console.log('Filter map view by visit status: ' + filterStatus);
-
-            mapMarkers.forEach((marker)=>{
-                marker.remove();
-            });
-
-            if (visitButtonList != null) { 
-                visitButtonList.forEach((button)=>{
-                    if (button.parentNode != null){
-                        button.parentNode.removeChild(button);
+            let showVisitButton = document.getElementById('sitterPopupShow'+sitterID);
+            //console.log(showVisitButton.innerHTML);
+            if (showVisitButton.innerHTML == 'SHOW VISITS') {
+                let allVisitsNow = allVisits;
+                allVisitsNow.forEach((visit)=> {
+                    if (visit.sitterID == sitterID) {
+                        createMapMarker(visit,'marker');
                     }
                 });
-
+                showVisitButton.innerHTML = 'DO NOT SHOW VISITS';
+            } else {
+                let allVisitsNow = allVisits;
+                allVisitsNow.forEach((visit)=> {
+                    if (visit.sitterID == sitterID) {
+                       // console.log(visit.sitterID);
+                        mapMarkers.forEach((mark)=> {
+                            let markerHTML = mark.getElement();
+                            console.log(markerHMTL.id);
+                            if (visit.visitID == markerHTML.getAttribute('id' )) {
+                                console.log('Remove this marker');
+                            }
+                        })
+                    }
+                });
             }
-
-            let visitFilterArray = [];
-
-            allVisits.forEach((visitDetails)=> {
-                let visitStatus = visitDetails.status;
-
-                if (filterStatus == visitDetails.status) {
-                    visitFilterArray.push(visitDetails);
-                } 
-                if (visitDetails.status == 'completed') {
-                    if (visitDetails.visitReportStatus == filterStatus) {
-                        visitFilterArray.push(visitDetails);
-                    } 
-                }
-            });
-            visitFilterArray.forEach((visit) => {
-                createMapMarker(visit,'marker');
-            });
         }
+        function createSitterPopup(sitterInfo) {
 
+            let popupBasicInfo = '<h1 style="color:white">'+sitterInfo.sitterName+'</h1>';
+            popupBasicInfo += '<p style="color:white">'+sitterInfo.street1 +',  ' + sitterInfo.city + '</p>';
+            let numberVisits = visitsBySitter[sitterInfo.sitterID];
+            popupBasicInfo += '<p style="color:white">Number of visits: ' + numberVisits + '</p>';
+            popupBasicInfo += '<div><button id="sitterPopupShow'+sitterInfo.sitterID+'" onclick=showSitterVisits('+sitterInfo.sitterID+') height=32 width=120>SHOW VISITS</button></div>';
 
+            let currentVisitListBySitter =[];
+            allVisits.forEach((visit)=> { 
+                if (visit.sitterID == sitterInfo.sitterID && visit.status != 'canceled') {
+                    currentVisitListBySitter.push(visit);
+                }
+            })
+            currentVisitListBySitter.sort(function(a,b){
+                let aDate = fullDate + ' ' + a.completed;
+                let bDate = fullDate + ' ' + b.completed;
+                return new Date(aDate) - new Date(bDate);
+            });
+            currentVisitListBySitter.forEach((visit)=> {
+                if(visit.sitterID == sitterInfo.sitterID) {
 
+                    if (visit.status == 'completed') {
+                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/check-mark-green@3x.png" width=20 height=20>';
+                    } else if (visit.status == 'late') {
+                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/icon-late.png" width=20 height=20>';
+                    } else if (visit.status == 'canceled') {
+                       popupBasicInfo += '<p style="color:white"> <img src="./assets/img/x-mark-red@3x.png" width=20 height=20>';
+                    } else if (visit.status == 'arrived') {
+                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/arrive.png" width=20 height=20>';
+                    } else if (visit.status == 'future') {
+                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/zoomin-bargraph@3x.png" width=20 height=20>';
+                    }
+                    popupBasicInfo += visit.clientName;
+                    allClients.forEach((client)=> {
+                        if (visit.clientID == client.client_id) {
+                            popupBasicInfo += ' (' + client.street1 ;
+                            if(client.street2 != null) {
+                                popupBasicInfo += ',' + client.street2 + '</p>';
+                            }
+                            popupBasicInfo += ')';
+                        }
+                    })
+                    popupBasicInfo += '</p>';
+                    if (visit.status == 'completed') {
+                        popupBasicInfo += '<p style="color:white">Arrived: ' + visit.arrived + ' Completed: ' + visit.completed + '</p>';
+
+                    }
+                }
+            })
+            popupBasicInfo += '<p style="color:white"><img src=\"./assets/img/postit\-20x20.png\" width=20 height=20>&nbsp&nbsp<input type=\"text\" name=\"messageSitter\" id=\"messageSitter\"></p>';
+
+            return popupBasicInfo;
+        }
         function createVisitReport(visitDictionary, visitID) {
             let dateReport;
             let timeReport;
@@ -806,123 +787,6 @@
 
             return popupBasicInfo;
         }
-
-
-
-        function createSitterMapMarker(sitterInfo) {
-            let el = document.createElement('div');
-            let latitude = parseFloat(sitterInfo.sitterLat);
-            let longitude = parseFloat(sitterInfo.sitterLon);
-            let popupView;
-            if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
-                popupView = createSitterPopup(sitterInfo);
-                el.class = 'sitter';
-                el.id = 'sitter';
-                el.addEventListener("click", ()=> {
-                    allVisits.forEach((visit) => { 
-                        if(visit.sitterID == sitterInfo.sitterID) {
-                            createMapMarker(visit, 'marker');
-                        }
-                    })
-                })
-
-                let popup = new mapboxgl.Popup({offset : 25})
-                    .setHTML(popupView);
-
-                if (latitude > 90 || latitude < -90 ) {
-                    console.log("Lat error");
-                } else {
-                    let marker = new mapboxgl.Marker(el)
-                        .setLngLat([longitude,latitude])
-                        .setPopup(popup)
-                        .addTo(map);
-
-                    mapMarkers.push(marker);
-                }
-            }
-        }
-        function showSitterVisits(sitterID) {
-
-            let showVisitButton = document.getElementById('sitterPopupShow'+sitterID);
-            //console.log(showVisitButton.innerHTML);
-            if (showVisitButton.innerHTML == 'SHOW VISITS') {
-                let allVisitsNow = allVisits;
-                allVisitsNow.forEach((visit)=> {
-                    if (visit.sitterID == sitterID) {
-                        createMapMarker(visit,'marker');
-                    }
-                });
-                showVisitButton.innerHTML = 'DO NOT SHOW VISITS';
-            } else {
-                let allVisitsNow = allVisits;
-                allVisitsNow.forEach((visit)=> {
-                    if (visit.sitterID == sitterID) {
-                       // console.log(visit.sitterID);
-                        mapMarkers.forEach((mark)=> {
-                            let markerHTML = mark.getElement();
-                            console.log(markerHMTL.id);
-                            if (visit.visitID == markerHTML.getAttribute('id' )) {
-                                console.log('Remove this marker');
-                            }
-                        })
-                    }
-                });
-            }
-        }
-        function createSitterPopup(sitterInfo) {
-
-            let popupBasicInfo = '<h1 style="color:white">'+sitterInfo.sitterName+'</h1>';
-            popupBasicInfo += '<p style="color:white">'+sitterInfo.street1 +',  ' + sitterInfo.city + '</p>';
-            let numberVisits = visitsBySitter[sitterInfo.sitterID];
-            popupBasicInfo += '<p style="color:white">Number of visits: ' + numberVisits + '</p>';
-            popupBasicInfo += '<div><button id="sitterPopupShow'+sitterInfo.sitterID+'" onclick=showSitterVisits('+sitterInfo.sitterID+') height=32 width=120>SHOW VISITS</button></div>';
-
-            let currentVisitListBySitter =[];
-            allVisits.forEach((visit)=> { 
-                if (visit.sitterID == sitterInfo.sitterID && visit.status != 'canceled') {
-                    currentVisitListBySitter.push(visit);
-                }
-            })
-            currentVisitListBySitter.sort(function(a,b){
-                let aDate = fullDate + ' ' + a.completed;
-                let bDate = fullDate + ' ' + b.completed;
-                return new Date(aDate) - new Date(bDate);
-            });
-            currentVisitListBySitter.forEach((visit)=> {
-                if(visit.sitterID == sitterInfo.sitterID) {
-
-                    if (visit.status == 'completed') {
-                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/check-mark-green@3x.png" width=20 height=20>';
-                    } else if (visit.status == 'late') {
-                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/red-dot@3x.png" width=20 height=20>';
-                    } else if (visit.status == 'canceled') {
-                       popupBasicInfo += '<p style="color:white"> <img src="./assets/img/x-mark-red@3x.png" width=20 height=20>';
-                    } else if (visit.status == 'arrived') {
-                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/arrive.png" width=20 height=20>';
-                    } else if (visit.status == 'future') {
-                        popupBasicInfo += '<p style="color:white"> <img src="./assets/img/zoomin-bargraph@3x.png" width=20 height=20>';
-                    }
-                    popupBasicInfo += visit.clientName;
-                    allClients.forEach((client)=> {
-                        if (visit.clientID == client.client_id) {
-                            popupBasicInfo += ' (' + client.street1 ;
-                            if(client.street2 != null) {
-                                popupBasicInfo += ',' + client.street2 + '</p>';
-                            }
-                            popupBasicInfo += ')';
-                        }
-                    })
-                    popupBasicInfo += '</p>';
-                    if (visit.status == 'completed') {
-                        popupBasicInfo += '<p style="color:white">Arrived: ' + visit.arrived + ' Completed: ' + visit.completed + '</p>';
-
-                    }
-                }
-            })
-            popupBasicInfo += '<p style="color:white"><img src=\"./assets/img/postit\-20x20.png\" width=20 height=20>&nbsp&nbsp<input type=\"text\" name=\"messageSitter\" id=\"messageSitter\"></p>';
-
-            return popupBasicInfo;
-        }
         function createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList) {
 
             let popupBasicInfo = '<h1>'+sitterInfo.sitterName+'</h1>';
@@ -1001,7 +865,41 @@
                 createMapMarker(visit, "");
             })
         }        
+        function filterMapViewByVisitStatus(filterStatus) {
 
+            console.log(filterStatus);
+
+            mapMarkers.forEach((marker)=>{
+                marker.remove();
+            });
+
+            if (visitButtonList != null) { 
+                visitButtonList.forEach((button)=>{
+                    if (button.parentNode != null){
+                        button.parentNode.removeChild(button);
+                    }
+                });
+
+            }
+
+            let visitFilterArray = [];
+
+            allVisits.forEach((visitDetails)=> {
+                let visitStatus = visitDetails.status;
+
+                if (filterStatus == visitDetails.status) {
+                    visitFilterArray.push(visitDetails);
+                } 
+                if (visitDetails.status == 'completed') {
+                    if (visitDetails.visitReportStatus == filterStatus) {
+                        visitFilterArray.push(visitDetails);
+                    } 
+                }
+            });
+            visitFilterArray.forEach((visit) => {
+                createMapMarker(visit,'marker');
+            });
+        }
         function getCurrentlyShowingSitters() {
             let currentShowingSitters = [];
 
@@ -1089,7 +987,25 @@
                 });
             }
         }
+        function removeVisitDivElements() {
+            /*var element = document.getElementById("visitListByClient");
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }*/
+        }
+        function removeSittersFromSitterList() {
 
+//            var element = document.getElementById("sitterList");
+//            while (element.firstChild) {
+//                element.removeChild(element.firstChild);
+//            }
+        }
+        function removeAllMapMarkers() {
+            mapMarkers.forEach((marker)=>{
+                marker.remove();
+            });
+        }     
+        
         function createVisitHTML(visitDetails) {       
           console.log('calling create visit html');
             let visitLabel = document.createElement("div");
@@ -1141,177 +1057,6 @@
                 }
             });
         }
-
-
-        function showLoginPanel() {
-            var loginPanel = document.getElementById("lt-loginPanel");
-            loginPanel.setAttribute("style", "display:block");
-        }
-        function flyToVisit(visitDetails) {
-
-            if (visitDetails != null) {
-                if (visitDetails.lon != null && visitDetails.lat != null && visitDetails.lon > -90 && visitDetails.lat < 90) {
-                    map.flyTo({
-                        center: [visitDetails.lon, visitDetails.lat],
-                        zoom: 20
-                    });
-                } else {
-                    alert("Coordinates are invalid");
-                }
-            }
-        }
-        function flyToFirstVisit() {
-            allVisits.forEach((visit)=> {
-                //console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
-            })
-            if (allVisits[1] != null) {
-                 let lastVisit = allVisits[1];
-                if (lastVisit.lon != null && lastVisit.lat != null && lastVisit.lon > -90 && lastVisit.lat < 90 ) {
-                    map.flyTo({
-                        center: [lastVisit.lon, lastVisit.lat],
-                        zoom: 16
-                    });
-                } else {
-                    console.log('FIRST VISIT FLY TO INVALID COORDINATES: ' + lastVisit.clientName + ' (' + lastVisit.lon + ',' + lastVisit.lat + ')');
-                }
-            }
-        }
-        
-        function getFullDate() {
-            var todayDate = new Date();
-            onWhichDay = new Date(todayDate);
-            let todayMonth = todayDate.getMonth()+1;
-            let todayYear = todayDate.getFullYear();
-            let todayDay = todayDate.getDate();
-
-            let dayOfWeek = todayDate.getDay();
-
-            let dayWeekLabel = document.getElementById('dayWeek');
-            dayWeekLabel.innerHTML = dayArrStr[dayOfWeek] + ', ';
-            let monthLabel = document.getElementById('month');
-            monthLabel.innerHTML = monthsArrStr[todayMonth-1];
-            let dateLabel = document.getElementById("dateLabel");
-            dateLabel.innerHTML = todayDay;
-            return todayYear+'-'+todayMonth+'-'+todayDay;
-        }
-
-        function prevDay() {
-            removeAccordionControls();
-            onWhichDay.setDate(onWhichDay.getDate()-1)
-            let monthDate = onWhichDay.getMonth() + 1;
-            let monthDay = onWhichDay.getDate();
-            let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate+ '-' + monthDay;
-            updateDateInfo();
-            fullDate = dateRequestString;
-            prevDaySteps(dateRequestString);
-
-            removeSittersFromSitterList();
-            removeAllMapMarkers();
-            removeVisitDivElements();
-        }
-        function nextDay() {
-
-            removeAccordionControls();
-
-            onWhichDay.setDate(onWhichDay.getDate()+1)
-            let monthDate = onWhichDay.getMonth() + 1;
-            let monthDay = onWhichDay.getDate();
-            let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate+ '-' + monthDay;
-            updateDateInfo();
-            fullDate = dateRequestString;
-            prevDaySteps(dateRequestString);
-
-            removeSittersFromSitterList();
-            removeAllMapMarkers();
-            removeVisitDivElements();
-        }
-        async function prevDaySteps(loginDate) {
-
-            allVisits = [];
-            allSitters = [];
-            allClients =[];
-
-            let url = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+userRole+'&startDate='+loginDate+'&endDate='+loginDate;
-            const loginFetchResponse = await fetch(url);
-            const response = await loginFetchResponse.json();
-
-            const sitterListAfterLogin = LTMGR.getManagerData();
-            await sitterListAfterLogin.then((results)=> {
-                allSitters = results;
-            });
-
-            const visitListAfterLogin = LTMGR.getManagerVisits();
-            await visitListAfterLogin.then((results)=> {
-                allVisits = results;
-            })
-
-            const clientsAfterLogin = LTMGR.getManagerClients();
-            await clientsAfterLogin.then((results)=> {
-                allClients = results;
-            });
-
-            visitsBySitter = [];
-            mapMarkers = [];
-        
-            masterVreportList()
-            .then((vListItems)=> { 
-                vListItems.forEach((item)=> {
-                    visitReportList.push(item);
-                    console.log(item.visitID + ' -> ' + item.status);
-                });
-                flyToFirstVisit();
-                buildSitterButtons(allVisits, allSitters);
-            });
-        }
-        function updateDateInfo() {
-
-            let todayMonth = onWhichDay.getMonth() +1 ;
-            let todayYear = onWhichDay.getFullYear();
-            let todayDay = onWhichDay.getDate();
-            let dayOfWeek = onWhichDay.getDay();
-           //console.log('Today month: ' + todayMonth + ' Year:' + todayYear + ' Today Day: ' + todayDay + ' Day of Week:' + dayOfWeek);
-
-            /*let dayWeekLabel = document.getElementById('dayWeek');
-            dayWeekLabel.innerHTML = dayArrStr[dayOfWeek] + ', ';
-            let monthLabel = document.getElementById('month');
-            monthLabel.innerHTML = monthsArrStr[todayMonth-1];
-            let dateLabel = document.getElementById("dateLabel");
-            dateLabel.innerHTML = todayDay;*/
-        }        
-        function truncate(value) {
-            console.log(value);
-            if (value < 0) {
-                return Math.ceil(value);
-            }
-            return Math.floor(value).toString();
-        } 
-
-        function removeAccordionControls() {
-            let accordionVisits = document.getElementById('visitListBySitterAccordions');
-
-            while (accordionVisits.hasChildNodes()) {   
-              accordionVisits.removeChild(accordionVisits.firstChild);
-            }
-        }
-        function removeVisitDivElements() {
-            /*var element = document.getElementById("visitListByClient");
-            while (element.firstChild) {
-                element.removeChild(element.firstChild);
-            }*/
-        }
-        function removeSittersFromSitterList() {
-
-            //            var element = document.getElementById("sitterList");
-            //            while (element.firstChild) {
-            //                element.removeChild(element.firstChild);
-            //            }
-        }
-        function removeAllMapMarkers() {
-            mapMarkers.forEach((marker)=>{
-                marker.remove();
-            });
-        }     
-
         function checkDistanceMatrix(waypointsArrayCheck) {
 
             let distanceMatrix = LTMGR.getDistanceMatrix();
@@ -1396,4 +1141,293 @@
         }
         function parseDistanceData(distanceResponse, waypoints, sitterID) {}
         
+        function showLoginPanel() {
+            var loginPanel = document.getElementById("lt-loginPanel");
+            loginPanel.setAttribute("style", "display:block");
+        }
+
+        function flyToVisit(visitDetails) {
+
+            if (visitDetails != null) {
+                if (visitDetails.lon != null && visitDetails.lat != null && visitDetails.lon > -90 && visitDetails.lat < 90) {
+                    map.flyTo({
+                        center: [visitDetails.lon, visitDetails.lat],
+                        zoom: 20
+                    });
+                } else {
+                    alert("Coordinates are invalid");
+                }
+            }
+        }
+        function flyToFirstVisit() {
+            allVisits.forEach((visit)=> {
+                //console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
+            })
+            if (allVisits[1] != null) {
+                 let lastVisit = allVisits[1];
+                if (lastVisit.lon != null && lastVisit.lat != null && lastVisit.lon > -90 && lastVisit.lat < 90 ) {
+                    map.flyTo({
+                        center: [lastVisit.lon, lastVisit.lat],
+                        zoom: 16
+                    });
+                } else {
+                    console.log('FIRST VISIT FLY TO INVALID COORDINATES: ' + lastVisit.clientName + ' (' + lastVisit.lon + ',' + lastVisit.lat + ')');
+                }
+            }
+        }
+        function getFullDate() {
+            var todayDate = new Date();
+            onWhichDay = new Date(todayDate);
+            let todayMonth = todayDate.getMonth()+1;
+            let todayYear = todayDate.getFullYear();
+            let todayDay = todayDate.getDate();
+
+            let dayOfWeek = todayDate.getDay();
+
+            let dayWeekLabel = document.getElementById('dayWeek');
+            dayWeekLabel.innerHTML = dayArrStr[dayOfWeek] + ', ';
+            let monthLabel = document.getElementById('month');
+            monthLabel.innerHTML = monthsArrStr[todayMonth-1];
+            let dateLabel = document.getElementById("dateLabel");
+            dateLabel.innerHTML = todayDay;
+            return todayYear+'-'+todayMonth+'-'+todayDay;
+        }
+        function removeAccordionControls() {
+            let accordionVisits = document.getElementById('visitListBySitterAccordions');
+
+            while (accordionVisits.hasChildNodes()) {   
+              accordionVisits.removeChild(accordionVisits.firstChild);
+            }
+        }
+        function prevDay() {
+            removeAccordionControls();
+            onWhichDay.setDate(onWhichDay.getDate()-1)
+            let monthDate = onWhichDay.getMonth() + 1;
+            let monthDay = onWhichDay.getDate();
+            let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate+ '-' + monthDay;
+            updateDateInfo();
+            fullDate = dateRequestString;
+            prevDaySteps(dateRequestString);
+
+            removeSittersFromSitterList();
+            removeAllMapMarkers();
+            removeVisitDivElements();
+        }
+        function nextDay() {
+
+            removeAccordionControls();
+
+            onWhichDay.setDate(onWhichDay.getDate()+1)
+            let monthDate = onWhichDay.getMonth() + 1;
+            let monthDay = onWhichDay.getDate();
+            let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate+ '-' + monthDay;
+            updateDateInfo();
+            fullDate = dateRequestString;
+            prevDaySteps(dateRequestString);
+
+            removeSittersFromSitterList();
+            removeAllMapMarkers();
+            removeVisitDivElements();
+        }
+        async function prevDaySteps(loginDate) {
+
+            allVisits = [];
+            allSitters = [];
+            allClients =[];
+
+            let url = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+userRole+'&startDate='+loginDate+'&endDate='+loginDate;
+            const loginFetchResponse = await fetch(url);
+            const response = await loginFetchResponse.json();
+
+            const sitterListAfterLogin = LTMGR.getManagerData();
+            await sitterListAfterLogin.then((results)=> {
+                allSitters = results;
+            });
+
+            const visitListAfterLogin = LTMGR.getManagerVisits();
+            await visitListAfterLogin.then((results)=> {
+                allVisits = results;
+            })
+
+            const clientsAfterLogin = LTMGR.getManagerClients();
+            await clientsAfterLogin.then((results)=> {
+                allClients = results;
+            });
+
+            visitsBySitter = [];
+            mapMarkers = [];
+        
+            masterVreportList()
+            .then((vListItems)=> { 
+                vListItems.forEach((item)=> {
+                    visitReportList.push(item);
+                    console.log(item.visitID + ' -> ' + item.status);
+                });
+                flyToFirstVisit();
+                buildSitterButtons(allVisits, allSitters);
+            });
+        }
+        function updateDateInfo() {
+
+            let todayMonth = onWhichDay.getMonth() +1 ;
+            let todayYear = onWhichDay.getFullYear();
+            let todayDay = onWhichDay.getDate();
+            let dayOfWeek = onWhichDay.getDay();
+           //console.log('Today month: ' + todayMonth + ' Year:' + todayYear + ' Today Day: ' + todayDay + ' Day of Week:' + dayOfWeek);
+
+            /*let dayWeekLabel = document.getElementById('dayWeek');
+            dayWeekLabel.innerHTML = dayArrStr[dayOfWeek] + ', ';
+            let monthLabel = document.getElementById('month');
+            monthLabel.innerHTML = monthsArrStr[todayMonth-1];
+            let dateLabel = document.getElementById("dateLabel");
+            dateLabel.innerHTML = todayDay;*/
+        }        
+        function createPopupNoVisitReportView(visitInfo) {
+            let arriveTime = visitInfo.arrived;
+            let completeTime = visitInfo.completed;
+
+            if (arriveTime == null) {
+                arriveTime = 'Not started';
+                completetime = '';
+            }
+            if (completeTime == null) {
+                completeTime = 'Not completed';
+            }
+            let popupBasicInfo = 
+                                `<div class="card card-bordered style-primary">
+                                        <div class="card-head">
+                                            <div class="tools">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-icon-toggle btn-refresh"><i class="md md-refresh"></i></a>
+                                                    <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
+                                                    <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
+                                                </div>
+                                            </div>
+                                            <header class="">${visitInfo.service}</header>
+                                            <h4 style="color:yellow;">VISIT REPORT HAS NOT BEEN SENT</h4>
+                                            <div class="card-body p-t-0">
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-t-0">
+                                            <p><span class="text-default">ARRIVED: ${arriveTime}
+                                            &nbsp &nbsp COMPLETE: </span>${completeTime}</span></p>
+                                            <p class="no-margin no-padding"><span class="text-default">SITTER: </span>${visitInfo.sitterName}</p>
+                                            <p class="no-margin no-padding"><span class="text-default">CLIENT: ${visitInfo.clientName}</p>
+                                        </div>
+                                </div>`;
+
+                                if (visitInfo.status == 'completed') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-success no-margin\"><i class=\"fa fa-compass\"> COMPLETE: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                } else if (visitInfo.status == 'late') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-warning no-margin\"><i class=\"fa fa-warning\"> LATE: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                } else if (visitInfo.status == 'future') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-info no-margin\"><i class=\"fa fa-wifi\"> FUTURE: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                } else if (visitInfo.status == 'canceled') {
+                                    popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-danger no-margin\"><i class=\"fa fa-ban\"> CANCELED: </i> '+visitInfo.timeOfDay+'</p></div>';
+                                }
+
+            let visitNote = "No visit note";
+            if (visitInfo.visitNote != null) {
+                visitNote = visitInfo.visitNote;
+            }
+            popupBasicInfo += `
+                <div class=\"card-body small-padding p-t-0 p-b-0\">
+                    <div class=\"form-group floating-label m-t-0 p-t-0\">
+                        <textarea name=\"messageSitter\" id=\"messageSitter\" class=\"form-control text-sm\" rows=\"3\">
+                            ${visitNote}
+                        </textarea>
+                        <label for=\"messageSitter\">
+                            <i class=\"fa fa-note icon-tilt-alt\"></i> Visit Notes
+                        </label>
+                    </div>
+                    </p>
+                </div>
+                <div class="card-actionbar">
+                    <div class="card-actionbar-row no-padding">
+                        <a href="javascript:void(0);" class="btn btn-icon-toggle btn-danger ink-reaction pull-left">
+                        <i class="fa fa-heart"></i></a><a href="javascript:void(0);" class="btn btn-icon-toggle btn-default ink-reaction pull-left">
+                        <i class="fa fa-reply"></i></a><a href="javascript:void(0);" class="btn btn-flat btn-default-dark ink-reaction">SEND</a>
+                    </div>
+                </div>
+            </div>`;
+            return popupBasicInfo;
+        }
+        function createPopupVisitReportView(visitReportDetailParam) {
+            let dateReport = visitReportDetailParam.reportPublishedDate;
+            let timeReport = visitReportDetailParam.reportPublishedTime;
+            let arrivedTime = visitReportDetailParam.ARRIVED;
+            let completedTime = visitReportDetailParam.COMPLETED;
+            console.log('Popup view: ' + arrivedTime + ' ' + completedTime);
+            //let timeArrive = re.exec(arrivedTime);
+            //let arriveTime = timeArrive[1] + ':' + timeArrive[2];
+            let timeComplete = arrivedTime; //re.exec(completedTime);
+            let completeTime = completedTime; //timeComplete[1] + ':' + timeComplete[2];
+            let onMood;
+            if (visitReportDetailParam.moodButtons != null) {
+                let moodKeys = Object.keys(visitReportDetailParam.MOODBUTTON);
+                console.log('visit report details mood buttons: ' + visitReportDetailParam.MOODBUTTON);
+                onMood = moodKeys.filter(function(key) {
+                      return vrListInfo.MOODBUTTON[key] == 1;
+                });
+            } else {
+                console.log('Mood buttons is null');
+            }
+
+            popupBasicInfo = 
+                `<div class="card card-bordered style-primary" id="popupMain">
+                    <div class="card-head">
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn-icon-toggle btn-refresh"><i class="md md-refresh"></i></a>
+                                <a class="btn btn-icon-toggle btn-collapse"><i class="fa fa-angle-down"></i></a>
+                                <a class="btn btn-icon-toggle btn-close"><i class="md md-close"></i></a>
+                            </div>
+                        </div>
+                        <header class="">${visitReportDetailParam.service}</header>
+                        <div>
+                            ${onMood.map((mood)=>{
+                                return "<img src=./assets/img/"+moodButtonMap[mood]+" width=36 height=36>"
+                            })}
+                        </div>
+                        <div>
+                            <span><img src=${vrListInfo.VISITPHOTONUGGETURL} id="popupPhoto" width = 160 height = 160></span>
+                            &nbsp&nbsp
+                            <span><img src=${vrListInfo.MAPROUTENUGGETURL} width = 160 height = 160></span>
+                        </div>
+                        <div class="card-body p-t-0">
+                        </div>
+                    </div>
+                    <div class="card-body p-t-0">
+                        <p><span class="text-default">ARRIVED: ${arriveTime}
+                            &nbsp &nbsp COMPLETE: </span>${completeTime}</span></p>
+                        <p class="no-margin no-padding"><span class="text-default">SITTER: </span>${vrListInfo.sitter}</p>
+                        <p class="no-margin no-padding"><span class="text-default">CLIENT: ${vrListInfo.CLIENTFNAME} ${vrDetails.CLIENTLNAME}</p>
+                        <p class="no-margin no-padding"><span class="text-default">PETS: ${vrListInfo.PETS}</p>
+
+                    </div>
+                </div>`;
+            popupBasicInfo += '<div class=\"card\"><div class=\"card-header no-margin\"><p class=\"alert alert-success no-margin\"><i class=\"fa fa-compass\"> COMPLETE</i>';
+            popupBasicInfo += '<p class=\"alert alert-success no-margin\">VISIT REPORT SENT:  '+ timeReport  +' <BR> ' + dateReport +'</p></div>';
+            popupBasicInfo += `
+                    <div class=\"card-body small-padding p-t-0 p-b-0\">
+                        <div class=\"form-group floating-label m-t-0 p-t-0\">
+                                        
+                            <textarea name=\"messageSitter\" id=\"messageSitter\" class=\"form-control text-sm\" rows=\"3\">
+                                \n\n${vrListInfo.NOTE}
+                            </textarea>
+                            <label for=\"messageSitter\">
+                                <i class=\"fa fa-note icon-tilt-alt\"></i> Visit Notes
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-actionbar">
+                        <div class="card-actionbar-row no-padding">
+                            <a href="javascript:void(0);" class="btn btn-icon-toggle btn-danger ink-reaction pull-left">
+                            <i class="fa fa-heart"></i></a><a href="javascript:void(0);" class="btn btn-icon-toggle btn-default ink-reaction pull-left">
+                            <i class="fa fa-reply"></i></a><a href="javascript:void(0);" class="btn btn-flat btn-default-dark ink-reaction">SEND</a>
+                        </div>
+                    </div>
+            </div>`;
+            return popupBasicInfo;
+        }
 //}(this.materialadmin)); 
