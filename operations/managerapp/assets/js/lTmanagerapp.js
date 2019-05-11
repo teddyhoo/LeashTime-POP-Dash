@@ -250,7 +250,7 @@
             });
 
             activeSitters.forEach((sitter)=> {
-                populateSitterAccordions(sitter);
+                populateSitterAccordions(sitter,allVisits);
             });
 
             updateSummaryGraph(activeSitters, allSitterVisits);
@@ -339,7 +339,7 @@
                 });
             }
         }
-        function populateSitterAccordions(sitter) {
+        function populateSitterAccordions(sitter,accordionVisits) {
 
             let sitterListDiv = document.getElementById('visitListBySitterAccordions');
             //<div class="sitter card panel"> 
@@ -408,7 +408,7 @@
             sitterListElement.appendChild(expandAccordion);
 
             let visitCount = 0;
-            allVisits.forEach((visit)=> {
+            accordionVisits.forEach((visit)=> {
                 if(visit.sitterID == sitter.sitterID) {
                     visitCount = visitCount +1;
                     //  <div class="card panel">
@@ -586,16 +586,33 @@
             visitReportBar.innerHTML = vReviewFloat + '%';
             visitReportSentBar.innerHTML = vSentFloat + '%';
         }
+        function filterAccordionByStatus(filterType, visitList) {
 
-        function filterAccordionByStatus(filterType) {
-            console.log('Filter accordion type: ' + filterType);
             let sitterListDiv = document.getElementById('visitListBySitterAccordions');
-            allSitters.forEach((sitter)=>  {
-                allVisits.forEach((visit)=> {
-                    console.log(visit.status);
-                });
-            })
-            //listSittersAndVisits.forEach((sitterVisitList) => {
+            while(sitterListDiv.firstChild) {
+                sitterListDiv.removeChild(sitterListDiv.firstChild);
+            }
+            console.log('Filter accordion type: ' + filterType);
+
+            visitList.forEach((visit)=> {
+                console.log(visit.status);
+            });
+
+            let sitterList;
+
+            allSitters.forEach((sitter) => {
+
+                for (let i = 0; i < visitList.length; i++) {
+                    let visit = visitList[i];
+                    if (visit.sitterID == sitter.sitterID) {
+                        populateSitterAccordions(sitter,visitList);
+                        console.log('matched sitter: ' + sitter.sitterName);
+                        break;
+                    }
+                }
+
+
+
                 /*let sitterListElement = document.createElement('div');
                 sitterListElement.setAttribute("class", "sitter card panel");
 
@@ -616,7 +633,7 @@
 
                 headerElement.innerHTML = sitter.sitterName;*/
 
-            //});
+            });
         }
         function filterMapViewByVisitStatus(filterStatus) {
 
@@ -652,7 +669,11 @@
             visitFilterArray.forEach((visit) => {
                 createMapMarker(visit,'marker');
             });
+
+            filterAccordionByStatus(filterStatus, visitFilterArray);
+
         }
+
 
 
 
@@ -806,9 +827,6 @@
 
             return popupBasicInfo;
         }
-
-
-
         function createSitterMapMarker(sitterInfo) {
             let el = document.createElement('div');
             let latitude = parseFloat(sitterInfo.sitterLat);
