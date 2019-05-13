@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ACCORDION</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+</head>
+<body style="padding: 3em;">
+
+
+<!--SITTERS CONTAINER-->
+<div class="panel-group" id="visitListBySitterAccordions">
+  <!--ESTABLISH SITTER-->
+  <div id="sitterID" class="sitter card panel">
+    <div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#visitList-sitterID" aria-expanded="false">
+      <header>SITTER 1</header>
+      <div class="tools">
+        <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+      </div>
+    </div>
+    <!--SITTERS VISITS CONTAINER-->
+    <div id="visitList-sitterID" class="collapse" aria-expanded="false">
+      <div class="card-body small-padding">
+        <!--ESTABLISH SITTERS VISIT LIST-->
+        <div id="visitList-SITTERNUM" class="panel-group">
+          <!--ESTABLISH VISIT-->
+          <div id="visitID-11" class="visit card panel">
+            <div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitList-SITTERNUM" data-target="#visitID-details-VISITCOUNT" aria-expanded="false">
+              <header>VISIT 1</header>
+              <div class="tools">
+                <span class="badge badge-warning">LATE</span>
+                <!--<span class="badge badge-danger">CANCELLED</span>-->
+<!--                <span class="badge badge-success">COMPLETE</span>-->
+<!--                <span class="badge badge-info">NOT STARTED</span>-->
+                <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+              </div>
+            </div>
+            <!--BUILD VISITS DETAILS-->
+            <div id="visitID-details-VISITCOUNT" class="collapse" aria-expanded="false" style="height: 0px;">
+              <div class="card-body no-padding no-margin style-default-light">
+                <!--BUILD VISIT TABS-->
+                <div class="card m-b-0">
+                  <div class="card-head">
+                    <ul class="nav nav-tabs nav-justified style-default-light" data-toggle="tabs">
+                      <li class="active"><a href="#visit-edit-CUSTOMERID"><i class="fa fa-pet"></i> VIST INFO</a></li>
+                      <li class=""><a href="#home-info-CUSTOMERID"><i class="fa fa-home"></i> HOME INFO</a></li>
+                      <li class=""><a href="#profile-info-CUSTOMERID"><i class="fa fa-user"></i> CUSTOMER PROFILE</a></li>
+                    </ul>
+                  </div>
+                  <!--BUILD TAB CONTENT-->
+                  <div class="card-body tab-content">
+                    <div class="tab-pane active" id="visit-edit-CUSTOMERID">
+                      <div id="visit-details-VISITID">
+                        VISIT DETAILS HERE
+                      </div>
+                      <div class="tools align-right">
+                        <button type="button" class="btn ink-reaction btn-info"><i class="fa fa-comments"></i> VISIT NOTES</button>
+                        <button type="button" class="btn ink-reaction btn-warning"><i class="fa fa-exchange"></i> SWAP SITTERS</button>
+                        <button type="button" class="btn ink-reaction btn-danger"><i class="fa fa-ban"></i> CANCEL VISIT</button>
+                      </div>
+                    </div>
+                    <div class="tab-pane" id="home-info-CUSTOMERID">
+                      <p>HOME INFO</p>
+                      <h4 class="no-margin">ALARM CODE: 27-33-22</h4>
+                      <h4 class="no-margin">KEY CODE: 234145</h4>
+                      <p>FOOD LOCATION:<b> KITCHEN UNDER THE SINK</b></p>
+                      <p>Quod option numquam vel in, et fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Dicant vituperata consequuntur at sea, mazim commodo</p>
+                    </div>
+                    <div class="tab-pane" id="profile-info-CUSTOMERID">
+                      <p>PROFILE INFO</p>
+                      <h4 class="no-margin">NAME: John Doe</h4>
+                      <h4 class="no-margin">ADDRESS: 123 Street Address</h4>
+                      <p>Duo semper accumsan ea, quidam convenire cum cu, oportere maiestatis incorrupte est eu. Soluta audiam timeam ius te, idque gubergren forensibus ad mel, persius urbanitas usu id. Civibus nostrum fabellas mea te, ne pri lucilius iudicabit. Ut cibo semper vituperatoribus vix, cum in error elitr. Vix molestiae intellegat omittantur an, nam cu modo ullum scriptorem.</p>
+                      <p>Quod option numquam vel in, et fuisset delicatissimi duo, qui ut animal noluisse erroribus. Ea eum veniam audire. Per at postea mediocritatem, vim numquam aliquid eu, in nam sale gubergren. Dicant vituperata consequuntur at sea, mazim commodo</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="small-padding">
+                  <button type="button" class="btn btn-block ink-reaction btn-info">GO TO MAP</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div> 
+
+
+
+<div class="panel-group" id="mainAccordion"></div>
+ 
+<script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+<script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+<script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script> 
+<script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+<script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+
+<script src="../../assets/js/core/source/App.js"></script>
+<script src="../../assets/js/core/source/AppVendor.js"></script>
+
+
+
+  </div>
+</body>
+</html>
+          
