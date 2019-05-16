@@ -98,18 +98,12 @@
 
             masterVreportList()
             .then((items)=> { 
-                console.log('MASTER VISIT REPORT LIST ITEMS RECEIVED');
                 if (items != null) {
                     items.forEach((item)=> {
                         visitReportList.push(item);
                         console.log('visit report id: ' + item.visitID + ' with status: ' + item.status);
                     });
-                    console.log('FLY TO FIRST VISIT WITH VISIT REPORT ITEM COUNT: ');
-
                     flyToFirstVisit();
-
-                    console.log('CALL BUILD SITTER BUTTONS');
-
                     buildSitterButtons(allVisits, allSitters);
                 }
             });
@@ -146,6 +140,20 @@
             }
             try {
                 response = await loginFetchResponse.json();
+                let additionalDaysFetch = 'http://localhost:3300?type=mmdLogin&username='+username+'&password='+password+'&role='+userRole+'&startDate='+fullDate+'&endDate='+fullDate;
+                let loginFetchResponseMore;
+                let responseMoreDays;
+                try {
+                    logloginFetchResponseMore = await fetch(url);
+                } catch(error) {
+                    return error;
+                }
+                try {
+                    responseMoreDays = await loginFetchResponseMore.json();
+                } catch(error) {
+                    console.log('Response more error.'); 
+                }
+
             } catch(error) {
                 console.log('Response error ');
             }
@@ -373,7 +381,6 @@
                     createVisitDetailHeader(visit, visitDiv);
                     let visitExpandAccordion = visitDetailExpandAccordion(visit);
  
-                    //visitExpandAccordion.appendChild(visitDetailCard);
                     panelItem.appendChild(visitDiv);
                     panelItem.appendChild(visitExpandAccordion);
                     panelGroup.appendChild(panelItem);
@@ -382,43 +389,6 @@
             });
 
             headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
-        }
-
-        function visitDetailExpandAccordion(visitInfo) {
-            let visitExpandAccordion = document.createElement('div');
-            visitExpandAccordion.setAttribute("id", "visitDetails-"+visitInfo.visitID);
-            visitExpandAccordion.setAttribute("class", "collapse");
-            visitExpandAccordion.setAttribute("style","height: 0px;");
-            visitExpandAccordion.setAttribute("aria-expanded", "false");
-
-            let visitDetailCard = document.createElement("div");
-            visitDetailCard.setAttribute("class", "card-body small-padding");
-            visitDetailCard.setAttribute("id","visitDetailCard-" + visitInfo.visitID);
-            visitDetailCard.setAttribute("style", "background-color: #e1e1e1;")
-                   
-            let visitDetailsHTML = ' ' ;
-
-            allClients.forEach((client)=> {
-                if (client.client_id == visitInfo.clientID) {
-                    visitDetailsHTML = `
-                        <p>${visitInfo.pets} | ${visitInfo.service}<br>
-                        ${client.street1}, ${client.city}, ${client.state} ${client.zip}<br>
-                        ALARM CODE INFO: ${client.alarmcompany} : ${client.alarminfo} <br>
-                        CELL: ${client.cellphone}, ALT CELL: ${client.cellphone2} <br>
-                        EMAIL: ${client.email} <br>
-                        ALT EMAIL: ${client.email2} </p>
-                    `;
-                }
-            });
-            if (visitInfo.visitNote != null) {
-                visitDetailsHTML = `<p>NOTE: ${visitInfo.visitNote}` + visitDetailsHTML;
-            }
-
-            visitDetailCard.innerHTML = visitDetailsHTML;
-            visitExpandAccordion.appendChild(visitDetailCard);
-            return visitExpandAccordion;
-
-
         }
 
         function createSitterCardHead(sitterInfo, parentName, targetName) {
@@ -473,15 +443,49 @@
         }
         function createCardBody(sitterInfo) {
             let cCardBody = document.createElement('div');
-            cCardBody.setAttribute("class", "card-body no-padding");
+            cCardBody.setAttribute("class", "card-body small-padding");
             cCardBody.setAttribute("id","visitsBy-"+sitterInfo.sitterID);
             return cCardBody;
         }    
         function createPanelGroup(sitterInfo) {
             let cPanelGroup = document.createElement('div');
-            cPanelGroup.setAttribute("class","visit panel-group");
+            cPanelGroup.setAttribute("class","panel-group");
             cPanelGroup.setAttribute("id","visitAccordionPanel-"+sitterInfo.sitterID);
             return cPanelGroup;
+        }        
+        function createVisitPanelItem(visitInfo) {
+
+            let panelItem = document.createElement('div');
+            panelItem.setAttribute("class","visit card panel");
+            panelItem.setAttribute("id","visitDetailDiv-"+ visitInfo.visitID);
+            return panelItem;
+        }
+        function createVisitDetailDiv(visitInfo) {
+
+            let visitDiv = document.createElement('div');
+            visitDiv.setAttribute("id", "visit-"+visitInfo.visitID);
+            visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
+            visitDiv.setAttribute("data-toggle", "collapse");
+            visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visitInfo.visitID);
+            visitDiv.setAttribute("data-target", "#visitDetails-"+visitInfo.visitID);
+            visitDiv.setAttribute("aria-expanded", "false");
+                  
+            if(visitInfo.status == 'completed') {
+                visitDiv.classList.add("style-success");
+            } else if (visitInfo.status == "late") {
+                visitDiv.classList.add("bg-warning");
+            } else if (visitInfo.status == "future") {
+                visitDiv.classList.add("bg-info");
+            } else if (visitInfo.status == "canceled") {
+                visitDiv.classList.add("bg-danger");
+            } else if (visitInfo.status == "arrived") {       
+            }
+
+            visitDiv.addEventListener('click', (eventObj) => {
+                flyToVisit(visitInfo);
+            });
+
+            return visitDiv;
         }
         function createVisitDetailHeader(visitInfo, visitDivParent) {
 
@@ -508,108 +512,143 @@
             visitToolDiv.appendChild(iVisit);
             visitDivParent.appendChild(visitToolDiv);
         }
-        function createVisitPanelItem(visitInfo) {
+        function visitDetailExpandAccordion(visitInfo) {
+            let visitExpandAccordion = document.createElement('div');
+            visitExpandAccordion.setAttribute("id", "visitDetails-"+visitInfo.visitID);
+            visitExpandAccordion.setAttribute("class", "collapse");
+            visitExpandAccordion.setAttribute("style","height: 0px;");
+            visitExpandAccordion.setAttribute("aria-expanded", "false");
 
-            let panelItem = document.createElement('div');
-            panelItem.setAttribute("class","card panel");
-            panelItem.setAttribute("id","visitDetailDiv-"+ visitInfo.visitID);
-            return panelItem;
-        }
-        function createVisitDetailDiv(visitInfo) {
+            let visitDetailCard = document.createElement("div");
+            visitDetailCard.setAttribute("class", "card-body no-padding no-margin style-default-light");
+            visitDetailCard.setAttribute("id","visitDetailCard-" + visitInfo.visitID);
+            visitDetailCard.setAttribute("style", "background-color: #e1e1e1;")
+                   
+            let visitDetailsHTML = ' ' ;
 
-            let visitDiv = document.createElement('div');
-            visitDiv.setAttribute("id", "visit-"+visitInfo.visitID);
-            visitDiv.setAttribute("class", "card-head card-head-xs collapsed");
-            visitDiv.setAttribute("data-toggle", "collapse");
-            visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visitInfo.visitID);
-            visitDiv.setAttribute("data-target", "#visitDetails-"+visitInfo.visitID);
-            visitDiv.setAttribute("aria-expanded", "false");
-                  
-            if(visitInfo.status == 'completed') {
-                visitDiv.classList.add("style-success");
-            } else if (visitInfo.status == "late") {
-                visitDiv.classList.add("bg-warning");
-            } else if (visitInfo.status == "future") {
-                visitDiv.classList.add("bg-info");
-            } else if (visitInfo.status == "canceled") {
-                visitDiv.classList.add("bg-danger");
-            } else if (visitInfo.status == "arrived") {       
-            }
+            allClients.forEach((client)=> {
+                if (client.client_id == visitInfo.clientID) {
 
-            visitDiv.addEventListener('click', (eventObj) => {
-                flyToVisit(visitInfo);
-            });
+                    let cardMB0 = document.createElement('div');
+                    cardMB0.setAttribute("cls", "card m-b-0");
+                    let cardHead = document.createElement('div');
+                    cardHead.setAttribute("class", "card-head");
+                    let tabBodyContent = document.createElement('div');
+                    tabBodyContent.setAttribute("class", "card-body tab-content");
+                    cardMB0.appendChild(cardHead);
+                    cardMB0.appendChild(tabBodyContent);
+                    visitDetailCard.appendChild(cardMB0);
 
-            return visitDiv;
-        }
-        function createVisitDetailCard(visitInfo, clientInfo) {
 
-            let cVisitDetailsHTML = `
-                                <p>${visitInfo.pets} | ${visitInfo.service}<br>
+                    let tabList = document.createElement('ul');
+                    tabList.setAttribute("class", "nav nav-tabs nav-justified style-default-light");
+                    tabList.setAttribute("data-toggle","tabs");
 
-                                ${clientInfo.street1}, ${clientInfo.city}, ${clientInfo.state} ${clientInfo.zip}<br>
-                                
-                                ALARM CODE INFO: ${clientInfo.alarmcompany} : ${clientInfo.alarminfo} <br>
-                                
-                                CELL: ${clientInfo.cellphone}, ALT CELL: ${clientInfo.cellphone2} <br>
-                                
-                                EMAIL: ${clientInfo.email} <br>
-                                
-                                ALT EMAIL: ${clientInfo.email2} </p>
+                    cardHead.appendChild(tabList);
 
-                                 `;
-
-            if (visitInfo.visitNote != null) {
-                cVisitDetailsHTML = `<p>NOTE: ${visitInfo.visitNote}` + cVisitDetailsHTML;
-            }
-
-            return cVisitDetailsHTML;
-        }
-
-                    //<div class="sitter card panel"> 
-            //          sitterListElement.setAttribute("type", "div"); CPA REMOVED
-            //          sitterListElement.setAttribute("id","sitterListAccordions") //These IDs must be unique to thre HTML page 
-            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
-            //let sitterCardHead = document.createElement('div');
-            //      sitterCardHead.setAttribute("type", "div");
-            /*sitterCardHead.setAttribute("id", sitter.sitterID);
-            sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
-            sitterCardHead.setAttribute("data-toggle", "collapse");
-            sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
-            sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
-            sitterCardHead.setAttribute("aria-expanded", "false");
-
-            sitterCardHead.addEventListener('click', ()=> {
-                console.log('tapped sitter accordion item');
-            })*/
-            // <header>${sitter.sitterID}</header>
-
-            // <div class="tools">
-            // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
-            // </div>
-            // <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
-            //            expandAccordion.setAttribute("type", "div");
-            //      <div class="card-body small-padding ">      
-            //            cardBody.setAttribute("type","div");
-            //      <div class="visit panel-group" id="visitID">
-            //            panelGroup.setAttribute("type","div");
+                    let tabItemVisitInfo = createDetailVisitTab("visit-edit-", visitInfo.visitID, "fa fa-home", true);
+                    tabList.appendChild(tabItemVisitInfo);
                     
-            //  <div class="card panel">
-            //   panelItem.setAttribute("type","div");
-            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
-            //  visitDiv.setAttribute("type", "div");
-            // visitDiv.setAttribute("class", "card-head card-head-sm collapsed"); CPA
-            //  panelItem.setAttribute("style","background-color: #0B6623");
-            // check visit report sent status and adjust view
-            //visitDiv.setAttribute("style","background-color: #FDD033");
-            // visitDiv.setAttribute("style","background-color: #ADD8E6");
-            //visitDiv.setAttribute("style","background-color: #A80000");
-            // <div class="tools">
-            //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
-            //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
-            //      visitExpandAccordion.setAttribute("type", "div");
-            //  <div class="card-body">
-            //      visitDetailCard.setAttribute("type", "div");
+                    let tabItemHomeInfo = createDetailVisitTab("visit-home-info-", visitInfo.visitID, "fa fa-home", false);
+                    tabList.appendChild(tabItemHomeInfo);
+
+                    let tabItemCustomerInfo = createDetailVisitTab("visit-profile-", visitInfo.visitID, "fa fa-user", false);
+                    tabList.appendChild(tabItemCustomerInfo);
+
+                    let tabPaneVisitDetails = createTabBodyVisitDetails(visitInfo);
+                    let tabPaneHomeInfo = createTabBodyHomeInfo(visitInfo);
+
+                    tabBodyContent.appendChild(tabPaneVisitDetails);
+                    tabBodyContent.appendChild(tabPaneHomeInfo);
+
+
+                }
+            });
+            /*if (visitInfo.visitNote != null) {
+                visitDetailsHTML = `<p>NOTE: ${visitInfo.visitNote}` + visitDetailsHTML;
+            }*/
+
+            //visitDetailCard.innerHTML = visitDetailsHTML;
+            visitExpandAccordion.appendChild(visitDetailCard);
+            return visitExpandAccordion;
+        }
+
+        function createDetailVisitTab(textClass, visitID, textIcon, isActive) {
+            let tabItemVisitInfo = document.createElement('li');
+            if (isActive) {
+                tabItemVisitInfo.setAttribute("class", "active");
+            } else {
+                tabItemVisitInfo.setAttribute("class", "");
+            }
+
+            let aHrefTab = document.createElement('a');
+            aHrefTab.setAttribute("href",  "#"+textClass + visitID)
+            aHrefTab.innerHTML = 'TAB';
+            let iconComp = document.createElement('i');
+            iconComp.setAttribute("class", textIcon);
+
+            aHrefTab.appendChild(iconComp);
+            tabItemVisitInfo.appendChild(aHrefTab);
+
+            
+
+            return tabItemVisitInfo;
+        }
+
+        function createTabBodyVisitDetails(visitInfo) {
+            let tabPaneVisitDetails = document.createElement('div');
+            tabPaneVisitDetails.setAttribute("class", "tab-pane active");
+            tabPaneVisitDetails.setAttribute("id", "visit-edit-"+visitInfo.visitID);
+
+            let toolsDiv = document.createElement('div');
+            toolsDiv.setAttribute("class", "tools align-right");
+
+            let buttonVisitNotes = document.createElement('div');
+            buttonVisitNotes.setAttribute("type","button");
+            buttonVisitNotes.setAttribute("class", "btn ink-reaction btn-info");
+            buttonVisitNotes.innerHTML = `<i class="fa fa-comments"></i>NOTES`;
+
+            let buttonReassign = document.createElement('div');
+            buttonReassign.setAttribute("type","button");
+            buttonReassign.setAttribute("class","btn ink-reaction btn-warning");
+            buttonReassign.innerHTML = `<i class="fa fa-exchange"></i>REASSIGN`;
+
+            let buttonCancelVisit = document.createElement('div');
+            buttonCancelVisit.setAttribute("type","button");
+            buttonCancelVisit.setAttribute("class","btn ink-reaction btn-danger");
+            buttonCancelVisit.innerHTML = `<i class="fa fa-ban"></i>CANCEL`;
+
+            toolsDiv.appendChild(buttonVisitNotes);
+            toolsDiv.appendChild(buttonReassign);
+            toolsDiv.appendChild(buttonCancelVisit);
+            tabPaneVisitDetails.appendChild(toolsDiv);
+
+            return tabPaneVisitDetails;
+        }
+
+        function createTabBodyHomeInfo(visitInfo) {
+            let tabPaneVisitDetails = document.createElement('div');
+            tabPaneVisitDetails.setAttribute("class", "tab-pane");
+            tabPaneVisitDetails.setAttribute("id", "visit-home-info-"+visitInfo.visitID);
+
+            let title = document.createElement('p');
+            title.innerHTML = `HOME INFO`;
+            tabPaneVisitDetails.appendChild(title);
+
+
+            /*tabPaneVisitDetails.innerHMTL = `<p>HOME INFO</p>
+                      <h4 class="no-margin">ALARM CODE: 27-33-22</h4>
+                      <h4 class="no-margin">KEY CODE: 234145</h4>
+                      <p>FOOD LOCATION:<b> KITCHEN UNDER THE SINK</b></p>
+                      <p>Quod option numquam vel in, et fuisset delicatissimi duo, 
+                      qui ut animal noluisse erroribus. Ea eum veniam audire. 
+                      Per at postea mediocritatem, vim numquam aliquid eu,
+                       in nam sale gubergren. Dicant vituperata consequuntur at sea, 
+                       mazim commodo</p>`;
+            */
+            return tabPaneVisitDetails;
+
+        }
 
 
         function updateSummaryGraph(activeSitterList, sittersVisits) {
@@ -1221,6 +1260,95 @@
                 }
             });
         }
+        function checkDistanceMatrix(waypointsArrayCheck) {
+
+            let distanceMatrix = LTMGR.getDistanceMatrix();
+            if (distanceMatrix != null) {
+                //console.log('Waypoints to check: ' + waypointsArrayCheck.length + ', ' + distanceMatrix.length);
+                let wayPointsGet = [];
+
+                let numWaypoints = waypointsArrayCheck.length;
+                for (let c=1 ; c < numWaypoints; c++) {
+                    let wayEnd = waypointsArrayCheck[c];
+                    let wayBegin = waypointsArrayCheck[c-1];
+                    let wayBeginCoord = wayBegin['coordinates'];
+                    let wayEndCoord = wayEnd['coordinates'];
+                    
+                    
+                    distanceMatrix.forEach((matrix)=> {
+                        let beginCoordinate = matrix.beginCoordinate;
+                        let endCoordinate = matrix.endCoordinate;
+                        //console.log(beginCoordinate + ' --> wayBegin: ' + wayBeginCoord);
+                        if (beginCoordinate[0] == wayBeginCoord[0] && 
+                            beginCoordinate[1] == wayBeginCoord[1] &&
+                            endCoordinate[0] == wayEndCoord[0] &&
+                            endCoordinate[1] == wayEndCoord[1]) {
+                            console.log('Matched distance matrix');
+                        }
+                    });
+                }
+            }
+        }
+        function calculateRouteTimeDistance(sitterID, sitterRoute) {
+
+            let waypointsArr = [];
+            let visit_count = sitterRoute.length;
+
+            sitterRoute.forEach((visit)=> {
+                let lat = parseFloat(visit.lat);
+                let lon = parseFloat(visit.lon);
+                let coordPair = [];
+                coordPair.push(lon);
+                coordPair.push(lat);
+                let coord = {"coordinates" : coordPair};
+                let waypointName = {"name" : visit.clientName};
+                waypointsArr.push(coord);
+                visit_count = visit_count - 1;
+
+            });
+
+            allSitters.forEach((sitter)=> {
+                if(sitterID == sitter.sitterID) {
+                    let lat = parseFloat(sitter.sitterLat);
+                    let lon = parseFloat(sitter.sitterLon);
+                    let coordPair = [];
+                    coordPair.push(lon);
+                    coordPair.push(lat);
+                    let coord = {"coordinates" : coordPair};
+
+                    if (lat != null && lon != null && lon > -90 && lat < 90) {
+                        waypointsArr.push(coord);
+                        waypointsArr.unshift(coord);
+                        createSitterMapMarker(sitter);
+                    } else {
+                        console.log('sitter does not have valid coordinates');
+                    }
+
+                 }
+            });
+            checkDistanceMatrix(waypointsArr);
+            let waypointDict= {"waypoints": waypointsArr};
+            var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+            mapboxClient.directions.getDirections(waypointDict)
+                .send()
+                .then(response => {
+                    const directions = response.body;
+                    let waypoints = directions['waypoints'];
+                    let routes = directions.routes;
+                    let d2 = routes[0];
+                    parseDistanceData(d2, waypoints,sitterID);
+                }, error => {
+                    console.log('Hit error');
+                    console.log(error.message);
+                });
+        }
+        function parseDistanceData(distanceResponse, waypoints, sitterID) {
+
+
+
+        }
+
+
 
 
         function showLoginPanel() {
@@ -1255,11 +1383,18 @@
                     console.log('FIRST VISIT FLY TO INVALID COORDINATES: ' + lastVisit.clientName + ' (' + lastVisit.lon + ',' + lastVisit.lat + ')');
                 }
             }
-        }
-        
+        }        
         function getFullDate() {
             var todayDate = new Date();
             onWhichDay = new Date(todayDate);
+            let futureDate = new Date();
+
+            futureDate.setDate(futureDate.getDate() + 45);
+            let futureMonth = futureDate.getMonth()+1;
+            console.log(futureDate);
+            console.log(futureMonth);
+            console.log(futureDate.getDate());
+
             let todayMonth = todayDate.getMonth()+1;
             let todayYear = todayDate.getFullYear();
             let todayDay = todayDate.getDate();
@@ -1274,17 +1409,30 @@
             dateLabel.innerHTML = todayDay;
             return todayYear+'-'+todayMonth+'-'+todayDay;
         }
-
+        function updateDateLabels(month, date, day)  {
+            let dayWeekLabel = document.getElementById('dayWeek');
+            let monthLabel = document.getElementById('month');
+            let dateLabel = document.getElementById("dateLabel");
+            dayWeekLabel.innerHTML = day + ', ';
+            monthLabel.innerHTML = month;
+            dateLabel.innerHTML = todayDay;
+        }
         function prevDay() {
             removeAccordionControls();
             onWhichDay.setDate(onWhichDay.getDate()-1)
-            let monthDate = onWhichDay.getMonth() + 1;
+            let monthDate = onWhichDay.getMonth();
             let monthDay = onWhichDay.getDate();
+            let prevDay = onWhichDay.getDay() - 1;
+            console.log(monthDate + ' ' + monthDay + ' ' +prevDay);
+
             let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate+ '-' + monthDay;
-            updateDateInfo();
+
+            updateDateInfo(monthDate, monthDay, prevDay);
+
             fullDate = dateRequestString;
             prevDaySteps(dateRequestString);
 
+            updateDateLabels()
             removeSittersFromSitterList();
             removeAllMapMarkers();
             removeVisitDivElements();
@@ -1392,88 +1540,54 @@
             });
         }     
 
-        function checkDistanceMatrix(waypointsArrayCheck) {
-
-            let distanceMatrix = LTMGR.getDistanceMatrix();
-            if (distanceMatrix != null) {
-                //console.log('Waypoints to check: ' + waypointsArrayCheck.length + ', ' + distanceMatrix.length);
-                let wayPointsGet = [];
-
-                let numWaypoints = waypointsArrayCheck.length;
-                for (let c=1 ; c < numWaypoints; c++) {
-                    let wayEnd = waypointsArrayCheck[c];
-                    let wayBegin = waypointsArrayCheck[c-1];
-                    let wayBeginCoord = wayBegin['coordinates'];
-                    let wayEndCoord = wayEnd['coordinates'];
-                    
-                    
-                    distanceMatrix.forEach((matrix)=> {
-                        let beginCoordinate = matrix.beginCoordinate;
-                        let endCoordinate = matrix.endCoordinate;
-                        //console.log(beginCoordinate + ' --> wayBegin: ' + wayBeginCoord);
-                        if (beginCoordinate[0] == wayBeginCoord[0] && 
-                            beginCoordinate[1] == wayBeginCoord[1] &&
-                            endCoordinate[0] == wayEndCoord[0] &&
-                            endCoordinate[1] == wayEndCoord[1]) {
-                            console.log('Matched distance matrix');
-                        }
-                    });
-                }
-            }
-        }
-        function calculateRouteTimeDistance(sitterID, sitterRoute) {
-
-            let waypointsArr = [];
-            let visit_count = sitterRoute.length;
-
-            sitterRoute.forEach((visit)=> {
-                let lat = parseFloat(visit.lat);
-                let lon = parseFloat(visit.lon);
-                let coordPair = [];
-                coordPair.push(lon);
-                coordPair.push(lat);
-                let coord = {"coordinates" : coordPair};
-                let waypointName = {"name" : visit.clientName};
-                waypointsArr.push(coord);
-                visit_count = visit_count - 1;
-
-            });
-
-            allSitters.forEach((sitter)=> {
-                if(sitterID == sitter.sitterID) {
-                    let lat = parseFloat(sitter.sitterLat);
-                    let lon = parseFloat(sitter.sitterLon);
-                    let coordPair = [];
-                    coordPair.push(lon);
-                    coordPair.push(lat);
-                    let coord = {"coordinates" : coordPair};
-
-                    if (lat != null && lon != null && lon > -90 && lat < 90) {
-                        waypointsArr.push(coord);
-                        waypointsArr.unshift(coord);
-                        createSitterMapMarker(sitter);
-                    } else {
-                        console.log('sitter does not have valid coordinates');
-                    }
-
-                 }
-            });
-            checkDistanceMatrix(waypointsArr);
-            let waypointDict= {"waypoints": waypointsArr};
-            var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
-            mapboxClient.directions.getDirections(waypointDict)
-                .send()
-                .then(response => {
-                    const directions = response.body;
-                    let waypoints = directions['waypoints'];
-                    let routes = directions.routes;
-                    let d2 = routes[0];
-                    parseDistanceData(d2, waypoints,sitterID);
-                }, error => {
-                    console.log('Hit error');
-                    console.log(error.message);
-                });
-        }
-        function parseDistanceData(distanceResponse, waypoints, sitterID) {}
         
 //}(this.materialadmin)); 
+
+
+
+
+            //<div class="sitter card panel"> 
+            //          sitterListElement.setAttribute("type", "div"); CPA REMOVED
+            //          sitterListElement.setAttribute("id","sitterListAccordions") //These IDs must be unique to thre HTML page 
+            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitListBySitterAccordions" data-target="#accordion3-1" aria-expanded="false">
+            //let sitterCardHead = document.createElement('div');
+            //      sitterCardHead.setAttribute("type", "div");
+            /*sitterCardHead.setAttribute("id", sitter.sitterID);
+            sitterCardHead.setAttribute("class", "card-head card-head-sm collapsed");
+            sitterCardHead.setAttribute("data-toggle", "collapse");
+            sitterCardHead.setAttribute("data-parent", "#sitterListAccordions");
+            sitterCardHead.setAttribute("data-target", "#accordion-"+sitter.sitterID);
+            sitterCardHead.setAttribute("aria-expanded", "false");
+
+            sitterCardHead.addEventListener('click', ()=> {
+                console.log('tapped sitter accordion item');
+            })*/
+            // <header>${sitter.sitterID}</header>
+
+            // <div class="tools">
+            // <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+            // </div>
+            // <div id="accordion3-1" class="collapse" aria-expanded="false" style="height: 0px;">
+            //            expandAccordion.setAttribute("type", "div");
+            //      <div class="card-body small-padding ">      
+            //            cardBody.setAttribute("type","div");
+            //      <div class="visit panel-group" id="visitID">
+            //            panelGroup.setAttribute("type","div");
+                    
+            //  <div class="card panel">
+            //   panelItem.setAttribute("type","div");
+            //<div class="card-head card-head-sm collapsed" data-toggle="collapse" data-parent="#visitID" data-target="#visit-1" aria-expanded="false">
+            //  visitDiv.setAttribute("type", "div");
+            // visitDiv.setAttribute("class", "card-head card-head-sm collapsed"); CPA
+            //  panelItem.setAttribute("style","background-color: #0B6623");
+            // check visit report sent status and adjust view
+            //visitDiv.setAttribute("style","background-color: #FDD033");
+            // visitDiv.setAttribute("style","background-color: #ADD8E6");
+            //visitDiv.setAttribute("style","background-color: #A80000");
+            // <div class="tools">
+            //  <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+            //  <div id="visit-1" class="collapse" aria-expanded="false" style="height: 0px;">
+            //      visitExpandAccordion.setAttribute("type", "div");
+            //  <div class="card-body">
+            //      visitDetailCard.setAttribute("type", "div");
+
