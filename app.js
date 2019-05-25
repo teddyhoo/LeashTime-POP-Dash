@@ -93,8 +93,7 @@ http.createServer((req, res) => {
 	 		} else {
 
 	 			cookieVal = httpResponse.headers['set-cookie'];
-	 			console.log(cookieVal);
-	 			console.log(body);
+	 			//console.log(body);
 	 			request.post({
 	 				url: 'https://leashtime.com/mmd-sitters.php',
 	 				headers: {
@@ -109,7 +108,7 @@ http.createServer((req, res) => {
 	 					let listSitterID;
 	 					sitterJSON = JSON.parse(body2);
 	 					let sitterJSONKeys = Object.keys(sitterJSON);
-	 					console.log(sitterJSONKeys);
+	 					//console.log(sitterJSONKeys);
 	 					sitterList = sitterJSON.sitters;
 			 			sitterList.forEach((sitter) => {
 							 if(sitter.active == 1) {
@@ -133,6 +132,32 @@ http.createServer((req, res) => {
 								let clientIDlist;
 								visitList.forEach((visitItem)=> {
 									clientIDlist += visitItem.clientptr + ',';
+									let visitKeys = Object.keys(visitItem);
+
+									console.log('---------VISIT INFO---------')
+									visitKeys.forEach((key)=> {
+										if (key == 'report') {
+											let reportDic = visitItem[key];
+											let reportKeys = Object.keys(reportDic);
+											console.log('   ---VISIT REPORT---');
+											reportKeys.forEach((rKey)=> {
+												if (rKey == 'status'){
+													console.log('####' + rKey + ' -> ' + reportDic[rKey]);
+												}
+
+											});
+
+										} else if (key == 'performance') {
+
+											let reportDic = visitItem[key];
+											let reportKeys = Object.keys(reportDic);
+											console.log('   ---PERFORMANCE---');
+
+											reportKeys.forEach((rKey)=> {
+													console.log('####' + rKey + ' -> ' + reportDic[rKey]);
+											});
+										}
+									})
 								})
 							 	request.post({
 									url: 'https://leashtime.com/mmd-clients.php',

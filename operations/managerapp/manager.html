@@ -1,441 +1,303 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <title>LeashTime Manager Dashboard</title>
+    <title>LeashTime Manager Dashboard</title>
 
-  <!-- BEGIN META -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="per_sitting_businesses">
-  <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
-  <!-- END META -->
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+    <!-- END META -->
 
-  <!-- BEGIN FRAMEWORK STYLESHEETS -->
-  <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
-  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
-  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
-  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
-  <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+    <!-- BEGIN FRAMEWORK STYLESHEETS -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
 
-  <!-- BEGIN PLUGIN STYLESHEETS -->
-  <link type="text/css" rel="stylesheet" href="../../assets/css/libs/fullcalendar/fullcalendar-leashtime.css">
-
-  <!-- BEGIN LEASHTIME STYLESHEETS -->
-  <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
-  <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
-  <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
-  <!--<link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">-->
-  <link href="./assets/css/manager-styles.css" rel="stylesheet" type="text/css">
-  <!-- END STYLESHEETS -->
-
-  <script src='assets/js/LTMGR.js'></script>
-  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
-  <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.js"></script>
-  <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
-  
+    <!-- BEGIN LEASHTIME STYLESHEETS -->
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/manager-styles.css" rel="stylesheet" type="text/css">
+    <!-- END STYLESHEETS -->
+    <script src='assets/js/LTMGR.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.js"></script>
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
 </head>
-
 <!--<body class="header-fixed">-->
 
 <body class="menubar-hoverable header-fixed menubar-pin ">
+    <div id="base" style="padding-left:0;">
+        <div class="offcanvas">
+        </div>
+        <div id="">
+            <div class="row">
+                <div class="col-xs-12 full-bleed no-margin Full-height">
+                    <div class="transparent no-margin no-padding">
+                        <div id='map' class="mapView stick-bottom-left stick-bottom-right" style="height:100vh"></div>
+                    </div>
 
+                    <div class="overlay stick-top-right stick-top-left height-1 blue white-text p-t-0">
+                        <div class="pull-left">
+                            <ul>
+                                <li id="status" class="dropdown hidden-xs">
+                                    <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-area-chart white-text"></i><sup class="badge style-info"></sup>
+                                    </a>
+                                    <ul class="dropdown-menu animation-expand">
+                                        <li class="dropdown-header">SERVICE REPORT
+                                        </li>
 
-<!--/////////////// BEGIN HEADER ///////////////
-<header id="" class="">
-  <div class="headerbar blue ">
-      <div class="">
-        <ul class="header-nav header-nav-options">
-          <li style="float: left;">
-            <a class="btn btn-icon-toggle text-center" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
-              <i class="fa fa-paw white-text fa-2x"></i>
-            </a>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light">TOTAL VISITS<strong>TODAY</strong></span>
+                                                    <strong id="numTotal" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-warning" style="width: 44%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light">LATE VISITS </span>
+                                                    <strong id="numLatePercent" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-warning" id="progLate" style="width: 44%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light"><strong>CANCELLED</strong></span>
+                                                    <strong id="cancelPercent" class="pull-right">33</strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-danger" style="width: 13%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light"><strong>VISIT REPORTS TO REVIEW</strong></span>
+                                                    <strong id="numVRpercent" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div id="vrReviewBar" class="progress-bar progress-bar-success" style="width: 30%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light"><strong>PUBLISHED VISIT REPORTS</strong></span>
+                                                    <strong id="numVRsentPercent" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div id="vrSentBar" class="progress-bar progress-bar-success" style="width: 30%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-icon-toggle text-center">
+                                <i class="fa fa-eye white-text"></i>
+                            </a>
+                            <a class="btn btn-icon-toggle text-center" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
+                                <i class="fa fa-paw white-text"></i>
+                            </a>
 
-          </li>
-          <li style="line-height:1;padding:24px 0">
-            <div class="brand-holder hidden-on-mobile">
-              <span class="text-lg white-text">MOBILE<strong> OPERATIONS</strong>™
-                <span style="font-weight: 100;opacity: .8"> | SITTER MONITOR</span></span>
-            </div>
-          </li>
-        </ul>
-      </div>
+                        </div>
+                    </div>
 
-      <div class="headerbar-right">  
-       
-        <ul class="header-nav header-nav-options">
+                    <!-- LOGIN  -->
+                    <div class="stick-top-right m-t-20 m-r-20">
+                        <section id="lt-loginPanel" class="ltLogin m-t-25 section-info">
+                            <div class="section-body">
+                                <div class="card style-info force-padding">
+                                    <span class="text-small">
+                                      <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
+                                      <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
+                                      <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=managerApp.login()>LOGIN</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
 
-           <li id="calendar">
-              <form class="navbar-search" role="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" name="headerSearch" placeholder="Enter your keyword">
+                    <!-- FILTER BTNS -->
+                    <div id="filterOptions" class="filterStatus overlay no-margin no-padding" style="position: absolute;right: 0;bottom: 0;left: 0">
+                        <div class="btn-group btn-group-info btn-group-justified" role="group" aria-label="Filter View" style="background-color:rgba(0,0,0,.4)">
+                            <a class="btn" role="button">
+                                <button type="button" id="allSitters" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.showSitters()">SITTERS</button>
+                            </a>
+                            <a class="btn" role="button">
+                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.showAllClients('clientlist')"> CLIENTS</button>
+                            </a>
+                            <a class="btn" role="button">
+                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.filterMapViewByVisitStatus('late')">LATE</button>
+                            </a>
+                            <a class="btn" role="button">
+                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.filterMapViewByVisitStatus('published')">VR SENT</button>
+                            </a>
+                            <a class="btn" role="button">
+                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.filterMapViewByVisitStatus('submitted')">VR REVIEW</button>
+                            </a>
+                            <a class="btn" role="button">
+                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.filterMapViewByVisitStatus('noreportdatareceived')">VR NONE</button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <style>
+                        .mapboxgl-control-container {
+                            display: none;
+                        }
+                        
+                        #visitListBySitterAccordions > .panel-group {
+                            margin-bottom: 0;
+                        }
+                    </style>
+
                 </div>
-                <button type="submit" class="btn btn-icon-toggle ink-reaction"><i class="fa fa-search"></i></button>
-              </form>
-            </li>
+            </div>
+        </div>
 
-            <li id="status" class="dropdown hidden-xs">
-              <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-area-chart white-text"></i><sup class="badge style-info"></sup>
-              </a>
-              <ul class="dropdown-menu animation-expand">
-                <li class="dropdown-header">SERVICE REPORT
-                </li>
-
-                <li class="dropdown-progress">
-                  <a href="javascript:void(0);">
-                    <div class="dropdown-label">
-                      <span id="numVisits" class="text-light">Total Visits <strong>TODAY</strong></span>
-                      <strong class="pull-right">55%</strong>
+        <div class="offcanvas">
+            <div id="offcanvas-sitters" class="offcanvas-pane width-8 blue">
+                <div class="offcanvas-head ">
+                    <header class="white-text"><small>SITTERS AND VISITS</small></header>
+                    <div class="offcanvas-tools">
+                        <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+                            <i class="md md-close"></i>
+                        </a>
                     </div>
-                    <div class="progress"><div class="progress-bar progress-bar-info" style="width: 74%"></div></div>
-                  </a>
-                </li>
-                <li class="dropdown-progress">
-                  <a href="javascript:void(0);">
-                    <div class="dropdown-label">
-                      <span class="text-light">LATE VISITS <strong>TODAY</strong></span>
-                      <strong class="pull-right">74%</strong>
+                    <!-- CALENDAR NAV -->
+                    <div id="calendarNav">
+                        <a id="prev" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="prevDay()"><i class="fa fa-angle-left"></i></a>
+                        <div class="cal-date text-center text-xs">
+                            <span id="dayWeek"></span>
+                            <span id="month">...Login...</span>
+                            <span id="dateLabel"></span>
+                            <br>
+                        </div>
+                        <a id="next" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="nextDay()"><i class="fa fa-angle-right"></i></a>
                     </div>
-                    <div class="progress"><div class="progress-bar progress-bar-warning" style="width: 44%"></div></div>
-                  </a>
-                </li>
-                <li class="dropdown-progress">
-                  <a href="javascript:void(0);">
-                    <div class="dropdown-label">
-                      <span class="text-light">Services Goals <strong>CANCELLED</strong></span>
-                      <strong class="pull-right">13%</strong>
-                    </div>
-                    <div class="progress"><div class="progress-bar progress-bar-danger" style="width: 13%"></div></div>
-                  </a>
-                </li>
-                <li class="dropdown-progress">
-                  <a href="javascript:void(0);">
-                    <div class="dropdown-label">
-                      <span class="text-light">Service Reports <strong>SEND TODAY</strong></span>
-                      <strong class="pull-right">30%</strong>
-                    </div>
-                    <div class="progress"><div class="progress-bar progress-bar-success" style="width: 30%"></div></div>
-                  </a>
-                </li>
-              </ul>
-            </li>
 
-            <li id="messages" class="dropdown hidden-xs">
-              <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-bell white-text"></i>
-              </a>
-              <ul class="dropdown-menu animation-expand">
-                <li class="dropdown-header">Today's messages</li>
-                <li>
-                  <a class="alert alert-callout alert-warning" href="javascript:void(0);">
-                    <img class="pull-right img-circle dropdown-avatar" src="./assets/img/avatar2.jpg?1404026449" alt="">
-                    <strong>Teddy Bun Panda</strong><br>
-                    <small>Testing functionality...</small>
-                  </a>
-                </li>
-                <li>
-                  <a class="alert alert-callout alert-info" href="javascript:void(0);">
-                    <img class="pull-right img-circle dropdown-avatar" src="./assets/img/avatar3.jpg?1404026799" alt="">
-                    <strong>Jody Sparkles</strong><br>
-                    <small>Reviewing last changes...</small>
-                  </a>
-                </li>
-                <li class="dropdown-header">Options</li>
-                <li><a href="#">View all messages <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
-                <li><a href="#">Mark as read <span class="pull-right"><i class="fa fa-arrow-right"></i></span></a></li>
-              </ul>
-            </li>
-
-            <li id="protect"> 
-              <a class="btn btn-icon-toggle btn-default ink-reaction" href="#offcanvas-pet-protect" data-toggle="offcanvas" data-backdrop="false">
-               <i class="md md-local-hospital fa-2x white-text"></i></a>
-            </li>
-
-            <li id="menu">
-              <a class="btn btn-icon-toggle btn-default" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
-              <i class="fa fa-ellipsis-v white-text"></i></a>
-            </li>
-
-        </ul>
-
-</div>
- 
-  </div>
-</header>-->
-<!-- END HEADER NAV-->
-
-<!-- PAGE CONTENT -->
-<div id="base" style="padding-left:0;">
-
-<!-- LEFT OFFCANVAS -->
-<div class="offcanvas">
-
-</div>
-
-<!-- ////////////////// BEGIN MAIN CONTENT  ////////////////////-->
-<div id="">
-<div class="row">
-<div class="col-xs-12 full-bleed no-margin Full-height">
-
-<!-- MAP -->
-<div class="transparent no-margin no-padding">
-<div id='map' class="mapView stick-bottom-left stick-bottom-right" style= "height:100vh"></div>
-</div>
-
-<div class="overlay stick-top-right stick-top-left height-1 blue white-text p-t-0">
-  <div class="pull-left">
-  <ul>
-   <li id="status" class="dropdown hidden-xs">
-      <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
-        <i class="fa fa-area-chart white-text"></i><sup class="badge style-info"></sup>
-      </a>
-      <ul class="dropdown-menu animation-expand">
-        <li class="dropdown-header">SERVICE REPORT
-        </li>
-
-        <li class="dropdown-progress">
-          <a href="javascript:void(0);">
-            <div class="dropdown-label">
-              <span class="text-light">TOTAL VISITS<strong>TODAY</strong></span>
-              <strong id="numTotal" class="pull-right"></strong>
-            </div>
-            <div class="progress">
-                <div class="progress-bar progress-bar-warning" style="width: 44%"></div>
-            </div>
-          </a>
-        </li>
-        <li class="dropdown-progress">
-          <a href="javascript:void(0);">
-            <div class="dropdown-label">
-              <span class="text-light">LATE VISITS </span>
-              <strong id="numLatePercent" class="pull-right"></strong>
-            </div>
-            <div class="progress">
-                <div class="progress-bar progress-bar-warning" id="progLate" style="width: 44%"></div></div>
-          </a>
-        </li>
-        <li class="dropdown-progress">
-          <a href="javascript:void(0);">
-            <div class="dropdown-label">
-              <span class="text-light"><strong>CANCELLED</strong></span>
-              <strong id="cancelPercent" class="pull-right">33</strong>
-            </div>
-            <div class="progress"><div class="progress-bar progress-bar-danger" style="width: 13%"></div></div>
-          </a>
-        </li>
-        <li class="dropdown-progress">
-          <a href="javascript:void(0);">
-            <div class="dropdown-label">
-              <span class="text-light"><strong>VISIT REPORTS TO REVIEW</strong></span>
-              <strong id="numVRpercent" class="pull-right"></strong>
-            </div>
-            <div class="progress"><div id="vrReviewBar" class="progress-bar progress-bar-success" style="width: 30%"></div></div>
-          </a>
-        </li>
-         <li class="dropdown-progress">
-              <a href="javascript:void(0);">
-                <div class="dropdown-label">
-                  <span class="text-light"><strong>PUBLISHED VISIT REPORTS</strong></span>
-                  <strong id="numVRsentPercent" class="pull-right"></strong>
                 </div>
-                <div class="progress"><div id="vrSentBar" class="progress-bar progress-bar-success" style="width: 30%"></div></div>
-              </a>
-        </li>
-      </ul>
-      </li>
-    </ul>
-  </div>
-  <div class="pull-right"> 
-    <a class="btn btn-icon-toggle text-center">
-      <i class="fa fa-eye white-text"></i>
-    </a>  
-     <a class="btn btn-icon-toggle text-center" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
-      <i class="fa fa-paw white-text"></i>
-    </a>
-     
-  </div> 
-</div>
 
+                <div class="offcanvas-body no-padding">
+                    <div class="panel-group" id="visitListBySitterAccordions">
 
-<!-- LOGIN  -->                                                                                                        
-<div class="stick-top-right m-t-20 m-r-20">                 
-  <section id="lt-loginPanel" class="ltLogin m-t-25 section-info">
- <div class="section-body">
-   <div class="card style-info force-padding">
-      <span  class="text-small">
-        <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
-        <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
-        <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=login()>LOGIN</button>
-      </span>
-   </div>
- </div>
-</section>    
-</div>
+                    </div>
+                </div>
+            </div>
+            <div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
+                <!-- TITLE -->
+                <div class="offcanvas-head ">
+                    <header><small style="color:#b43d3d"><strong style="font-weight: 800">PET</strong>PROTECT™</small></header>
+                    <div class="offcanvas-tools">
+                        <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+                            <i class="md md-close"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="offcanvas-body no-padding">
+                    <!-- PET PROTECT ESSENTIAL PANEL CARD -->
+                    <div class="">
+                        <div class="no-padding">
+                            <ul class="list  white-text text-lighten-5">
+                                <li class="tile pp-tile">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-local-hospital fa-2x"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            EMERGENCY CARE
+                                            <small>(123) 456-7890</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-location-on"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            LOST DOG SEARCH
+                                            <small>Leashtime</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-account-balance"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            LOCAL LEASH LAWS
+                                            <small>City of Something</small>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="tile pp-sidebar">
+                                    <a href="#!" class="tile-content ink-reaction">
+                                        <div class="tile-icon">
+                                            <i class="md md-account-balance"></i>
+                                        </div>
+                                        <div class="tile-text">
+                                            DOG BITE LAW
+                                            <small>Resources</small>
+                                        </div>
+                                    </a>
+                                </li>
 
-<!-- FILTER BTNS -->
-<div id="filterOptions" class="filterStatus overlay no-margin no-padding" style="position: absolute;right: 0;bottom: 0;left: 0">
-  <div class="btn-group btn-group-info btn-group-justified" role="group" aria-label="Filter View" style="background-color:rgba(0,0,0,.4)"> 
-    <a class="btn" role="button">
-      <button type = "button"id="allSitters" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="showSitters()">SITTERS</button>
-    </a>
-    <a class="btn" role="button">
-      <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="showAllClients()"> CLIENTS</button>
-    </a>
-     <a class="btn" role="button">
-      <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('late')">LATE</button>
-    </a>
-    <a class="btn" role="button">
-      <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('published')">VR SENT</button>
-    </a>
-    <a class="btn" role="button">
-      <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('submitted')">VR REVIEW</button>
-    </a>
-    <a class="btn" role="button">
-      <button type = "button"id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick="filterMapViewByVisitStatus('noreportdatareceived')">VR NONE</button>
-    </a> 
-  </div>
-</div>
-
-<style> 
-  .mapboxgl-control-container {
-    display: none;
-  }
-  #visitListBySitterAccordions > .panel-group {
-    margin-bottom: 0;
-  }
-</style>
-        
-        
-</div>
-</div>      
-</div>
-   
-   
-<!-- RIGHT OFFCANVAS -->     
-<div class="offcanvas">
-
-<!-- BEGIN OFFCANVAS SITTER & VISITS -->
-<div id="offcanvas-sitters" class="offcanvas-pane width-8 blue">
-  <div class="offcanvas-head ">
-    <header class="white-text"><small>SITTERS AND VISITS</small></header>
-    <div class="offcanvas-tools">
-      <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
-        <i class="md md-close"></i>
-      </a>
-    </div>
-    <!-- CALENDAR NAV -->
-    <div id="calendarNav">
-      <a id="prev" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="prevDay()"><i class="fa fa-angle-left"></i></a>
-      <div class="cal-date text-center text-xs">
-        <span id="dayWeek"></span>
-        <span id="month">...Login...</span>
-        <span id="dateLabel"></span>
-        <br>
-      </div>
-        <a id="next" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="nextDay()"><i class="fa fa-angle-right"></i></a>
-    </div> 
-    
-  </div>
-  
-  <div class="offcanvas-body no-padding">
-
-    <div class="panel-group" id="visitListBySitterAccordions">
-    
-    </div>
-
-  </div>
-</div>f
-
-<!-- BEGIN OFFCANVAS PETPRO™ -->
-<div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
-    <!-- TITLE -->
-    <div class="offcanvas-head ">
-        <header><small style="color:#b43d3d"><strong style="font-weight: 800">PET</strong>PROTECT™</small></header>
-        <div class="offcanvas-tools">
-            <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
-            <i class="md md-close"></i>
-          </a>
+                            </ul>
+                        </div>
+                        <!--end .card-body -->
+                    </div>
+                    <!--END PETPROTECT PANEL CARD -->
+                </div>
+            </div>
         </div>
     </div>
-    <div class="offcanvas-body no-padding">
-        <!-- PET PROTECT ESSENTIAL PANEL CARD -->
-        <div class="">
-            <div class="no-padding">
-                <ul class="list  white-text text-lighten-5">
-                    <li class="tile pp-tile">
-                        <a href="#!" class="tile-content ink-reaction">
-                            <div class="tile-icon">
-                                <i class="md md-local-hospital fa-2x"></i>
-                            </div>
-                            <div class="tile-text">
-                                EMERGENCY CARE
-                                <small>(123) 456-7890</small>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="tile pp-sidebar">
-                        <a href="#!" class="tile-content ink-reaction">
-                            <div class="tile-icon">
-                                <i class="md md-location-on"></i>
-                            </div>
-                            <div class="tile-text">
-                                LOST DOG SEARCH
-                                <small>Leashtime</small>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="tile pp-sidebar">
-                        <a href="#!" class="tile-content ink-reaction">
-                            <div class="tile-icon">
-                                <i class="md md-account-balance"></i>
-                            </div>
-                            <div class="tile-text">
-                                LOCAL LEASH LAWS
-                                <small>City of Something</small>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="tile pp-sidebar">
-                        <a href="#!" class="tile-content ink-reaction">
-                            <div class="tile-icon">
-                                <i class="md md-account-balance"></i>
-                            </div>
-                            <div class="tile-text">
-                                DOG BITE LAW
-                                <small>Resources</small>
-                            </div>
-                        </a>
-                    </li>
+    <!-- END BASE -->
 
-                </ul>
-            </div>
-            <!--end .card-body -->
-        </div>
-        <!--END PETPROTECT PANEL CARD -->
-</div>
+    <!-- JAVASCRIPT -->
 
-</div>
+    <!--<script src="./assets/js/lTmanagerapp.js"></script>-->
+    <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+    <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
 
-</div>
+    <script src="../../assets/js/core/source/App.js"></script>
+    <script src="../../assets/js/core/source/AppVendor.js"></script>
+    <script src="../../assets/js/libs/moment/moment.js"></script>
 
-</div> <!-- END BASE -->
+    <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
+    <script src="../../assets/js/core/source/AppCard.js"></script>
+    <script src="./assets/js/managerApp.js"></script>
 
-<!-- JAVASCRIPT -->
-<script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
-<script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
-<script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
-<script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script> 
-<script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
-<script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+    <div id="device-breakpoints">
+        <div class="device-xs visible-xs" data-breakpoint="xs"></div>
+        <div class="device-sm visible-sm" data-breakpoint="sm"></div>
+        <div class="device-md visible-md" data-breakpoint="md"></div>
+        <div class="device-lg visible-lg" data-breakpoint="lg"></div>
+    </div>
+</body>
 
-<script src="../../assets/js/core/source/App.js"></script>
-<script src="../../assets/js/core/source/AppVendor.js"></script>
-<script src="../../assets/js/libs/moment/moment.js"></script>
-
-<script src="../../assets/js/core/source/AppOffcanvas.js"></script>
-<script src="../../assets/js/core/source/AppCard.js"></script>
-<script src="./assets/js/lTmanagerapp.js"></script>
-
-  </body>
 </html>

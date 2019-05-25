@@ -1,4 +1,4 @@
-//(function (namespace) {
+(function manager (document) {
         const base_url = 'https://leashtime.com';
         var fullDate;
         var username = '';
@@ -59,7 +59,6 @@
             center : ([-77.888,38.1111]),
             zoom: 9
         });
-
         map.on("load",()=>{
         });
 
@@ -101,7 +100,7 @@
                 if (items != null) {
                     items.forEach((item)=> {
                         visitReportList.push(item);
-                        console.log('visit report id: ' + item.visitID + ' with status: ' + item.status);
+                        //console.log('visit report id: ' + item.visitID + ' with status: ' + item.status);
                     });
                     flyToFirstVisit();
                     buildSitterButtons(allVisits, allSitters);
@@ -208,7 +207,7 @@
 
             allSitterVisits.forEach((visit)=> {
 
-                console.log(visit.status + ' -> ' + visit.vrStatus);
+                //console.log(visit.status + ' -> ' + visit.vrStatus);
             });
 
             totalVisitCount = parseInt(0);
@@ -345,312 +344,6 @@
                 });
             }
         }
-
-        function populateSitterAccordions(sitter,accordionVisits) {
-
-            let sitterListDiv = document.getElementById('visitListBySitterAccordions');
-            let sitterListElement = document.createElement('div');
-            sitterListElement.setAttribute("class", "sitter card panel");
-
-            let sitterCardHead = createSitterCardHead(sitter, "sitterListAccordions",sitter.sitterID );
-            let headerElement  = createHeaderTools(sitter);
-            let toolDiv  = createToolDiv(sitter);
-
-            sitterListDiv.appendChild(sitterListElement);
-            sitterListElement.appendChild(sitterCardHead);
-            sitterCardHead.appendChild(headerElement);
-            sitterCardHead.appendChild(toolDiv);
-
-            let expandAccordion = createExpandAccordion(sitter);
-            let cardBody = createCardBody(sitter);
-            let panelGroup = createPanelGroup(sitter);
-
-            cardBody.appendChild(panelGroup);
-            expandAccordion.appendChild(cardBody);
-            sitterListElement.appendChild(expandAccordion);
-
-            let visitCount = 0;
-
-            accordionVisits.forEach((visit)=> {
-                if(visit.sitterID == sitter.sitterID) {
-
-                    visitCount = visitCount +1;
-
-                    let panelItem = createVisitPanelItem(visit);
-                    let visitDiv = createVisitDetailDiv(visit);
-                    createVisitDetailHeader(visit, visitDiv);
-                    let visitExpandAccordion = visitDetailExpandAccordion(visit);
- 
-                    panelItem.appendChild(visitDiv);
-                    panelItem.appendChild(visitExpandAccordion);
-                    panelGroup.appendChild(panelItem);
-
-                }
-            });
-
-            headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
-        }
-
-        function createSitterCardHead(sitterInfo, parentName, targetName) {
-            let sitterCardHeadMake = document.createElement('div');
-            //      sitterCardHead.setAttribute("type", "div");
-            sitterCardHeadMake.setAttribute("id", sitterInfo.sitterID);
-            sitterCardHeadMake.setAttribute("class", "card-head card-head-sm collapsed");
-            sitterCardHeadMake.setAttribute("data-toggle", "collapse");
-            sitterCardHeadMake.setAttribute("data-parent", "#"+parentName);
-            sitterCardHeadMake.setAttribute("data-target", "#accordion-"+ targetName);
-            sitterCardHeadMake.setAttribute("aria-expanded", "false");
-
-            sitterCardHeadMake.addEventListener('click', ()=> {
-                console.log('tapped sitter accordion item');
-            })
-            return sitterCardHeadMake;
-        }
-        function createHeaderTools(sitterInfo) {
-
-            let cHeaderElement = document.createElement('header');
-            cHeaderElement.setAttribute("type", "header");
-            cHeaderElement.setAttribute("id", "header-"+sitterInfo.sitterID);
-            cHeaderElement.innerHTML = sitterInfo.sitterName;
-            return cHeaderElement;;
-        }
-        function createToolDiv(sitterInfo) {
-
-            let cToolDiv = document.createElement('div');
-            cToolDiv.setAttribute("id","tool-accordion-"+sitterInfo.sitterID); 
-            cToolDiv.setAttribute("class","tools");
-
-            let buttonTool = document.createElement('button');
-            buttonTool.setAttribute("type","button");
-            buttonTool.setAttribute("class", "btn btn-icon-toggle");
-
-            let iTool = document.createElement('i')
-            iTool.setAttribute("type","i");
-            iTool.setAttribute("class","fa fa-angle-down");
-
-            cToolDiv.appendChild(buttonTool);
-            cToolDiv.appendChild(iTool);
-
-            return cToolDiv;
-        }
-        function createExpandAccordion(sitterInfo) {
-            let cExpandAccordion = document.createElement('div');
-            cExpandAccordion.setAttribute("id", "accordion-"+sitterInfo.sitterID);
-            cExpandAccordion.setAttribute("class", "collapse");
-            cExpandAccordion.setAttribute("style","height: 0px;");
-            cExpandAccordion.setAttribute("aria-expanded", "false");
-            return cExpandAccordion;
-        }
-        function createCardBody(sitterInfo) {
-            let cCardBody = document.createElement('div');
-            cCardBody.setAttribute("class", "card-body small-padding");
-            cCardBody.setAttribute("id","visitsBy-"+sitterInfo.sitterID);
-            return cCardBody;
-        }    
-        function createPanelGroup(sitterInfo) {
-            let cPanelGroup = document.createElement('div');
-            cPanelGroup.setAttribute("class","panel-group");
-            cPanelGroup.setAttribute("id","visitAccordionPanel-"+sitterInfo.sitterID);
-            return cPanelGroup;
-        }        
-        function createVisitPanelItem(visitInfo) {
-
-            let panelItem = document.createElement('div');
-            panelItem.setAttribute("class","visit card panel");
-            panelItem.setAttribute("id","visitDetailDiv-"+ visitInfo.visitID);
-            return panelItem;
-        }
-        function createVisitDetailDiv(visitInfo) {
-
-            let visitDiv = document.createElement('div');
-            visitDiv.setAttribute("id", "visit-"+visitInfo.visitID);
-            visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
-            visitDiv.setAttribute("data-toggle", "collapse");
-            visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visitInfo.visitID);
-            visitDiv.setAttribute("data-target", "#visitDetails-"+visitInfo.visitID);
-            visitDiv.setAttribute("aria-expanded", "false");
-                  
-            if(visitInfo.status == 'completed') {
-                visitDiv.classList.add("style-success");
-            } else if (visitInfo.status == "late") {
-                visitDiv.classList.add("bg-warning");
-            } else if (visitInfo.status == "future") {
-                visitDiv.classList.add("bg-info");
-            } else if (visitInfo.status == "canceled") {
-                visitDiv.classList.add("bg-danger");
-            } else if (visitInfo.status == "arrived") {       
-            }
-
-            visitDiv.addEventListener('click', (eventObj) => {
-                flyToVisit(visitInfo);
-            });
-
-            return visitDiv;
-        }
-        function createVisitDetailHeader(visitInfo, visitDivParent) {
-
-            let visitHeader = document.createElement("header");
-
-            let visitSummaryHTML = `
-                ${visitInfo.clientName} (${visitInfo.timeOfDay})
-            `;
-            visitHeader.innerHTML = visitSummaryHTML;
-
-            let visitToolDiv = document.createElement('div');
-            visitToolDiv.setAttribute("id","tool-accordion-"+visitInfo.visitID);
-            visitToolDiv.setAttribute("class","tools");
-
-            let visitDetailButton = document.createElement('button');
-            visitDetailButton.setAttribute("type","button");
-            visitDetailButton.setAttribute("class", "btn btn-icon-toggle");
-            let iVisit = document.createElement('i')
-            iVisit.setAttribute("type","i");
-            iVisit.setAttribute("class","fa fa-angle-down");
-
-            visitDivParent.appendChild(visitHeader);
-            visitToolDiv.appendChild(visitDetailButton);
-            visitToolDiv.appendChild(iVisit);
-            visitDivParent.appendChild(visitToolDiv);
-        }
-        function visitDetailExpandAccordion(visitInfo) {
-            let visitExpandAccordion = document.createElement('div');
-            visitExpandAccordion.setAttribute("id", "visitDetails-"+visitInfo.visitID);
-            visitExpandAccordion.setAttribute("class", "collapse");
-            visitExpandAccordion.setAttribute("style","height: 0px;");
-            visitExpandAccordion.setAttribute("aria-expanded", "false");
-
-            let visitDetailCard = document.createElement("div");
-            visitDetailCard.setAttribute("class", "card-body no-padding no-margin style-default-light");
-            visitDetailCard.setAttribute("id","visitDetailCard-" + visitInfo.visitID);
-            visitDetailCard.setAttribute("style", "background-color: #e1e1e1;")
-                   
-            let visitDetailsHTML = ' ' ;
-
-            allClients.forEach((client)=> {
-                if (client.client_id == visitInfo.clientID) {
-
-                    let cardMB0 = document.createElement('div');
-                    cardMB0.setAttribute("cls", "card m-b-0");
-                    let cardHead = document.createElement('div');
-                    cardHead.setAttribute("class", "card-head");
-                    let tabBodyContent = document.createElement('div');
-                    tabBodyContent.setAttribute("class", "card-body tab-content");
-                    cardMB0.appendChild(cardHead);
-                    cardMB0.appendChild(tabBodyContent);
-                    visitDetailCard.appendChild(cardMB0);
-
-
-                    let tabList = document.createElement('ul');
-                    tabList.setAttribute("class", "nav nav-tabs nav-justified style-default-light");
-                    tabList.setAttribute("data-toggle","tabs");
-
-                    cardHead.appendChild(tabList);
-
-                    let tabItemVisitInfo = createDetailVisitTab("visit-edit-", visitInfo.visitID, "fa fa-home", true);
-                    tabList.appendChild(tabItemVisitInfo);
-                    
-                    let tabItemHomeInfo = createDetailVisitTab("visit-home-info-", visitInfo.visitID, "fa fa-home", false);
-                    tabList.appendChild(tabItemHomeInfo);
-
-                    let tabItemCustomerInfo = createDetailVisitTab("visit-profile-", visitInfo.visitID, "fa fa-user", false);
-                    tabList.appendChild(tabItemCustomerInfo);
-
-                    let tabPaneVisitDetails = createTabBodyVisitDetails(visitInfo);
-                    let tabPaneHomeInfo = createTabBodyHomeInfo(visitInfo);
-
-                    tabBodyContent.appendChild(tabPaneVisitDetails);
-                    tabBodyContent.appendChild(tabPaneHomeInfo);
-
-
-                }
-            });
-            /*if (visitInfo.visitNote != null) {
-                visitDetailsHTML = `<p>NOTE: ${visitInfo.visitNote}` + visitDetailsHTML;
-            }*/
-
-            //visitDetailCard.innerHTML = visitDetailsHTML;
-            visitExpandAccordion.appendChild(visitDetailCard);
-            return visitExpandAccordion;
-        }
-
-        function createDetailVisitTab(textClass, visitID, textIcon, isActive) {
-            let tabItemVisitInfo = document.createElement('li');
-            if (isActive) {
-                tabItemVisitInfo.setAttribute("class", "active");
-            } else {
-                tabItemVisitInfo.setAttribute("class", "");
-            }
-
-            let aHrefTab = document.createElement('a');
-            aHrefTab.setAttribute("href",  "#"+textClass + visitID)
-            aHrefTab.innerHTML = 'TAB';
-            let iconComp = document.createElement('i');
-            iconComp.setAttribute("class", textIcon);
-
-            aHrefTab.appendChild(iconComp);
-            tabItemVisitInfo.appendChild(aHrefTab);
-
-            
-
-            return tabItemVisitInfo;
-        }
-
-        function createTabBodyVisitDetails(visitInfo) {
-            let tabPaneVisitDetails = document.createElement('div');
-            tabPaneVisitDetails.setAttribute("class", "tab-pane active");
-            tabPaneVisitDetails.setAttribute("id", "visit-edit-"+visitInfo.visitID);
-
-            let toolsDiv = document.createElement('div');
-            toolsDiv.setAttribute("class", "tools align-right");
-
-            let buttonVisitNotes = document.createElement('div');
-            buttonVisitNotes.setAttribute("type","button");
-            buttonVisitNotes.setAttribute("class", "btn ink-reaction btn-info");
-            buttonVisitNotes.innerHTML = `<i class="fa fa-comments"></i>NOTES`;
-
-            let buttonReassign = document.createElement('div');
-            buttonReassign.setAttribute("type","button");
-            buttonReassign.setAttribute("class","btn ink-reaction btn-warning");
-            buttonReassign.innerHTML = `<i class="fa fa-exchange"></i>REASSIGN`;
-
-            let buttonCancelVisit = document.createElement('div');
-            buttonCancelVisit.setAttribute("type","button");
-            buttonCancelVisit.setAttribute("class","btn ink-reaction btn-danger");
-            buttonCancelVisit.innerHTML = `<i class="fa fa-ban"></i>CANCEL`;
-
-            toolsDiv.appendChild(buttonVisitNotes);
-            toolsDiv.appendChild(buttonReassign);
-            toolsDiv.appendChild(buttonCancelVisit);
-            tabPaneVisitDetails.appendChild(toolsDiv);
-
-            return tabPaneVisitDetails;
-        }
-
-        function createTabBodyHomeInfo(visitInfo) {
-            let tabPaneVisitDetails = document.createElement('div');
-            tabPaneVisitDetails.setAttribute("class", "tab-pane");
-            tabPaneVisitDetails.setAttribute("id", "visit-home-info-"+visitInfo.visitID);
-
-            let title = document.createElement('p');
-            title.innerHTML = `HOME INFO`;
-            tabPaneVisitDetails.appendChild(title);
-
-
-            /*tabPaneVisitDetails.innerHMTL = `<p>HOME INFO</p>
-                      <h4 class="no-margin">ALARM CODE: 27-33-22</h4>
-                      <h4 class="no-margin">KEY CODE: 234145</h4>
-                      <p>FOOD LOCATION:<b> KITCHEN UNDER THE SINK</b></p>
-                      <p>Quod option numquam vel in, et fuisset delicatissimi duo, 
-                      qui ut animal noluisse erroribus. Ea eum veniam audire. 
-                      Per at postea mediocritatem, vim numquam aliquid eu,
-                       in nam sale gubergren. Dicant vituperata consequuntur at sea, 
-                       mazim commodo</p>`;
-            */
-            return tabPaneVisitDetails;
-
-        }
-
-
         function updateSummaryGraph(activeSitterList, sittersVisits) {
 
             let totalVisitCount = 0;
@@ -784,7 +477,7 @@
             let submittedDate;
             let submittedTime;
 
-            console.log(visitDictionary.status);
+            //console.log(visitDictionary.status);
 
             let popupBasicInfo = `<div class="card card-bordered style-primary" id="popupMain">
                                     <div class="card-head">
@@ -817,7 +510,7 @@
             if (visitDictionary.moodButtons != null) {
                 let moodKeys = Object.keys(visitDictionary.moodButtons);
                 moodKeys.forEach((key)=> {
-                    console.log(key);
+                    //console.log(key);
                 })
                 onMood = moodKeys.filter(function(key) {
                     return visitDictionary.moodButtons[key] == 1;
@@ -989,6 +682,7 @@
             }
         }
         function createSitterPopup(sitterInfo) {
+            console.log('create sitter popup');
 
             let popupBasicInfo = '<h1 style="color:white">'+sitterInfo.sitterName+'</h1>';
             popupBasicInfo += '<p style="color:white">'+sitterInfo.street1 +',  ' + sitterInfo.city + '</p>';
@@ -1022,6 +716,15 @@
                         popupBasicInfo += '<p style="color:white"> <img src="./assets/img/zoomin-bargraph@3x.png" width=20 height=20>';
                     }
                     popupBasicInfo += visit.clientName;
+
+                    allClients.forEach((client)=> { 
+
+                        if(client.client_id == visit.clientID) {
+
+                            console.log('CLIENT NAME: ' + visit.clientName + ' CLIENT RECORD WITH ID: '  + client.client_id + " and visit ID:  " + visit.clientID);
+                        }
+
+                    });
                     allClients.forEach((client)=> {
                         if (visit.clientID == client.client_id) {
                             popupBasicInfo += ' (' + client.street1 ;
@@ -1343,9 +1046,6 @@
                 });
         }
         function parseDistanceData(distanceResponse, waypoints, sitterID) {
-
-
-
         }
 
 
@@ -1540,8 +1240,315 @@
             });
         }     
 
-        
-//}(this.materialadmin)); 
+        function populateSitterAccordions(sitter,accordionVisits) {
+
+            let sitterListDiv = document.getElementById('visitListBySitterAccordions');
+            let sitterListElement = document.createElement('div');
+            sitterListElement.setAttribute("class", "sitter card panel");
+
+            let sitterCardHead = createSitterCardHead(sitter, "sitterListAccordions",sitter.sitterID );
+            let headerElement  = createHeaderTools(sitter);
+            let toolDiv  = createToolDiv(sitter);
+
+            sitterListDiv.appendChild(sitterListElement);
+            sitterListElement.appendChild(sitterCardHead);
+            sitterCardHead.appendChild(headerElement);
+            sitterCardHead.appendChild(toolDiv);
+
+            let expandAccordion = createExpandAccordion(sitter);
+            let cardBody = createCardBody(sitter);
+            let panelGroup = createPanelGroup(sitter);
+
+            cardBody.appendChild(panelGroup);
+            expandAccordion.appendChild(cardBody);
+            sitterListElement.appendChild(expandAccordion);
+
+            let panelGroupMain = document.createElement('div');
+            panelGroupMain.setAttribute("class", 'panel-group');
+            panelGroupMain.setAttribute("id","mainAccordion");
+            sitterListDiv.appendChild(panelGroupMain);
+            let visitCount = 0;
+
+            accordionVisits.forEach((visit)=> {
+                if(visit.sitterID == sitter.sitterID) {
+
+                    visitCount = visitCount +1;
+
+                    let panelItem = createVisitPanelItem(visit);
+                    let visitDiv = createVisitDetailDiv(visit);
+                    createVisitDetailHeader(visit, visitDiv);
+                    let visitExpandAccordion = visitDetailExpandAccordion(visit);
+ 
+                    panelItem.appendChild(visitDiv);
+                    panelItem.appendChild(visitExpandAccordion);
+                    panelGroup.appendChild(panelItem);
+
+                }
+            });
+
+            headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
+        }
+        function createSitterCardHead(sitterInfo, parentName, targetName) {
+            let sitterCardHeadMake = document.createElement('div');
+            //      sitterCardHead.setAttribute("type", "div");
+            sitterCardHeadMake.setAttribute("id", sitterInfo.sitterID);
+            sitterCardHeadMake.setAttribute("class", "card-head card-head-sm collapsed");
+            sitterCardHeadMake.setAttribute("data-toggle", "collapse");
+            sitterCardHeadMake.setAttribute("data-parent", "#"+parentName);
+            sitterCardHeadMake.setAttribute("data-target", "#accordion-"+ targetName);
+            sitterCardHeadMake.setAttribute("aria-expanded", "false");
+
+            sitterCardHeadMake.addEventListener('click', ()=> {
+                //console.log('tapped sitter accordion item');
+            })
+            return sitterCardHeadMake;
+        }
+        function createHeaderTools(sitterInfo) {
+
+            let cHeaderElement = document.createElement('header');
+            cHeaderElement.setAttribute("type", "header");
+            cHeaderElement.setAttribute("id", "header-"+sitterInfo.sitterID);
+            cHeaderElement.innerHTML = sitterInfo.sitterName;
+            return cHeaderElement;;
+        }
+        function createToolDiv(sitterInfo) {
+
+            let cToolDiv = document.createElement('div');
+            cToolDiv.setAttribute("id","tool-accordion-"+sitterInfo.sitterID); 
+            cToolDiv.setAttribute("class","tools");
+
+            let buttonTool = document.createElement('button');
+            buttonTool.setAttribute("type","button");
+            buttonTool.setAttribute("class", "btn btn-icon-toggle");
+
+            let iTool = document.createElement('i')
+            iTool.setAttribute("type","i");
+            iTool.setAttribute("class","fa fa-angle-down");
+
+            cToolDiv.appendChild(buttonTool);
+            cToolDiv.appendChild(iTool);
+
+            return cToolDiv;
+        }
+        function createExpandAccordion(sitterInfo) {
+            let cExpandAccordion = document.createElement('div');
+            cExpandAccordion.setAttribute("id", "accordion-"+sitterInfo.sitterID);
+            cExpandAccordion.setAttribute("class", "collapse");
+            cExpandAccordion.setAttribute("style","height: 0px;");
+            cExpandAccordion.setAttribute("aria-expanded", "false");
+            return cExpandAccordion;
+        }
+        function createCardBody(sitterInfo) {
+            let cCardBody = document.createElement('div');
+            cCardBody.setAttribute("class", "card-body small-padding");
+            cCardBody.setAttribute("id","visitsBy-"+sitterInfo.sitterID);
+            return cCardBody;
+        }    
+        function createPanelGroup(sitterInfo) {
+            let cPanelGroup = document.createElement('div');
+            cPanelGroup.setAttribute("class","panel-group");
+            cPanelGroup.setAttribute("id","visitAccordionPanel-"+sitterInfo.sitterID);
+            return cPanelGroup;
+        }        
+        function createVisitPanelItem(visitInfo) {
+
+            let panelItem = document.createElement('div');
+            panelItem.setAttribute("class","visit card panel");
+            panelItem.setAttribute("id","visitDetailDiv-"+ visitInfo.visitID);
+            return panelItem;
+        }
+        function createVisitDetailDiv(visitInfo) {
+
+            let visitDiv = document.createElement('div');
+            visitDiv.setAttribute("id", "visit-"+visitInfo.visitID);
+            visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
+            visitDiv.setAttribute("data-toggle", "collapse");
+            visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visitInfo.visitID);
+            visitDiv.setAttribute("data-target", "#visitDetails-"+visitInfo.visitID);
+            visitDiv.setAttribute("aria-expanded", "false");
+                  
+            if(visitInfo.status == 'completed') {
+                visitDiv.classList.add("style-success");
+            } else if (visitInfo.status == "late") {
+                visitDiv.classList.add("bg-warning");
+            } else if (visitInfo.status == "future") {
+                visitDiv.classList.add("bg-info");
+            } else if (visitInfo.status == "canceled") {
+                visitDiv.classList.add("bg-danger");
+            } else if (visitInfo.status == "arrived") {       
+            }
+
+            visitDiv.addEventListener('click', (eventObj) => {
+                flyToVisit(visitInfo);
+            });
+
+            return visitDiv;
+        }
+        function createVisitDetailHeader(visitInfo, visitDivParent) {
+
+            let visitHeader = document.createElement("header");
+
+            let visitSummaryHTML = `
+                ${visitInfo.clientName} (${visitInfo.timeOfDay})
+            `;
+            visitHeader.innerHTML = visitSummaryHTML;
+
+            let visitToolDiv = document.createElement('div');
+            visitToolDiv.setAttribute("id","tool-accordion-"+visitInfo.visitID);
+            visitToolDiv.setAttribute("class","tools");
+
+            let visitDetailButton = document.createElement('button');
+            visitDetailButton.setAttribute("type","button");
+            visitDetailButton.setAttribute("class", "btn btn-icon-toggle");
+            let iVisit = document.createElement('i')
+            iVisit.setAttribute("type","i");
+            iVisit.setAttribute("class","fa fa-angle-down");
+
+            visitDivParent.appendChild(visitHeader);
+            visitToolDiv.appendChild(visitDetailButton);
+            visitToolDiv.appendChild(iVisit);
+            visitDivParent.appendChild(visitToolDiv);
+        }
+        function visitDetailExpandAccordion(visitInfo) {
+            let visitExpandAccordion = document.createElement('div');
+            visitExpandAccordion.setAttribute("id", "visitDetails-"+visitInfo.visitID);
+            visitExpandAccordion.setAttribute("class", "collapse");
+            visitExpandAccordion.setAttribute("style","height: 0px;");
+            visitExpandAccordion.setAttribute("aria-expanded", "false");
+
+            let visitDetailCard = document.createElement("div");
+            visitDetailCard.setAttribute("class", "card-body no-padding no-margin style-default-light");
+            //visitDetailCard.setAttribute("id","visitDetailCard-" + visitInfo.visitID);
+            visitDetailCard.setAttribute("style", "background-color: #e1e1e1;")
+                   
+            let visitDetailsHTML = ' ' ;
+
+            allClients.forEach((client)=> {
+                if (client.client_id == visitInfo.clientID) {
+
+                    let cardMB0 = document.createElement('div');
+                    cardMB0.setAttribute("cls", "card m-b-0");
+                    let cardHead = document.createElement('div');
+                    cardHead.setAttribute("class", "card-head");
+                    let tabBodyContent = document.createElement('div');
+                    tabBodyContent.setAttribute("class", "card-body tab-content");
+                    cardMB0.appendChild(cardHead);
+                    cardMB0.appendChild(tabBodyContent);
+                    visitDetailCard.appendChild(cardMB0);
+
+
+                    let tabList = document.createElement('ul');
+                    tabList.setAttribute("class", "nav nav-tabs nav-justified style-default-light");
+                    tabList.setAttribute("data-toggle","tabs");
+
+                    cardHead.appendChild(tabList);
+
+                    let tabItemVisitInfo = createDetailVisitTab("visit-edit-", visitInfo.visitID, "fa fa-home", "VISIT", true);
+                    tabList.appendChild(tabItemVisitInfo);
+                    
+                    let tabItemHomeInfo = createDetailVisitTab("visit-home-info-", visitInfo.visitID, "fa fa-home", "HOME", false);
+                    tabList.appendChild(tabItemHomeInfo);
+
+                    let tabItemCustomerInfo = createDetailVisitTab("visit-profile-", visitInfo.visitID, "fa fa-user","CLIENT", false);
+                    tabList.appendChild(tabItemCustomerInfo);
+
+                    let tabPaneVisitDetails = createTabBodyVisitDetails(visitInfo);
+                    let tabPaneHomeInfo = createTabBodyHomeInfo(visitInfo);
+
+                    tabBodyContent.appendChild(tabPaneVisitDetails);
+                    tabBodyContent.appendChild(tabPaneHomeInfo);
+
+
+                }
+            });
+            /*if (visitInfo.visitNote != null) {
+                visitDetailsHTML = `<p>NOTE: ${visitInfo.visitNote}` + visitDetailsHTML;
+            }*/
+
+            //visitDetailCard.innerHTML = visitDetailsHTML;
+            visitExpandAccordion.appendChild(visitDetailCard);
+            return visitExpandAccordion;
+        }
+        function createDetailVisitTab(textClass, visitID, textIcon, tabText, isActive) {
+            let tabItemVisitInfo = document.createElement('li');
+            if (isActive) {
+                tabItemVisitInfo.setAttribute("class", "active");
+            } else {
+                tabItemVisitInfo.setAttribute("class", "");
+            }
+
+            let aHrefTab = document.createElement('a');
+            aHrefTab.setAttribute("href",  "#"+textClass + visitID)
+
+            let iconComp = document.createElement('i');
+            iconComp.setAttribute("class", textIcon);
+
+            aHrefTab.appendChild(iconComp);
+            aHrefTab.innerHTML = tabText;
+            tabItemVisitInfo.appendChild(aHrefTab);
+            return tabItemVisitInfo;
+        }
+        function createTabBodyVisitDetails(visitInfo) {
+            let tabPaneVisitDetails = document.createElement('div');
+            tabPaneVisitDetails.setAttribute("class", "tab-pane active");
+            tabPaneVisitDetails.setAttribute("id", "visit-edit-"+visitInfo.visitID);
+
+            let toolsDiv = document.createElement('div');
+            toolsDiv.setAttribute("class", "tools align-right");
+            toolsDiv.setAttribute("id","tabToolDiv")
+
+
+
+            let buttonVisitNotes = document.createElement('div');
+            buttonVisitNotes.setAttribute("type","button");
+            buttonVisitNotes.setAttribute("class", "btn ink-reaction btn-info");
+            buttonVisitNotes.innerHTML = `<i class="fa fa-comments"></i>NOTES`;
+
+            let buttonReassign = document.createElement('div');
+            buttonReassign.setAttribute("type","button");
+            buttonReassign.setAttribute("class","btn ink-reaction btn-warning");
+            buttonReassign.innerHTML = `<i class="fa fa-exchange"></i>REASSIGN`;
+
+            let buttonCancelVisit = document.createElement('div');
+            buttonCancelVisit.setAttribute("type","button");
+            buttonCancelVisit.setAttribute("class","btn ink-reaction btn-danger");
+            buttonCancelVisit.innerHTML = `<i class="fa fa-ban"></i>CANCEL`;
+
+            toolsDiv.appendChild(buttonVisitNotes);
+            toolsDiv.appendChild(buttonReassign);
+            toolsDiv.appendChild(buttonCancelVisit);
+
+            let toolButtons = `<button type="button" class="btn ink-reaction btn-info"><i class="fa fa-comments"></i></button>`;
+
+            tabPaneVisitDetails.appendChild(toolsDiv);
+           //let tDiv = document.getElementById("tabToolDiv");
+            //tDiv.innerHMTL = toolButtons;
+            return tabPaneVisitDetails;
+        }
+        function createTabBodyHomeInfo(visitInfo) {
+            let tabPaneVisitDetails = document.createElement('div');
+            tabPaneVisitDetails.setAttribute("class", "tab-pane");
+            tabPaneVisitDetails.setAttribute("id", "visit-home-info-"+visitInfo.visitID);
+
+            let title = document.createElement('p');
+            title.innerHTML = `HOME INFO`;
+            tabPaneVisitDetails.appendChild(title);
+
+
+            /*tabPaneVisitDetails.innerHMTL = `<p>HOME INFO</p>
+                      <h4 class="no-margin">ALARM CODE: 27-33-22</h4>
+                      <h4 class="no-margin">KEY CODE: 234145</h4>
+                      <p>FOOD LOCATION:<b> KITCHEN UNDER THE SINK</b></p>
+                      <p>Quod option numquam vel in, et fuisset delicatissimi duo, 
+                      qui ut animal noluisse erroribus. Ea eum veniam audire. 
+                      Per at postea mediocritatem, vim numquam aliquid eu,
+                       in nam sale gubergren. Dicant vituperata consequuntur at sea, 
+                       mazim commodo</p>`;
+            */
+            return tabPaneVisitDetails;
+        }
+
+} (document)); 
 
 
 

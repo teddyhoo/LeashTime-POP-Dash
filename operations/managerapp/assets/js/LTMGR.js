@@ -67,7 +67,7 @@ var LTMGR = (function() {
 	class SitterVisit {
 		constructor(visitInfo) {
 
-			this.vrStatus = '';
+			//this.vrStatus = '';
 			let visitInfoKeys = Object.keys(visitInfo);
 			visitInfoKeys.forEach((key)=> {
 				if (key == 'report') {
@@ -89,6 +89,11 @@ var LTMGR = (function() {
 
 			let visitReportInfo = visitInfo.report;
 			if (visitReportInfo != null) {
+				let reportKeys = Object.keys(visitReportInfo);
+					reportKeys.forEach((rKey)=> {
+					console.log(' ---> ' + rKey + '  ' + visitReportInfo[rKey]);
+				});
+
 				this.vrStatus = visitReportInfo.status;
 				console.log('SITTER VISIT OBJECT CREATED WITH visit report status: ' + this.vrStatus);
 			}
@@ -305,12 +310,12 @@ var LTMGR = (function() {
 		    this.PETOWNER = this.CLIENTFNAME + ' ' + this.CLIENTLNAME;
 		    let arriveRaw = visitDictionary['ARRIVED']; //yyyy-mm-dd hh:mm:ss
 		    let completeRaw = visitDictionary['COMPLETED'];
-		    console.log('Arrive raw: ' + arriveRaw + ' Complete raw: ' + completeRaw);
+		    //console.log('Arrive raw: ' + arriveRaw + ' Complete raw: ' + completeRaw);
 		    let reArrComp =/[0-9]+:[0-9]+/;
 		    let re=/[0-9]+-[0-9]+-[0-9]+/;
 		    this.ARRIVED = arriveRaw; //reArrComp.exec(arriveRaw);
 		    this.COMPLETED = completeRaw; //reArrComp.exec(completeRaw);
-		    console.log('ARRIVE: ' + this.ARRIVED + ' COMPLETE: ' + this.COMPLETED); 
+		    //console.log('ARRIVE: ' + this.ARRIVED + ' COMPLETE: ' + this.COMPLETED); 
 		    this.vrdate =re.exec(arriveRaw);
 		    this.NOTE = visitDictionary['NOTE'];
 		    this.PETS = visitDictionary['PETS'];
@@ -522,6 +527,7 @@ var LTMGR = (function() {
 		const response = await fetch(url);
 		const myJson = await response.json();
 	}
+
 	async function getManagerData() {
 		sitterList = [];
 		visitList =[];
@@ -605,7 +611,7 @@ var LTMGR = (function() {
 		} else {
 			if(vrListJson != null ) {
 				vrListJson.forEach((vrItem) => {
-					console.log('Visit report item: ' + vrItem);
+					//console.log('Visit report item: ' + vrItem);
 					if (vrItem['appointmentid'] == visitID) {
 						let visitReportItem = new VisitReportVisitDetails(vrItem);
 						report['report'] = visitReportItem

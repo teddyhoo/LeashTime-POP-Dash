@@ -2,6 +2,9 @@
 	"use strict";
 
 	var AppVendor = function() {
+
+		console.log('App Vendor initialize: ');
+
 		// Create reference to this instance
 		var o = this;
 		// Initialize app when document is ready
@@ -135,9 +138,11 @@
 	// =========================================================================
 
 	p._initTabs = function () {
-		if (!$.isFunction($.fn.tab)) {
+		console.log('Init tabs');
+		/*if (!$.isFunction($.fn.tab)) {
+			console.log('tabs click event');
 			return;
-		}
+		}*/
 		$('[data-toggle="tabs"] a').click(function (e) {
 			e.preventDefault();
 			$(this).tab('show');
