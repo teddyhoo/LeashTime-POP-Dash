@@ -1,21 +1,32 @@
 var managerApp = (function(jquery, global,document) {
 	const base_url = 'https://leashtime.com';
+	const kHourlyEarnRate = 36.00;
+
 	var fullDate;
 	var username = '';
 	var password = '';
 	var userRole = 'm';
 	var isAjax = false;
 
-	var allVisits = [];
-	var allSitters = [];
+	// [SitterVisit, SitterVisit, ..., SitterVisit]
+	var allVisits = []; 
+	// [SitterProfile, SitterProfile, ..., SitterProfile]
+	var allSitters = []; 
+	//[PetOwnerProfile,PetOwnerProfile, ... , PetOwnerProfile]
 	var allClients = [];
+	// [VisitReportVisitDetails, VisitReportVisitDetails, ..., VisitReportVisitDetails]
 	var visitReportList = [];
+	// sitterID --> [SitterVisit, SitterVisit, ..., SitterVisit]	
+	var visitsBySitterDict = {};  
 
-	var visitsBySitter = {};
-	var mapMarkers = [];
-	var visitButtonList = [];
+	var mapMarkers = []; 
+	var sitterMapMarkers = [];
 	var displaySitters = {};
+
+
 	var trackSitterMileage = [];
+	var visitButtonList = [];
+	var visitPhotoCache = {};
 
 	var totalVisitCount = parseInt(0);
 	var totalCancelVisitCount = parseInt(0);
@@ -83,7 +94,7 @@ var managerApp = (function(jquery, global,document) {
 	    allVisits = [];
 	    allSitters = [];
 	    allClients = [];
-	    visitsBySitter = [];
+	    visitsBySitterDict = {};
 	    mapMarkers = [];
 
 	    setupLoginSteps(loginDate, false);
@@ -111,7 +122,10 @@ var managerApp = (function(jquery, global,document) {
 	            if (items != null) {
 	                items.forEach((item) => {
 	                    visitReportList.push(item);
-	                    console.log('visit report id: ' + item.visitID + ' with status: ' + item.status);
+	                    let itemKeys = Object.keys(item);
+	                    itemKeys.forEach((iKey)=> {
+	                    	//console.log(iKey +  '  ---> ' + item[iKey]);
+	                    })
 	                });
 	                flyToFirstVisit();
 	                buildSitterButtons(allVisits, allSitters);
@@ -166,8 +180,10 @@ var managerApp = (function(jquery, global,document) {
 	    allVisits = [];
 	    allSitters = [];
 	    allClients = [];
-	    visitsBySitter = [];
+		visitsBySitterDict = {};
+
 	    mapMarkers = [];
+	    sitterMapMarkers = [];
 	    loginPromiseAjax();
 	}
 	async function loginPromiseAjax() {
@@ -202,8 +218,10 @@ var managerApp = (function(jquery, global,document) {
 	            flyToFirstVisit();
 	        });
 	}
+
+
+	// DISPLAY MARKERS, ACCORDION CONTROLS AND OTHER UX ELEMENTS
 	function buildSitterButtons(allSitterVisits, allSittersInfo) {
-	    console.log('BUILD SITTER BUTTONS');
 	    totalVisitCount = parseInt(0);
 	    totalCancelVisitCount = parseInt(0);
 	    let activeSitters = [];
@@ -220,7 +238,7 @@ var managerApp = (function(jquery, global,document) {
 	                    allVisitsDone = false;
 	                }
 	                if (true || visitDetails.status != 'canceled') {
-	                    createMapMarker(visitDetails, 'marker');
+	                    createMapMarker(visitDetails);
 	                    sitterCount = sitterCount + 1;
 	                    totalVisitCount = totalVisitCount + 1;
 	                    if (visitDetails.status == 'canceled') {
@@ -230,26 +248,37 @@ var managerApp = (function(jquery, global,document) {
 	            }
 	        });
 	        if (hasVisits) {
-	            createSitterMapMarker(sitter);
-	            displaySitters[sitter.sitterID] = false;
-	            let sitterListDiv = document.getElementById("sitterList");
-
-	            let sitterFilterButton = document.createElement("button");
-	            sitterFilterButton.setAttribute("type", "button");
-	            sitterFilterButton.setAttribute("id", sitter.sitterID);
-	            sitterFilterButton.setAttribute("class", "btn btn-block");
-
-	            if (allVisitsDone) {
-	                sitterFilterButton.setAttribute("style", "background-color: Green;")
-	            } else {
-	                sitterFilterButton.setAttribute("style", "background-color: Tomato;")
-	            }
+	            //createSitterMapMarker(sitter);
 	            activeSitters.push(sitter);
 	        }
 	    });
 
 	    activeSitters.forEach((sitter) => {
+			displaySitters[sitter.sitterID] = "NONE";
+	    	let sitterVisitList = [];
+	    	allSitterVisits.forEach((visit) => {
+	    		if (visit.sitterID == sitter.sitterID) {
+	    			sitterVisitList.push(visit);
+	    		}
+	    	});
+	    	visitsBySitterDict[sitter.sitterID] = sitterVisitList;
 	        populateSitterAccordions(sitter, allVisits);
+	    });
+
+	    activeSitters.forEach((sitter)=> {
+			let listOfVisits = visitsBySitterDict[sitter.sitterID];
+	    	let sitterVisitList = sortSitterVisitsByTime(listOfVisits);
+			visitsBySitterDict[sitter.sitterID] = sitterVisitList;
+
+	    	let componentAccordion = document.getElementById("sitter-accordion-header-"+sitter.sitterID);
+	    	componentAccordion.addEventListener('click', (e)=> {
+
+	    		calculateRouteTimeDistance(sitter.sitterID, sitterVisitList);
+
+	    	},false );
+
+			createSitterMapMarker(sitter);
+
 	    });
 
 	    updateSummaryGraph(activeSitters, allSitterVisits);
@@ -264,7 +293,7 @@ var managerApp = (function(jquery, global,document) {
 	    } else if (visitInfo.status == 'late') {
 	        el.setAttribute("class", "marker-visit marker-visible marker-late");
 	    } else if (visitInfo.status == 'completed') {
-	    	console.log(visitInfo.vrStatus);
+	    	//console.log(visitInfo.vrStatus);
 	        if (visitInfo.vrStatus == 'submitted') {
 	            el.setAttribute("class", "marker-visit marker-visible marker-submitted");
 	        } else if (visitInfo.vrStatus == 'published') {
@@ -297,12 +326,12 @@ var managerApp = (function(jquery, global,document) {
 	        el.addEventListener("click", async function(event) {
 	            let popupBasicInfo;
 	            let isAvailable = false;
-	            //let visitReportListItem;
 
 	            const vrList = async() => {
 	                if (!isAjax) {
 	                    let vReport = await LTMGR.getVisitReportList(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
 	                    vrListItem = vReport['report'];
+	                    console.log('vrList item request: ' + vrListItem);
 	                } else {
 	                    let vReport = await LTMGR.getVisitReportListAjax(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
 	                    vrListItem = vReport['report'];
@@ -312,6 +341,7 @@ var managerApp = (function(jquery, global,document) {
 	            const vrDetailsForList = async(vrLitem) => {
 	                if (!isAjax) {
 	                    let vReportDetailsData = await LTMGR.getVisitReport(vrLitem.visitID, vrLitem);
+	                    console.log('Visit report details data: ' + vReportDetailsData);
 	                    return vReportDetailsData;
 	                } else {
 	                    let vd = await fetch(vrLitem.externalUrl);
@@ -326,151 +356,78 @@ var managerApp = (function(jquery, global,document) {
 	                }
 	            };
 	            vrList()
-	                .then((vListItem) => {
-	                    vrDetailsForList(vListItem)
-	                        .then((vrDetails) => {
-	                            let visitReportDicInfo = vrDetails.vrDetail;
-	                            visitReportListItem = vrDetails.vrDetail;
-	                            if (visitInfo.visitID == visitReportListItem.visitID) {
-	                                popupBasicInfo = createVisitReport(visitReportListItem, visitInfo.visitID);
-	                                popup.setHTML(popupBasicInfo);
-
-	                            }
-	                        });
-	                });
+				.then((vListItem) => {
+					vrDetailsForList(vListItem)
+					.then((vrDetails) => {
+						let visitReportDicInfo = vrDetails.vrDetail;
+						visitReportListItem = vrDetails.vrDetail;
+						if (visitInfo.visitID == visitReportListItem.visitID) {
+							popupBasicInfo = createVisitReport(visitReportListItem, visitInfo.visitID);
+							popup.setHTML(popupBasicInfo);
+						}
+					});
+				});
 	        });
 	    }
 	}
-	function updateSummaryGraph(activeSitterList, sittersVisits) {
-
-	    let totalVisitCount = 0;
-	    let lateVisitCount = 0;
-	    let canceledVisitCount = 0;
-	    let completedVisitCount = 0;
-	    let visitReportCountSent = 0;
-	    let visitReportCountNeedReview = 0;
-
-	    let totalVisitBar = document.getElementById('numTotal');
-	    let lateVisitBar = document.getElementById('numLatePercent');
-	    let progLateBar = document.getElementById('progLate');
-	    let cancelVisitBar = document.getElementById('cancelPercent');
-	    let progCancelBar = document.getElementById('progCancel');
-	    let visitReportBar = document.getElementById('numVRpercent');
-	    let progVisitReportReviewBar = document.getElementById('vrReviewBar');
-	    let progVisitReportSentBar = document.getElementById('vrSentBar');
-
-	    let visitReportSentBar = document.getElementById('numVRsentPercent');
-
-	    activeSitterList.forEach((sitter) => {
-	        sittersVisits.forEach((visit) => {
-	            if (visit.sitterID == sitter.sitterID) {
-	                totalVisitCount = totalVisitCount + 1;
-	                if (visit.status == 'late') {
-	                    lateVisitCount = lateVisitCount + 1;
-	                } else if (visit.status == 'canceled') {
-	                    canceledVisitCount = canceledVisitCount + 1;
-	                } else if (visit.status == 'completed') {
-	                    completedVisitCount = completedVisitCount + 1;
-	                    if (visit.vrStatus == 'submitted') {
-	                        visitReportCountNeedReview = visitReportCountNeedReview + 1;
-	                    } else if (visit.vrStatus == 'published') {
-	                        visitReportCountSent = visitReportCountSent + 1;
-	                    }
-	                }
-	            }
-	        });
-	    });
-
-	    totalVisitBar.innerHTML = totalVisitCount;
-
-	    let lateByTotal = lateVisitCount / totalVisitCount;
-	    lateByTotal = lateByTotal * 100;
-	    let lateVisitFloat = Math.floor(lateByTotal);
-
-	    progLateBar.setAttribute("style", "width: " + lateVisitFloat + "%");
-
-	    let cancelByTotal = canceledVisitCount / totalVisitCount;
-	    cancelByTotal = cancelByTotal * 100;
-	    let cancelFloat = Math.floor(cancelByTotal);
-
-	    let visitReportReviewByTotal = visitReportCountNeedReview / totalVisitCount;
-	    visitReportReviewByTotal = visitReportReviewByTotal * 100;
-	    let vReviewFloat = Math.floor(visitReportReviewByTotal);
-	    progVisitReportReviewBar.setAttribute("style", "width: " + vReviewFloat + "%");
-
-	    let visitReportSendByTotal = visitReportCountSent / totalVisitCount;
-	    visitReportSendByTotal = visitReportSendByTotal * 100;
-	    let vSentFloat = Math.floor(visitReportSendByTotal);
-	    progVisitReportSentBar.setAttribute("style", "width: " + vSentFloat + "%");
-
-	    lateVisitBar.innerHTML = lateVisitFloat + '%';
-	    cancelVisitBar.innerHMTL = cancelFloat + '%'; //cancelFloat + '%';
-	    visitReportBar.innerHTML = vReviewFloat + '%';
-	    visitReportSentBar.innerHTML = vSentFloat + '%';
+	function drawShowingSittersWithVisits() {
+		removeAllMapMarkers();
+		//removeSitterMapMarker();
+		let keysSitterOn = Object.keys(displaySitters);
+		keysSitterOn.forEach((sitterID)=> {
+			if (displaySitters[sitterID] == "ON") {
+				console.log('---CREATING VISITS FOR: ' + sitterID + ' ---------');
+				allVisits.forEach((visit) => {
+					if (visit.sitterID == sitterID) {
+						console.log('CLIENT: ' + visit.clientName);
+						createMapMarker(visit);
+						mapMarkers.push(visit);
+					}
+				});
+			}
+		});
 	}
-	function filterAccordionByStatus(filterType, visitList) {
 
-		removeAccordions();
+	function createSitterMapMarker(sitterInfo) {
+	    let el = document.createElement('div');
+	    let latitude = parseFloat(sitterInfo.sitterLat);
+	    let longitude = parseFloat(sitterInfo.sitterLon);
+	    let popupView;
+	    if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
+	        popupView = createSitterPopup(sitterInfo);
+	        let popupWithClickListener = document.createElement('div');
+	        popupWithClickListener.innerHTML = popupView;
+	        popupWithClickListener.addEventListener('click', (e)=> {
 
-	    allSitters.forEach((sitter) => {
+				displaySitters[sitterInfo.sitterID] = "ON";
+				displaySitters.forEach((sitterIDInfo)=> {
+					console.log('DISPLAY SITTER ON FOR: ' + sitterIDInfo);
+				});
+	        	drawShowingSittersWithVisits();
+	        })
+	        
+	        el.class = 'sitter';
+	        el.id = 'sitter';
+	        el.addEventListener("click", () => {
+	            //drawShowingSittersWithVisits();
+	        })
 
-	        for (let i = 0; i < visitList.length; i++) {
-	            let visit = visitList[i];
-	            if (visit.sitterID == sitter.sitterID) {
-	                populateSitterAccordions(sitter, visitList);
-	                break;
-	            }
+	        let popup = new mapboxgl.Popup({
+	        	offset: 25,
+	        	className : 'sitterPopup'+sitterInfo.sitterID
+	        }).setDOMContent(popupWithClickListener);
+
+	        if (latitude > 90 || latitude < -90) {
+	            console.log("Lat error");
+	        } else {
+	            let marker = new mapboxgl.Marker(el)
+	                .setLngLat([longitude, latitude])
+	                .setPopup(popup)
+	                .addTo(map);
+
+	            sitterMapMarkers.push(marker);
 	        }
-	    });
-	}
-	function removeAccordions() {
-
-	    let sitterListDiv = document.getElementById('visitListBySitterAccordions');
-	    while (sitterListDiv.firstChild) {
-	        sitterListDiv.removeChild(sitterListDiv.firstChild);
 	    }
-	}
-	function filterMapViewByVisitStatus(filterStatus) {
-
-	    mapMarkers.forEach((marker) => {
-	        marker.remove();
-	    });
-
-	    if (visitButtonList != null) {
-	        visitButtonList.forEach((button) => {
-	            if (button.parentNode != null) {
-	                button.parentNode.removeChild(button);
-	            }
-	        });
-
-	    }
-
-	    let visitFilterArray = [];
-
-	    allVisits.forEach((visitDetails) => {
-	        let visitStatus = visitDetails.status;
-	        let visitReportStatus = visitDetails.vrStatus;
-	        console.log('visit status: ' + visitStatus + ', ' + visitReportStatus);
-	        if (filterStatus == visitDetails.status) {
-	        	// arrive, complete, canceled, future, late
-	            visitFilterArray.push(visitDetails);
-
-	        }  else if (filterStatus == 'published' || filterStatus == 'submitted') {
-	        	console.log(visitDetails.vrStatus);
-	        	if (visitDetails.vrStatus == filterStatus) {
-	        		visitFilterArray.push(visitDetails);
-	        	}
-	        } else if (visitStatus == 'completed' && filterStatus == 'noreportdatareceived') {
-	        	visitFilterArray.push(visitDetails);
-	        }
-	    });
-
-	    visitFilterArray.forEach((visit) => {
-	    	console.log('Visit Report status: ' + visit.vrStatus);
-	        createMapMarker(visit, 'marker');
-	    });
-
-	    filterAccordionByStatus(filterStatus, visitFilterArray);
 	}
 	function createVisitReport(visitDictionary, visitID) {
 	    let dateReport;
@@ -526,6 +483,8 @@ var managerApp = (function(jquery, global,document) {
 	    popupBasicInfo += `<div>`;
 
 	    if (visitDictionary.VISITPHOTONUGGETURL != null) {
+	    	visitPhotoCache[visitID] = visitDictionary.VISITPHOTONUGGETURL;
+	    	console.log('VISIT PHOTO for visit id: ' + visitID+ ' CACHE: ' + visitDictionary.VISITPHOTONUGGETURL);
 	        //popupBasicInfo += `<span><img src=${visitDictionary.VISITPHOTONUGGETURL}id="popupPhoto" width = 160 height = 160></span>`;
 	        popupBasicInfo += `<span><img async src=${visitDictionary.VISITPHOTONUGGETURL} id="popupPhoto" width = 160 height = 160></span>`;
 	    } else {
@@ -618,84 +577,11 @@ var managerApp = (function(jquery, global,document) {
 
 	    return popupBasicInfo;
 	}
-	function createSitterMapMarker(sitterInfo) {
-	    let el = document.createElement('div');
-	    let latitude = parseFloat(sitterInfo.sitterLat);
-	    let longitude = parseFloat(sitterInfo.sitterLon);
-	    let popupView;
-	    if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
-	        popupView = createSitterPopup(sitterInfo);
-	        let popupWithClickListener = document.createElement('div');
-	        popupWithClickListener.innerHTML = popupView;
-	        
-	        el.class = 'sitter';
-	        el.id = 'sitter';
-	        el.addEventListener("click", () => {
-	            allVisits.forEach((visit) => {
-	                if (visit.sitterID == sitterInfo.sitterID) {
-	                	console.log('Creating map marker for sitter visit: ' + visit.clientName);
-	                    createMapMarker(visit, 'marker');
-	                }
-	            })
-	        })
-
-	        let popup = new mapboxgl.Popup({
-	                offset: 25
-	            }).setHTML(popupView);
-
-	        if (latitude > 90 || latitude < -90) {
-	            console.log("Lat error");
-	        } else {
-	            let marker = new mapboxgl.Marker(el)
-	                .setLngLat([longitude, latitude])
-	                .setPopup(popup)
-	                .addTo(map);
-
-	            mapMarkers.push(marker);
-	        }
-	    }
-	}
-	function showSitterVisits(sitterID) {
-
-	    let showVisitButton = document.getElementById('sitterPopupShow' + sitterID);
-	    //console.log(showVisitButton.innerHTML);
-	    if (showVisitButton.innerHTML == 'SHOW VISITS') {
-	        let allVisitsNow = allVisits;
-	        allVisitsNow.forEach((visit) => {
-	            if (visit.sitterID == sitterID) {
-	                createMapMarker(visit, 'marker');
-	            }
-	        });
-	        showVisitButton.innerHTML = 'DO NOT SHOW VISITS';
-	    } else {
-	        let allVisitsNow = allVisits;
-	        allVisitsNow.forEach((visit) => {
-	            if (visit.sitterID == sitterID) {
-	                // console.log(visit.sitterID);
-	                mapMarkers.forEach((mark) => {
-	                    let markerHTML = mark.getElement();
-	                    console.log(markerHMTL.id);
-	                    if (visit.visitID == markerHTML.getAttribute('id')) {
-	                        console.log('Remove this marker');
-	                    }
-	                })
-	            }
-	        });
-	    }
-	}
-	function showAllClients(clients) {
-
-		buildSitterButtons(allVisits, allSitters);
-	}
 	function createSitterPopup(sitterInfo) {
 
-	    let numberVisits = visitsBySitter[sitterInfo.sitterID];
-	    let currentVisitListBySitter = [];
-	    allVisits.forEach((visit) => {
-	        if (visit.sitterID == sitterInfo.sitterID && visit.status != 'canceled') {
-	            currentVisitListBySitter.push(visit);
-	        }
-	    })
+	    let currentVisitListBySitter = visitsBySitterDict[sitterInfo.sitterID];
+		let numberVisits = currentVisitListBySitter.length;
+
 	    currentVisitListBySitter.sort(function(a, b) {
 	        let aDate = fullDate + ' ' + a.completed;
 	        let bDate = fullDate + ' ' + b.completed;
@@ -711,7 +597,7 @@ var managerApp = (function(jquery, global,document) {
 					<button id="sitterPopupShow${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised">SHOW VISITS</button>
 				</div>
 				<div>
-					<button type="button" id="sitterID-'${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised">MILEAGE</button>
+					<button type="button" id="sitterMiles-'${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised">MILEAGE</button>
 				</div>
 				<div>
 					<p style="color:white"><img src="./assets/img/postit-20x20.png" width=20 height=20>&nbsp&nbsp<input type="text" name="messageSitter" id="messageSitter"></p>
@@ -750,113 +636,194 @@ var managerApp = (function(jquery, global,document) {
 	    })
 	    return popupTempLit;
 	}
-	function calculateSitterMileage(sitterID) {
+	function updateSummaryGraph(activeSitterList, sittersVisits) {
 
-		console.log('Mileage calc for sitter with ID: ' + sitterID);
+	    let totalVisitCount = 0;
+	    let lateVisitCount = 0;
+	    let canceledVisitCount = 0;
+	    let completedVisitCount = 0;
+	    let visitReportCountSent = 0;
+	    let visitReportCountNeedReview = 0;
+
+	    let totalVisitBar = document.getElementById('numTotal');
+	    let lateVisitBar = document.getElementById('numLatePercent');
+	    let progLateBar = document.getElementById('progLate');
+	    let cancelVisitBar = document.getElementById('cancelPercent');
+	    let progCancelBar = document.getElementById('progCancel');
+	    let visitReportBar = document.getElementById('numVRpercent');
+	    let progVisitReportReviewBar = document.getElementById('vrReviewBar');
+	    let progVisitReportSentBar = document.getElementById('vrSentBar');
+
+	    let visitReportSentBar = document.getElementById('numVRsentPercent');
+
+	    activeSitterList.forEach((sitter) => {
+	        sittersVisits.forEach((visit) => {
+	            if (visit.sitterID == sitter.sitterID) {
+	                totalVisitCount = totalVisitCount + 1;
+	                if (visit.status == 'late') {
+	                    lateVisitCount = lateVisitCount + 1;
+	                } else if (visit.status == 'canceled') {
+	                    canceledVisitCount = canceledVisitCount + 1;
+	                } else if (visit.status == 'completed') {
+	                    completedVisitCount = completedVisitCount + 1;
+	                    if (visit.vrStatus == 'submitted') {
+	                        visitReportCountNeedReview = visitReportCountNeedReview + 1;
+	                    } else if (visit.vrStatus == 'published') {
+	                        visitReportCountSent = visitReportCountSent + 1;
+	                    }
+	                }
+	            }
+	        });
+	    });
+
+	    totalVisitBar.innerHTML = totalVisitCount;
+
+	    let lateByTotal = lateVisitCount / totalVisitCount;
+	    lateByTotal = lateByTotal * 100;
+	    let lateVisitFloat = Math.floor(lateByTotal);
+
+	    progLateBar.setAttribute("style", "width: " + lateVisitFloat + "%");
+
+	    let cancelByTotal = canceledVisitCount / totalVisitCount;
+	    cancelByTotal = cancelByTotal * 100;
+	    let cancelFloat = Math.floor(cancelByTotal);
+
+	    let visitReportReviewByTotal = visitReportCountNeedReview / totalVisitCount;
+	    visitReportReviewByTotal = visitReportReviewByTotal * 100;
+	    let vReviewFloat = Math.floor(visitReportReviewByTotal);
+	    progVisitReportReviewBar.setAttribute("style", "width: " + vReviewFloat + "%");
+
+	    let visitReportSendByTotal = visitReportCountSent / totalVisitCount;
+	    visitReportSendByTotal = visitReportSendByTotal * 100;
+	    let vSentFloat = Math.floor(visitReportSendByTotal);
+	    progVisitReportSentBar.setAttribute("style", "width: " + vSentFloat + "%");
+
+	    lateVisitBar.innerHTML = lateVisitFloat + '%';
+	    cancelVisitBar.innerHMTL = cancelFloat + '%'; //cancelFloat + '%';
+	    visitReportBar.innerHTML = vReviewFloat + '%';
+	    visitReportSentBar.innerHTML = vSentFloat + '%';
 	}
-	function createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList) {
 
-	    let popupBasicInfo = '<h1>' + sitterInfo.sitterName + '</h1>';
-	    popupBasicInfo += '<p>' + sitterInfo.street1 + ',  ' + sitterInfo.city + '</p>';
-	    let distanceResponse = mileageInfo.route;
-	    let waypoints = mileageInfo.waypoints;
-	    let total_distance = distanceResponse.distance / 1000;
-	    let total_duration = distanceResponse.duration / 60;
-	    let route_legs = distanceResponse.legs;
-	    let num_legs = distanceResponse.legs.length;
-	    let total_dist_check = 0;
-	    let total_duration_check = 0;
-	    let first_distance = 0;
-	    let last_distance = 0;
-	    let first_duration = 0;
-	    let last_duration = 0;
-	    let route_index = 0;
-	    route_legs.forEach((leg) => {
-	        let step_arr = leg.steps;
-	        num_legs = num_legs - 1;
-	        route_index = route_index + 1;
-	        total_dist_check = total_dist_check + parseFloat(leg.distance);
-	        total_duration_check = total_duration_check + parseFloat(leg.duration);
-	        if (route_index == 0) {
-	            first_distance = leg.distance;
-	        }
-	        if (route_index == distanceResponse.legs.length - 1) {
-	            last_distance = leg.distance
+	//**********************************************************************************
+	//**********************************************************************************
+	//******************************FILTERS*********************************
+	//**********************************************************************************
+	//**********************************************************************************
+
+	function filterAccordionByStatus(filterType, visitList) {
+
+		removeAccordions();
+
+	    allSitters.forEach((sitter) => {
+
+	        for (let i = 0; i < visitList.length; i++) {
+	            let visit = visitList[i];
+	            if (visit.sitterID == sitter.sitterID) {
+	                populateSitterAccordions(sitter, visitList);
+	                break;
+	            }
 	        }
 	    });
-	    total_miles = total_miles + (total_distance * .62137);
-	    total_duration_all = total_duration_all + total_duration;
-	    total_distance = total_distance * .62137;
-	    let per_visit_distance = total_distance / (waypoints.length - 2);
-	    let per_visit_duration = total_duration / (waypoints.length - 2);
-	    popupBasicInfo += '<p style="color:white">Total Miles: ' + total_distance + '<BR>';
-	    popupBasicInfo += '<p style="color:white"> Duration: ' + total_duration + '<BR>';
-	    popupBasicInfo += '<p style="color:white">Number of visits: </p' + visitList.length + '<BR>';
-	    popupBasicInfo += '<ul>';
-	    visitList.forEach((visit) => {
-	        popupBasicInfo += '<li>' + visit.clientName;
-	        if (visit.sitterName == sitterInfo.sitterName) {
-	            createMapMarker(visit, "");
-	        }
-	    })
-	    popupBasicInfo += '</ul>';
-	    popupBasicInfo += '<p><img src=\"./assets/img/postit\-20x20.png\" width=20 height=20>&nbsp&nbsp<input type=\"text\" name=\"messageSitter\" id=\"messageSitter\"></p>';
-
-	    return popupBasicInfo;
 	}
-	function createSitterMapMarkerWithMileage(sitterInfo, mileageInfo, visitList) {
-	    let el = document.createElement('div');
-	    let latitude = parseFloat(sitterInfo.sitterLat);
-	    let longitude = parseFloat(sitterInfo.sitterLon);
-	    let popupView;
-	    if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
-	        popupView = createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList);
-	        el.class = 'sitter';
-	        el.id = 'sitter';
+	function filterMapViewByVisitStatus(filterStatus) {
 
-	        let popup = new mapboxgl.Popup({
-	                offset: 25
-	            })
-	            .setHTML(popupView);
+	    mapMarkers.forEach((marker) => {
+	        marker.remove();
+	    });
 
-	        if (latitude > 90 || latitude < -90) {
-	            console.log("Lat error");
-	        } else {
-	            let marker = new mapboxgl.Marker(el)
-	                .setLngLat([longitude, latitude])
-	                .setPopup(popup)
-	                .addTo(map);
+	    if (visitButtonList != null) {
+	        visitButtonList.forEach((button) => {
+	            if (button.parentNode != null) {
+	                button.parentNode.removeChild(button);
+	            }
+	        });
 
-	            mapMarkers.push(marker);
-	        }
 	    }
-	    visitList.forEach((visit) => {
-	        createMapMarker(visit, "");
-	    })
+
+	    let visitFilterArray = [];
+
+	    allVisits.forEach((visitDetails) => {
+	        let visitStatus = visitDetails.status;
+	        let visitReportStatus = visitDetails.vrStatus;
+	        console.log('visit status: ' + visitStatus + ', ' + visitReportStatus);
+	        if (filterStatus == visitDetails.status) {
+	        	// arrive, complete, canceled, future, late
+	            visitFilterArray.push(visitDetails);
+
+	        }  else if (filterStatus == 'published' || filterStatus == 'submitted') {
+	        	console.log(visitDetails.vrStatus);
+	        	if (visitDetails.vrStatus == filterStatus) {
+	        		visitFilterArray.push(visitDetails);
+	        	}
+	        } else if (visitStatus == 'completed' && filterStatus == 'noreportdatareceived') {
+	        	visitFilterArray.push(visitDetails);
+	        }
+	    });
+
+	    visitFilterArray.forEach((visit) => {
+	    	console.log('Visit Report status: ' + visit.vrStatus);
+	        createMapMarker(visit, 'marker');
+	    });
+
+	    filterAccordionByStatus(filterStatus, visitFilterArray);
+	}
+	function showSitters() {
+	    total_miles = 0;
+	    total_duration_all = 0;
+
+	    removeVisitDivElements();
+	    //removeAllMapMarkers();
+	    let sitterProfile;
+	    let showingSitters = getCurrentlyShowingSitters();
+
+	    allSitters.forEach((sitter) => {
+	        let hasVisits = false;
+	        allVisits.forEach((visit) => {
+	            if (visit.sitterID == sitter.sitterID) {
+	                hasVisits = true;
+	            }
+	        });
+	        if (hasVisits) {
+	            createSitterMapMarker(sitter);
+	        }
+	    });
+	}
+
+	function showAllClients() {
+
+		buildSitterButtons(allVisits, allSitters);
 	}
 	function getCurrentlyShowingSitters() {
 	    let currentShowingSitters = [];
 
 	    let sitterKeys = Object.keys(displaySitters);
 	    sitterKeys.forEach((sitter) => {
-	        //console.log(sitter + ' ' + displaySitters[sitter]);
-	        if (displaySitters[sitter] = true) {
+	        if (displaySitters[sitter] = 'ON') {
 	            currentShowingSitters.push(sitter.sitterID);
 	        }
 	    })
 	    return currentShowingSitters;
 	}
+	function sortSitterVisitsByTime(listOfVisitsToSort) {
+	    listOfVisitsToSort.sort(function(a, b) {
+	        let aDate = fullDate + ' ' + a.completed;
+	        let bDate = fullDate + ' ' + b.completed;
+	        return new Date(aDate) - new Date(bDate);
+	    });
+	    return listOfVisitsToSort;
+	}
 	function showVisitBySitter(sitterProfile) {
 	    console.log('Showing visits by sitter');
 	    removeVisitDivElements();
 	    removeAllMapMarkers();
+	    createSitterMapMarker(sitterProfile);
 
 	    let sitterFilterButton = document.getElementById(sitterProfile.sitterID);
 	    if (displaySitters[sitterProfile.sitterID]) {
-	        displaySitters[sitterProfile.sitterID] = false;
+	        displaySitters[sitterProfile.sitterID] = 'NONE';
 	        sitterFilterButton.setAttribute("style", "background-color: Tomato;")
 	    } else {
-	        displaySitters[sitterProfile.sitterID] = true;
+	        displaySitters[sitterProfile.sitterID] = 'ON';
 	        sitterFilterButton.setAttribute("style", "background-color: DodgerBlue;")
 	    }
 
@@ -871,7 +838,6 @@ var managerApp = (function(jquery, global,document) {
 	                if (sitterProfile.sitterID == visitDetails.sitterID && visitDetails.status != 'canceled') {
 	                    currentVisitListBySitter.push(visitDetails);
 	                }
-	                //createMapMarker(visitDetails,'marker');
 	            }
 	        })
 	    });
@@ -893,9 +859,6 @@ var managerApp = (function(jquery, global,document) {
 	        return new Date(aDate) - new Date(bDate);
 	    });
 
-	    currentVisitListBySitter.forEach((visitDetails) => {
-	        //createVisitHTML(visitDetails);
-	    });
 
 	    let isMileageDone = false;
 
@@ -919,86 +882,14 @@ var managerApp = (function(jquery, global,document) {
 	            center: [parseFloat(lastVisit.lon), parseFloat(lastVisit.lat)],
 	            zoom: 18
 	        });
-	    }
+	   	}
 	}
-	function createVisitHTML(visitDetails) {
-	    console.log('calling create visit html');
-	    let visitLabel = document.createElement("div");
-	    let visitDiv = document.getElementById("visitListByClient");
-	    visitDiv.appendChild(visitLabel);
-	    visitLabel.id = visitDetails.visitID;
-	    visitLabel.setAttribute("class", "tile-text");
-	    visitLabel.setAttribute("name", visitDetails.clientName);
-	    visitLabel.classList.add('alert', 'alert-callout');
-	    let fLat = parseFloat(visitDetails.lat);
-	    let fLon = parseFloat(visitDetails.lon);
-	    visitLabel.addEventListener('click', function() {
-	        console.log(fLat + ' ' + fLon);
-	        map.flyTo({
-	            center: [fLon, fLat],
-	            zoom: 18
-	        });
-	    });
-	    visitLabel.innerHTML = visitDetails.clientName;
+	//**********************************************************************************
+	//**********************************************************************************
+	//******************************MILEAGE / DIRECTIONS API***********************
+	//**********************************************************************************
+	//**********************************************************************************
 
-	    if (visitDetails.status == 'late') {
-	        visitLabel.classList.add("alert-warning");
-	    } else if (visitDetails.status == "completed") {
-	        visitLabel.classList.add("alert-success");
-	    } else if (visitDetails.status == "canceled") {
-	        visitLabel.classList.add("alert-danger");
-	    }
-	    visitDiv.appendChild(visitLabel);
-	}
-	function showSitters() {
-	    total_miles = 0;
-	    total_duration_all = 0;
-
-	    removeVisitDivElements();
-	    removeAllMapMarkers();
-	    let sitterProfile;
-	    let showingSitters = getCurrentlyShowingSitters();
-
-	    allSitters.forEach((sitter) => {
-	        let hasVisits = false;
-	        allVisits.forEach((visit) => {
-	            if (visit.sitterID == sitter.sitterID) {
-	                hasVisits = true;
-	            }
-	        });
-	        if (hasVisits) {
-	            createSitterMapMarker(sitter);
-	        }
-	    });
-	}
-	function checkDistanceMatrix(waypointsArrayCheck) {
-
-	    let distanceMatrix = LTMGR.getDistanceMatrix();
-	    if (distanceMatrix != null) {
-	        //console.log('Waypoints to check: ' + waypointsArrayCheck.length + ', ' + distanceMatrix.length);
-	        let wayPointsGet = [];
-
-	        let numWaypoints = waypointsArrayCheck.length;
-	        for (let c = 1; c < numWaypoints; c++) {
-	            let wayEnd = waypointsArrayCheck[c];
-	            let wayBegin = waypointsArrayCheck[c - 1];
-	            let wayBeginCoord = wayBegin['coordinates'];
-	            let wayEndCoord = wayEnd['coordinates'];
-
-	            distanceMatrix.forEach((matrix) => {
-	                let beginCoordinate = matrix.beginCoordinate;
-	                let endCoordinate = matrix.endCoordinate;
-	                //console.log(beginCoordinate + ' --> wayBegin: ' + wayBeginCoord);
-	                if (beginCoordinate[0] == wayBeginCoord[0] &&
-	                    beginCoordinate[1] == wayBeginCoord[1] &&
-	                    endCoordinate[0] == wayEndCoord[0] &&
-	                    endCoordinate[1] == wayEndCoord[1]) {
-	                    console.log('Matched distance matrix');
-	                }
-	            });
-	        }
-	    }
-	}
 	function calculateRouteTimeDistance(sitterID, sitterRoute) {
 
 	    let waypointsArr = [];
@@ -1055,47 +946,64 @@ var managerApp = (function(jquery, global,document) {
 	            const directions = response.body;
 	            let waypoints = directions['waypoints'];
 	            let routes = directions.routes;
+	            console.log('Number of route elements: ');
 	            let d2 = routes[0];
-	            parseDistanceData(d2, waypoints, sitterID);
+	            //parseDistanceData(d2, waypoints, sitterID);
+	            LTMGR.addDistanceMatrixPair(d2,waypoints);
 	        }, error => {
 	            console.log('Hit error');
 	            console.log(error.message);
 	        });
 	}
-	function parseDistanceData(distanceResponse, waypoints, sitterID) {}
-	function showLoginPanel() {
-	    var loginPanel = document.getElementById("lt-loginPanel");
-	    loginPanel.setAttribute("style", "display:block");
-	}
-	function flyToVisit(visitDetails) {
+	function checkDistanceMatrix(waypointsArrayCheck) {
 
-	    if (visitDetails != null) {
-	        if (visitDetails.lon != null && visitDetails.lat != null && visitDetails.lon > -90 && visitDetails.lat < 90) {
-	            map.flyTo({
-	                center: [visitDetails.lon, visitDetails.lat],
-	                zoom: 20
+	    let distanceMatrix = LTMGR.getDistanceMatrix();
+	    if (distanceMatrix != null) {
+	        //console.log('Waypoints to check: ' + waypointsArrayCheck.length + ', ' + distanceMatrix.length);
+	        let wayPointsGet = [];
+
+	        let numWaypoints = waypointsArrayCheck.length;
+	        for (let c = 1; c < numWaypoints; c++) {
+	            let wayEnd = waypointsArrayCheck[c];
+	            let wayBegin = waypointsArrayCheck[c - 1];
+	            let wayBeginCoord = wayBegin['coordinates'];
+	            let wayEndCoord = wayEnd['coordinates'];
+
+	            distanceMatrix.forEach((matrix) => {
+	                let beginCoordinate = matrix.beginCoordinate;
+	                let endCoordinate = matrix.endCoordinate;
+	                //console.log(beginCoordinate + ' --> wayBegin: ' + wayBeginCoord);
+	                if (beginCoordinate[0] == wayBeginCoord[0] &&
+	                    beginCoordinate[1] == wayBeginCoord[1] &&
+	                    endCoordinate[0] == wayEndCoord[0] &&
+	                    endCoordinate[1] == wayEndCoord[1]) {
+	                    console.log('Matched distance matrix');
+	                }
 	            });
-	        } else {
-	            alert("Coordinates are invalid");
 	        }
 	    }
 	}
-	function flyToFirstVisit() {
-	    allVisits.forEach((visit) => {
-	        //console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
-	    })
-	    if (allVisits[1] != null) {
-	        let lastVisit = allVisits[1];
-	        if (lastVisit.lon != null && lastVisit.lat != null && lastVisit.lon > -90 && lastVisit.lat < 90) {
-	            map.flyTo({
-	                center: [lastVisit.lon, lastVisit.lat],
-	                zoom: 16
-	            });
-	        } else {
-	            console.log('FIRST VISIT FLY TO INVALID COORDINATES: ' + lastVisit.clientName + ' (' + lastVisit.lon + ',' + lastVisit.lat + ')');
-	        }
-	    }
+	function parseDistanceData(distanceResponse, waypoints, sitterID) {
+		console.log('-----SITTER WITH ID: '	+ sitterID + '-----------');
+
+		let distanceResponseKeys = Object.keys(distanceResponse);
+		let waypointsKeys = Object.keys(waypoints);
+
+		distanceResponseKeys.forEach((dKey) => {
+			if (dKey == 'legs')
+			console.log(dKey +' : ' + distanceResponse[dKey]);
+		})
+
+		waypointsKeys.forEach((wKey) => {
+			console.log(wKey + ' : ' +  waypoints[wKey]);
+		})
 	}
+
+	//**********************************************************************************
+	//**********************************************************************************
+	//******************************DATE FUNCTIONS*********************************
+	//**********************************************************************************
+	//**********************************************************************************
 	function getFullDate() {
 	    var todayDate = new Date();
 	    onWhichDay = new Date(todayDate);
@@ -1125,7 +1033,10 @@ var managerApp = (function(jquery, global,document) {
 	    let dayWeekLabel = document.getElementById('dayWeek');
 	    let monthLabel = document.getElementById('month');
 	    let dateLabel = document.getElementById("dateLabel");
-	    dayWeekLabel.innerHTML = dayArrStr[dateInfo.getDay()] + ', ';
+
+	    let dayWeekTemp = dateInfo.getDay();
+
+	    dayWeekLabel.innerHTML = dayArrStr[dayWeekTemp] + ', ';
 	    monthLabel.innerHTML = monthsArrStr[dateInfo.getMonth() -1];
 	    dateLabel.innerHTML = dateInfo.getDate();
 	}
@@ -1170,6 +1081,8 @@ var managerApp = (function(jquery, global,document) {
 	    allVisits = [];
 	    allSitters = [];
 	    allClients = [];
+		visitsBySitterDict = {};
+ 	    mapMarkers = [];
 
 	    let url = 'http://localhost:3300?type=mmdLogin&username=' + username + '&password=' + password + '&role=' + userRole + '&startDate=' + loginDate + '&endDate=' + loginDate;
 	    const loginFetchResponse = await fetch(url);
@@ -1190,8 +1103,7 @@ var managerApp = (function(jquery, global,document) {
 	        allClients = results;
 	    });
 
-	    visitsBySitter = [];
-	    mapMarkers = [];
+
 
 	    masterVreportList()
 	        .then((vListItems) => {
@@ -1202,38 +1114,6 @@ var managerApp = (function(jquery, global,document) {
 	            flyToFirstVisit();
 	            buildSitterButtons(allVisits, allSitters);
 	        });
-	}
-	function truncate(value) {
-	    console.log(value);
-	    if (value < 0) {
-	        return Math.ceil(value);
-	    }
-	    return Math.floor(value).toString();
-	}
-	function removeAccordionControls() {
-	    let accordionVisits = document.getElementById('visitListBySitterAccordions');
-
-	    while (accordionVisits.hasChildNodes()) {
-	        accordionVisits.removeChild(accordionVisits.firstChild);
-	    }
-	}
-	function removeVisitDivElements() {
-	    /*var element = document.getElementById("visitListByClient");
-	    while (element.firstChild) {
-	        element.removeChild(element.firstChild);
-	    }*/
-	}
-	function removeSittersFromSitterList() {
-
-	    //            var element = document.getElementById("sitterList");
-	    //            while (element.firstChild) {
-	    //                element.removeChild(element.firstChild);
-	    //            }
-	}
-	function removeAllMapMarkers() {
-	    mapMarkers.forEach((marker) => {
-	        marker.remove();
-	    });
 	}
 	function populateSitterAccordions(sitter, accordionVisits) {
 
@@ -1250,6 +1130,7 @@ var managerApp = (function(jquery, global,document) {
 	    sitterCardHead.appendChild(headerElement);
 	    sitterCardHead.appendChild(toolDiv);
 
+	    // ACCORDION EXPAND BODY
 	    let expandAccordion = createExpandAccordion(sitter);
 	    let cardBody = createCardBody(sitter);
 	    let panelGroup = createPanelGroup(sitter);
@@ -1257,13 +1138,9 @@ var managerApp = (function(jquery, global,document) {
 	    cardBody.appendChild(panelGroup);
 	    expandAccordion.appendChild(cardBody);
 	    sitterListElement.appendChild(expandAccordion);
-
-	    let panelGroupMain = document.createElement('div');
-	    panelGroupMain.setAttribute("class", 'panel-group');
-	    panelGroupMain.setAttribute("id", "mainAccordion");
-	    sitterListDiv.appendChild(panelGroupMain);
 	    let visitCount = 0;
 
+	    let sitterVisits
 	    accordionVisits.forEach((visit) => {
 	        if (visit.sitterID == sitter.sitterID) {
 
@@ -1281,8 +1158,18 @@ var managerApp = (function(jquery, global,document) {
 	        }
 	    });
 
-	    headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')';
+	    headerElement.innerHTML = sitter.sitterName + ' (' + visitCount + ')' + '<p>('+  sitter.street1+ ')';
+	    headerElement.addEventListener("click", ()=> {
+	    	flyToSitter(sitter);
+	    });
 	}
+
+	//**********************************************************************************
+	//**********************************************************************************
+	//******************************BUILD ACCORDION COMPONENTS***************
+	//**********************************************************************************
+	//**********************************************************************************
+	
 	function createSitterCardHead(sitterInfo, parentName, targetName) {
 	    let sitterCardHeadMake = document.createElement('div');
 	    sitterCardHeadMake.setAttribute("id", sitterInfo.sitterID);
@@ -1291,14 +1178,15 @@ var managerApp = (function(jquery, global,document) {
 	    sitterCardHeadMake.setAttribute("data-parent", "#" + parentName);
 	    sitterCardHeadMake.setAttribute("data-target", "#accordion-" + targetName);
 	    sitterCardHeadMake.setAttribute("aria-expanded", "false");
+
 	    return sitterCardHeadMake;
 	}
 	function createHeaderTools(sitterInfo) {
 
 	    let cHeaderElement = document.createElement('header');
 	    cHeaderElement.setAttribute("type", "header");
-	    cHeaderElement.setAttribute("id", "header-" + sitterInfo.sitterID);
-	    cHeaderElement.innerHTML = sitterInfo.sitterName;
+	    cHeaderElement.setAttribute("id", "sitter-accordion-header-" + sitterInfo.sitterID);
+	    cHeaderElement.innerHTML = sitterInfo.sitterName + ' ('+  sitterInfo.street1+ ')';
 	    return cHeaderElement;;
 	}
 	function createToolDiv(sitterInfo) {
@@ -1378,17 +1266,46 @@ var managerApp = (function(jquery, global,document) {
 	    let visitHeader = document.createElement("header");
 		let visitSummaryHTML;
 
+		let arriveTime;
+		let completeTime;
+
+		let streetAddress;
+
+		allClients.forEach((client)=> {
+			if (visitInfo.clientID == client.client_id) {
+				if(client.street1 == null) {
+					streetAddress = 'NONE';
+				} else {
+					streetAddress = client.street1;
+				}
+
+			}
+		});
+
+		if(visitInfo.arrived != null) {
+			arriveTime = visitInfo.arrived;
+			if (visitInfo.completed != null) {
+				arriveTime += ' - ' + visitInfo.completed;
+			}
+		} else {
+			arriveTime = visitInfo.timeOfDay;
+		}
+
+
 	    if (visitInfo.vrStatus == 'published') {
-			visitSummaryHTML = `${visitInfo.clientName} (${visitInfo.timeOfDay})`;
+			visitSummaryHTML = `[P]  ${visitInfo.clientName} <p>(${arriveTime}) ${streetAddress}`;
 	    } 
 	    else if (visitInfo.vrStatus == 'submitted') {
-			visitSummaryHTML = `${visitInfo.clientName} (${visitInfo.timeOfDay})`;
+			visitSummaryHTML = `[S]  ${visitInfo.clientName} <p>(${arriveTime}) <p>${streetAddress}`;
 	    }
 	    else if (visitInfo.vrStatus == 'noreportdatareceived' && visitInfo.status == 'completed') {
-			visitSummaryHTML = `${visitInfo.clientName} (${visitInfo.timeOfDay})`;
+			visitSummaryHTML = `[N] ${visitInfo.clientName} <p>(${arriveTime}) <p>${streetAddress}`;
+	    } else if (visitInfo.status == 'canceled') {
+			visitSummaryHTML = `[N] ${visitInfo.clientName} <p>CANCELED <p>${streetAddress}`;
+
 	    }
 	    else {
-			visitSummaryHTML = `${visitInfo.clientName} (${visitInfo.timeOfDay})`;
+			visitSummaryHTML = `${visitInfo.clientName} <p>(${arriveTime}) <p>${streetAddress}`;
 		}
 
 	    visitHeader.innerHTML = visitSummaryHTML;
@@ -1527,6 +1444,199 @@ var managerApp = (function(jquery, global,document) {
 	   
 	    return tabPaneVisitDetails;
 	}
+
+	//**********************************************************************************
+	//**********************************************************************************
+	//******************************UX UTILITY FUNCTIONS***************************
+	//**********************************************************************************
+	//**********************************************************************************
+
+	function showLoginPanel() {
+	    var loginPanel = document.getElementById("lt-loginPanel");
+	    loginPanel.setAttribute("style", "display:block");
+	}
+	function flyToSitter(sitterInfo) {
+		if(sitterInfo != null) {
+
+			if (sitterInfo.sitterLat != null & sitterInfo.sitterLon != null) {
+				map.flyTo({
+					center : [sitterInfo.sitterLon, sitterInfo.sitterLat],
+					zoom:  12
+				});
+			} else {
+				alert('Invalid coordinates for sitter home');
+			}
+		}
+ 
+	}
+	function flyToVisit(visitDetails) {
+
+	    if (visitDetails != null) {
+	        if (visitDetails.lon != null && visitDetails.lat != null && visitDetails.lon > -90 && visitDetails.lat < 90) {
+	            map.flyTo({
+	                center: [visitDetails.lon, visitDetails.lat],
+	                zoom: 20
+	            });
+	        } else {
+	            alert("Coordinates are invalid");
+	        }
+	    }
+	}
+	function flyToFirstVisit() {
+	    allVisits.forEach((visit) => {
+	        //console.log(visit.clientName + ' lat: ' + visit.lat + ' , lon: ' + visit.lon);
+	    })
+	    if (allVisits[1] != null) {
+	        let lastVisit = allVisits[1];
+	        if (lastVisit.lon != null && lastVisit.lat != null && lastVisit.lon > -90 && lastVisit.lat < 90) {
+	            map.flyTo({
+	                center: [lastVisit.lon, lastVisit.lat],
+	                zoom: 16
+	            });
+	        } else {
+	            console.log('FIRST VISIT FLY TO INVALID COORDINATES: ' + lastVisit.clientName + ' (' + lastVisit.lon + ',' + lastVisit.lat + ')');
+	        }
+	    }
+	}
+
+	//**********************************************************************************
+	//**********************************************************************************
+	//*****REMOVE FUNCTIONS FOR MAP COMPONENTS***************************
+	//**********************************************************************************
+	//**********************************************************************************
+
+
+	// REMOVE FUNCTIONS FOR MAP COMPONENTS
+	function removeAccordions() {
+
+	    let sitterListDiv = document.getElementById('visitListBySitterAccordions');
+	    while (sitterListDiv.firstChild) {
+	        sitterListDiv.removeChild(sitterListDiv.firstChild);
+	    }
+	}
+	function truncate(value) {
+	    console.log(value);
+	    if (value < 0) {
+	        return Math.ceil(value);
+	    }
+	    return Math.floor(value).toString();
+	}
+	function removeAccordionControls() {
+	    let accordionVisits = document.getElementById('visitListBySitterAccordions');
+
+	    while (accordionVisits.hasChildNodes()) {
+	        accordionVisits.removeChild(accordionVisits.firstChild);
+	    }
+	}
+	function removeVisitDivElements() {
+	    /*var element = document.getElementById("visitListByClient");
+	    while (element.firstChild) {
+	        element.removeChild(element.firstChild);
+	    }*/
+	}
+	function removeSittersFromSitterList() {
+
+	    //            var element = document.getElementById("sitterList");
+	    //            while (element.firstChild) {
+	    //                element.removeChild(element.firstChild);
+	    //            }
+	}
+	function removeAllMapMarkers() {
+		console.log('REMOVING MAP MARKERS, CURRENT Number of map markers: ' + mapMarkers.length);
+	    mapMarkers.forEach((marker) => {
+	    	console.log(typeof(marker));
+	        marker.remove();
+	    });
+	    mapMarkers = [];
+	}
+	function removeSitterMapMarker() {
+		sitterMapMarkers.forEach((sitterMarker)=> {
+			console.log(typeof(sitterMarker));
+			sitterMarker.remove();
+		});
+		sitterMapMarker = [];
+	}
+	function createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList) {
+
+	    let popupBasicInfo = '<h1>' + sitterInfo.sitterName + '</h1>';
+	    popupBasicInfo += '<p>' + sitterInfo.street1 + ',  ' + sitterInfo.city + '</p>';
+	    let distanceResponse = mileageInfo.route;
+	    let waypoints = mileageInfo.waypoints;
+	    let total_distance = distanceResponse.distance / 1000;
+	    let total_duration = distanceResponse.duration / 60;
+	    let route_legs = distanceResponse.legs;
+	    let num_legs = distanceResponse.legs.length;
+	    let total_dist_check = 0;
+	    let total_duration_check = 0;
+	    let first_distance = 0;
+	    let last_distance = 0;
+	    let first_duration = 0;
+	    let last_duration = 0;
+	    let route_index = 0;
+	    route_legs.forEach((leg) => {
+	        let step_arr = leg.steps;
+	        num_legs = num_legs - 1;
+	        route_index = route_index + 1;
+	        total_dist_check = total_dist_check + parseFloat(leg.distance);
+	        total_duration_check = total_duration_check + parseFloat(leg.duration);
+	        if (route_index == 0) {
+	            first_distance = leg.distance;
+	        }
+	        if (route_index == distanceResponse.legs.length - 1) {
+	            last_distance = leg.distance
+	        }
+	    });
+	    total_miles = total_miles + (total_distance * .62137);
+	    total_duration_all = total_duration_all + total_duration;
+	    total_distance = total_distance * .62137;
+	    let per_visit_distance = total_distance / (waypoints.length - 2);
+	    let per_visit_duration = total_duration / (waypoints.length - 2);
+	    popupBasicInfo += '<p style="color:white">Total Miles: ' + total_distance + '<BR>';
+	    popupBasicInfo += '<p style="color:white"> Duration: ' + total_duration + '<BR>';
+	    popupBasicInfo += '<p style="color:white">Number of visits: </p' + visitList.length + '<BR>';
+	    popupBasicInfo += '<ul>';
+	    visitList.forEach((visit) => {
+	        popupBasicInfo += '<li>' + visit.clientName;
+	        if (visit.sitterName == sitterInfo.sitterName) {
+	            createMapMarker(visit, "");
+	        }
+	    })
+	    popupBasicInfo += '</ul>';
+	    popupBasicInfo += '<p><img src=\"./assets/img/postit\-20x20.png\" width=20 height=20>&nbsp&nbsp<input type=\"text\" name=\"messageSitter\" id=\"messageSitter\"></p>';
+
+	    return popupBasicInfo;
+	}
+	function createSitterMapMarkerWithMileage(sitterInfo, mileageInfo, visitList) {
+	    let el = document.createElement('div');
+	    let latitude = parseFloat(sitterInfo.sitterLat);
+	    let longitude = parseFloat(sitterInfo.sitterLon);
+	    let popupView;
+	    if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
+	        popupView = createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList);
+	        el.class = 'sitter';
+	        el.id = 'sitter';
+
+	        let popup = new mapboxgl.Popup({
+	                offset: 25
+	            })
+	            .setHTML(popupView);
+
+	        if (latitude > 90 || latitude < -90) {
+	            console.log("Lat error");
+	        } else {
+	            let marker = new mapboxgl.Marker(el)
+	                .setLngLat([longitude, latitude])
+	                .setPopup(popup)
+	                .addTo(map);
+
+	        }
+	    }
+	    visitList.forEach((visit) => {
+	        createMapMarker(visit, "");
+	    })
+	}
+
+
 	return {
 
 		login : login,
@@ -1534,7 +1644,9 @@ var managerApp = (function(jquery, global,document) {
 		nextDay : nextDay,
 		showVisitBySitter : showVisitBySitter,
 		filterAccordionByStatus : filterAccordionByStatus,
-		filterMapViewByVisitStatus : filterMapViewByVisitStatus
+		filterMapViewByVisitStatus : filterMapViewByVisitStatus,
+		showAllClients : showAllClients,
+		showSitters : showSitters
 	}
 
 	module.exports = {

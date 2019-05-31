@@ -127,8 +127,8 @@
                             <div class="section-body">
                                 <div class="card style-info force-padding">
                                     <span class="text-small">
-                                      <input type="text" value="dlife" id="userName" name="username" class="full-bleed text-center text-default">
-                                      <input type="text" value="pass" id="passWord" name="password" class="full-bleed text-center text-default">
+                                      <input type="text" value="teddy123" id="userName" name="username" class="full-bleed text-center text-default">
+                                      <input type="text" value="teddy123" id="passWord" name="password" class="full-bleed text-center text-default">
                                       <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=managerApp.login()>LOGIN</button>
                                     </span>
                                 </div>
@@ -143,7 +143,7 @@
                                 <button type="button" id="allSitters" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.showSitters()">SITTERS</button>
                             </a>
                             <a class="btn" role="button">
-                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.showAllClients('clientlist')"> CLIENTS</button>
+                                <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.showAllClients()"> CLIENTS</button>
                             </a>
                             <a class="btn" role="button">
                                 <button type="button" id="allClients" class="btn btn-block btn-info m-t-10 darken-2  btn-raised" onClick="managerApp.filterMapViewByVisitStatus('late')">LATE</button>
@@ -175,34 +175,113 @@
         </div>
 
         <div class="offcanvas">
-            <div id="offcanvas-sitters" class="offcanvas-pane width-8 blue">
-                <div class="offcanvas-head ">
-                    <header class="white-text"><small>SITTERS AND VISITS</small></header>
-                    <div class="offcanvas-tools">
-                        <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
-                            <i class="md md-close"></i>
-                        </a>
-                    </div>
-                    <!-- CALENDAR NAV -->
-                    <div id="calendarNav">
-                        <a id="prev" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="prevDay()"><i class="fa fa-angle-left"></i></a>
-                        <div class="cal-date text-center text-xs">
-                            <span id="dayWeek"></span>
-                            <span id="month">...Login...</span>
-                            <span id="dateLabel"></span>
-                            <br>
-                        </div>
-                        <a id="next" type="button" class="btn-cal btn btn-default-bright btn-xs" role="button" onClick="nextDay()"><i class="fa fa-angle-right"></i></a>
-                    </div>
+<!-- BEGIN OFFCANVAS SITTER & VISITS -->
+<div id="offcanvas-sitters" class="offcanvas-pane width-8 blue active">
+  <div class="offcanvas-head ">
+    <header class="white-text sm-text"><small>SITTERS AND VISITS</small></header>
+    <div class="offcanvas-tools">
+      <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+        <i class="md md-close"></i>
+      </a>
+    </div>
 
-                </div>
+    <div class="offcanvas-body no-padding">
+      <!-- CALENDAR NAV -->
+      <div id="calendarNav" class="row style-default" style="margin-bottom: 5px">
+        <div class="col-xs-1">
+          <a id="prev" type="button" class="btn btn-sm ink-reaction btn-default-light" role="button" onClick="managerApp.prevDay()" aria-label="Yesterday">
+            <i class="fa fa-angle-left"></i></a>
+        </div>
+        <div class="col-xs-9 text-center p-t-5">
+          <a class="" style="pointer-events: none;">
+            <span id="dayWeek"></span><span id="month">...Login...</span><span id="dateLabel"></span>
+          </a>
+        </div>
+        <div class="col-xs-1">
+          <a id="next" type="button" class="btn btn-sm ink-reaction btn-default-light" role="button" onClick="managerApp.nextDay()" aria-label="Tommorrow"><i class="fa fa-angle-right"></i></a>
+        </div>
+      </div>
 
-                <div class="offcanvas-body no-padding">
-                    <div class="panel-group" id="visitListBySitterAccordions">
-
-                    </div>
-                </div>
+      <!-- FILTER NAV -->
+      <div class="row filter-list">
+        <div class="col-xs-4">
+          <div class="filter-item filter-item-active">
+            <label class="filter__label" for="filter-review">LATE</label>
+            <div class="filter__input input input_toggle">
+              <input class="input__source" id="filter-review" type="checkbox" name="filter-toggle" checked="checked" onClick="managerApp.filterMapViewByVisitStatus('late')" />
             </div>
+          </div>
+        </div>
+
+
+        <div class="col-xs-4 ">
+          <div class="filter-item filter-item-active">
+            <label class="filter__label filter__label_tv" for="filter-deliver">REVIEW</label>
+            <div class="filter__input input input_toggle">
+              <input class="input__source" id="filter-deliver" type="checkbox" name="filter-toggle" checked="checked" onClick="managerApp.filterMapViewByVisitStatus('submitted')" />
+              <label class="input__label" for="filter-deliver"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-4">
+          <div class="filter-item filter-item-active">
+            <label class="filter__label" for="filter-alerts">SENT</label>
+            <div class="filter__input input input_toggle ">
+              <input class="input__source" id="filter-alerts" type="checkbox" name="filter-toggle" onClick="managerApp.filterMapViewByVisitStatus('published')" />
+              <label class="input__label" for="filter-alerts"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <style>
+        .filter-item {
+          box-sizing: border-box;
+          border-radius: 3px;
+          background: white;
+          transition: background 0.2s ease-in-out;
+          width: 100%;
+          text-align: center;
+        }
+
+        .filter-item-active {
+          background: #8DC63F;
+        }
+
+        .filter-item-active .filter__label {
+          color: white;
+        }
+
+        .filter__input {
+          height: 0;
+        }
+
+        .filter__label {
+          cursor: pointer;
+          color: rgba(0, 0, 0, 0.5);
+          width: 100%;
+          flex-shrink: 1;
+        }
+
+        .input_toggle .input__source {
+          display: none;
+          opacity: 0;
+          visibility: hidden;
+        }
+      </style>
+      <script>
+        const filterItems = document.querySelectorAll('.filter-item');
+        filterItems.forEach(filter => filter.addEventListener('change', () => filter.classList.toggle('filter-item-active')));
+      </script>
+
+      <div class="panel-group" id="visitListBySitterAccordions">
+      </div>
+
+    </div>
+
+  </div>
+</div>
             <div id="offcanvas-pet-protect" class="offcanvas-pane width-8" style="background-color: #f18686">
                 <!-- TITLE -->
                 <div class="offcanvas-head ">

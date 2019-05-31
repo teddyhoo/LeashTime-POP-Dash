@@ -12,7 +12,12 @@ var LTMGR = (function() {
 
 	var vrList = [];
 	var vrListDic = {};
+	var sitterHomeToFirst = [];
 
+	var totalDistance = 0;
+	var numVisitsWithDistance = 0;
+	var totalTimeTravel = 0;
+	const hourlyServiceRate = 36.00;
 
 	class SitterProfile {
 		constructor(sitterInfo) {
@@ -91,11 +96,11 @@ var LTMGR = (function() {
 			if (visitReportInfo != null) {
 				let reportKeys = Object.keys(visitReportInfo);
 					reportKeys.forEach((rKey)=> {
-					console.log(' ---> ' + rKey + '  ' + visitReportInfo[rKey]);
+					//console.log(' ---> ' + rKey + '  ' + visitReportInfo[rKey]);
 				});
 
 				this.vrStatus = visitReportInfo.status;
-				console.log('SITTER VISIT OBJECT CREATED WITH visit report status: ' + this.vrStatus);
+				//console.log('SITTER VISIT OBJECT CREATED WITH visit report status: ' + this.vrStatus);
 			}
 
 			this.visitID = visitInfo.appointmentid;
@@ -683,15 +688,15 @@ var LTMGR = (function() {
 		total_distance = total_distance * .62137;
 		let total_duration = distanceMatrixInfo.duration/60;
 
-		console.log('route legs: ' + num_legs + ' waypoints: ' + waypoints.length);
+		//console.log('route legs: ' + num_legs + ' waypoints: ' + waypoints.length);
+		numVisitsWithDistance += waypoints.length - 1;
 		let matrixData = window.localStorage.getItem("distanceMatrix");
 		matrixDistance = JSON.parse(matrixData);
 		if (matrixDistance != null) {
 
 			matrixDistance.forEach((matrix)=> {
-				console.log('Reading matrix: ' + matrix.beginName);
+				//console.log('Reading matrix: ' + matrix.beginName);
 			})
-			//})
 		} else {
 			matrixDistance = [];
 		}
@@ -704,11 +709,10 @@ var LTMGR = (function() {
 			let endName;
 			let distance;
 			let duration;
-			let durationHours;
-			let convertDistance;
+
 
 			if (route_index > 0) {
-				console.log('Route index: ' + route_index);
+				//console.log('Route index: ' + route_index);
 				let leg = route_legs[route_index];
 				endName = waypointInfo.name;
 				endCoord = waypointInfo.location;
@@ -718,9 +722,19 @@ var LTMGR = (function() {
 				if (leg != null){
 					distance = leg.distance;
 					duration = leg.duration;
-					durationHours = duration/60;
-				 	convertDistance = (distance / 1000);
-					let matrixItem = new DistanceMatrixPair(startCoord, endCoord, startName, endName, convertDistance, durationHours);
+					let durationMin = duration/60;
+				 	let kmDistance  = (distance / 1000);
+				 	if (route_index == 1) {
+				 		console.log('Sitter home to first');
+				 		let distanceDuration = durationMin;
+				 		if (distanceDuration != 0) {
+							sitterHomeToFirst.push(distanceDuration);
+				 		}
+				 	}
+				 	console.log('' + startName + '->' + endName + ' : ' + kmDistance +  ' km, ' + durationMin + ' min');
+					totalDistance += kmDistance;
+					totalTimeTravel += durationMin;
+					let matrixItem = new DistanceMatrixPair(startCoord, endCoord, startName, endName, kmDistance, durationMin);
 					matrixDistance.push(matrixItem);
 				}
 			}
@@ -728,6 +742,22 @@ var LTMGR = (function() {
 			route_index = route_index + 1;
             num_legs = num_legs - 1;
 		});
+		console.log('----------------------------------------------------------------------');
+		console.log('Dist: ' + totalDistance + ' Time: ' + totalTimeTravel + ' Visits: ' + numVisitsWithDistance);
+		let averageTimeTravelCost = ((hourlyServiceRate/60) * totalTimeTravel) / numVisitsWithDistance;
+		console.log('AVG Transport cost per visit: ' + averageTimeTravelCost);
+		console.log('----------------------------------------------------------------------');
+
+		let numSitters = sitterHomeToFirst.length;
+		let totalHomeToFirst = 0;
+		sitterHomeToFirst.forEach((firstVisit)=> {
+			totalHomeToFirst += firstVisit;
+		});
+
+		let lastHomeToFirst = sitterHomeToFirst[numSitters  -1];
+		let avgHomeToFirst = totalHomeToFirst / numSitters;
+		console.log('Average Home to first: ' + avgHomeToFirst);
+
 		window.localStorage.setItem("distanceMatrix", JSON.stringify(matrixDistance));
 	}
 	function getDistanceMatrix() {
