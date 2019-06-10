@@ -22,7 +22,7 @@ var managerApp = (function(jquery, global,document) {
 	var mapMarkers = []; 
 	var sitterMapMarkers = [];
 	var displaySitters = {};
-
+	var displayClientMapMarkers = [];
 
 	var trackSitterMileage = [];
 	var visitButtonList = [];
@@ -72,16 +72,6 @@ var managerApp = (function(jquery, global,document) {
 	map.on("load", () => {
 
 		console.log('map loaded');
-
-	});
-
-	document.addEventListener('DOMContentLoaded', function() {
-
-		console.log('all content loaded');
-		$(function() {
-			$('#profile-tabs-215935 li:visit-profile-info-215935 a').tab('show');
-			console.log('showing tab');
-		})
 
 	});
 
@@ -218,8 +208,6 @@ var managerApp = (function(jquery, global,document) {
 	            flyToFirstVisit();
 	        });
 	}
-
-
 	// DISPLAY MARKERS, ACCORDION CONTROLS AND OTHER UX ELEMENTS
 	function buildSitterButtons(allSitterVisits, allSittersInfo) {
 	    totalVisitCount = parseInt(0);
@@ -331,7 +319,6 @@ var managerApp = (function(jquery, global,document) {
 	                if (!isAjax) {
 	                    let vReport = await LTMGR.getVisitReportList(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
 	                    vrListItem = vReport['report'];
-	                    console.log('vrList item request: ' + vrListItem);
 	                } else {
 	                    let vReport = await LTMGR.getVisitReportListAjax(visitInfo.clientID, fullDate, fullDate, visitInfo.visitID);
 	                    vrListItem = vReport['report'];
@@ -341,13 +328,13 @@ var managerApp = (function(jquery, global,document) {
 	            const vrDetailsForList = async(vrLitem) => {
 	                if (!isAjax) {
 	                    let vReportDetailsData = await LTMGR.getVisitReport(vrLitem.visitID, vrLitem);
-	                    console.log('Visit report details data: ' + vReportDetailsData);
+	                    //console.log('Visit report details data: ' + vReportDetailsData);
 	                    return vReportDetailsData;
 	                } else {
 	                    let vd = await fetch(vrLitem.externalUrl);
 	                    let vdResponse = await vd.json();
-	                    console.log("vdResponse: " + JSON.stringify(vdResponse));
-	                    console.log("vrLitem.externalUrl: " + vrLitem.externalUrl);
+	                    //console.log("vdResponse: " + JSON.stringify(vdResponse));
+	                    //console.log("vrLitem.externalUrl: " + vrLitem.externalUrl);
 
 	                    vrLitem.addVisitDetail(vdResponse);
 	                    let dic = {};
@@ -370,23 +357,103 @@ var managerApp = (function(jquery, global,document) {
 	        });
 	    }
 	}
-	function drawShowingSittersWithVisits() {
+	
+	function redrawMapMarkersForShownSitters() {
 		removeAllMapMarkers();
-		//removeSitterMapMarker();
-		let keysSitterOn = Object.keys(displaySitters);
-		keysSitterOn.forEach((sitterID)=> {
-			if (displaySitters[sitterID] == "ON") {
-				console.log('---CREATING VISITS FOR: ' + sitterID + ' ---------');
-				allVisits.forEach((visit) => {
-					if (visit.sitterID == sitterID) {
-						console.log('CLIENT: ' + visit.clientName);
-						createMapMarker(visit);
-						mapMarkers.push(visit);
+
+		let theVisits = [];
+		let displaySitterKeys = Object.keys(displaySitters);
+		displaySitterKeys.forEach((skey)=> {
+			let displayKeyVal = displaySitters[skey];
+			if (displayKeyVal == "ON") {
+				let visitsBySitterKeys = Object.keys(visitsBySitterDict);
+				visitsBySitterKeys.forEach((showKey)=> {
+					if (showKey == skey) {
+						theVisits = theVisits.concat(visitsBySitterDict[skey])
 					}
 				});
+			} 
+		});
+		theVisits.forEach((visitDisplay)=> {
+			createMapMarker(visitDisplay);
+		});
+
+	}
+
+	function sitterShowOnOff(e) {
+
+		let sitterID = e.target.getAttribute("id");
+		let buttonClass = e.target.getAttribute("class");
+		let classesArray = buttonClass.split(" ");
+		//sitterOnOffAction(classesArray);
+
+		classesArray.forEach((className) =>{
+
+			if(className == 'calcMileage') {
+			} else if(className == 'showVisits'){
+				displaySitters[sitterID] = 'ON';
+				classesArray.pop();
+				classesArray.push('dontShow');
+				let newClass = classesArray.join(' ');
+				e.target.setAttribute("class", newClass)
+				e.target.innerHTML = 'HIDE VISITS';
+
+				removeAllMapMarkers();
+				let theVisits = [];
+				let displaySitterKeys = Object.keys(displaySitters);
+				displaySitterKeys.forEach((skey)=> {
+					let displayKeyVal = displaySitters[skey];
+					if (displayKeyVal == "ON") {
+						console.log('Sitter ID display: ' + displayKeyVal);
+						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
+						visitsBySitterKeys.forEach((showKey)=> {
+
+							if (showKey == skey) {
+								theVisits = theVisits.concat(visitsBySitterDict[skey])
+							}
+
+						})
+					} 
+				});
+				theVisits.forEach((visitDisplay)=> {
+					console.log(visitDisplay.clientName);
+					createMapMarker(visitDisplay);
+				});
+			} else if (className == 'dontShow') {
+				displaySitters[sitterID] = 'OFF';
+				classesArray.pop();
+				classesArray.push('showVisits');
+				let newClass = classesArray.join(' ');
+				e.target.setAttribute("class", newClass);
+				e.target.innerHTML = 'SHOW VISITS';
+				removeAllMapMarkers();
+				let theVisits = [];
+
+				displaySitterKeys.forEach((skey)=> {
+
+					let displayKeyVal = displaySitters[skey];
+					if (displayKeyVal == "ON") {
+						console.log('Sitter ID display: ' + displayKeyVal);
+						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
+						visitsBySitterKeys.forEach((showKey)=> {
+
+							if (showKey == skey) {
+								theVisits = theVisits.concat(visitsBySitterDict[skey])
+							}
+
+						})
+					} 
+				});
+				theVisits.forEach((visitDisplay)=> {
+					console.log(visitDisplay.clientName);
+					createMapMarker(visitDisplay);
+				});
+
 			}
 		});
+
 	}
+
 
 	function createSitterMapMarker(sitterInfo) {
 	    let el = document.createElement('div');
@@ -397,20 +464,13 @@ var managerApp = (function(jquery, global,document) {
 	        popupView = createSitterPopup(sitterInfo);
 	        let popupWithClickListener = document.createElement('div');
 	        popupWithClickListener.innerHTML = popupView;
-	        popupWithClickListener.addEventListener('click', (e)=> {
+	        console.log('This value is: ' + this);
+			let that = this;
 
-				displaySitters[sitterInfo.sitterID] = "ON";
-				displaySitters.forEach((sitterIDInfo)=> {
-					console.log('DISPLAY SITTER ON FOR: ' + sitterIDInfo);
-				});
-	        	drawShowingSittersWithVisits();
-	        })
+	        popupWithClickListener.addEventListener('click',sitterShowOnOff);
 	        
 	        el.class = 'sitter';
 	        el.id = 'sitter';
-	        el.addEventListener("click", () => {
-	            //drawShowingSittersWithVisits();
-	        })
 
 	        let popup = new mapboxgl.Popup({
 	        	offset: 25,
@@ -428,6 +488,66 @@ var managerApp = (function(jquery, global,document) {
 	            sitterMapMarkers.push(marker);
 	        }
 	    }
+	}
+
+	function createSitterPopup(sitterInfo) {
+
+	    let currentVisitListBySitter = visitsBySitterDict[sitterInfo.sitterID];
+		let numberVisits = currentVisitListBySitter.length;
+
+	    currentVisitListBySitter.sort(function(a, b) {
+	        let aDate = fullDate + ' ' + a.completed;
+	        let bDate = fullDate + ' ' + b.completed;
+	        return new Date(aDate) - new Date(bDate);
+	    });
+
+		let popupTempLit = `
+
+			<h1 style="color:black">${sitterInfo.sitterName} </h1>
+				<p style="color:black">${sitterInfo.street1},  ${sitterInfo.city}</p>
+				<p style="color:black">Number of visits: ${numberVisits}</p>
+				<div>
+					<button id="${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised showVisits">SHOW VISITS</button>
+				</div>
+				<div>
+					<button type="button" id="${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised calcMileage">MILEAGE</button>
+				</div>
+				<div>
+					<p style="color:white"><img src="./assets/img/postit-20x20.png" width=20 height=20>&nbsp&nbsp<input type="text" name="messageSitter" id="messageSitter"></p>
+				</div>
+		`;
+	    
+	    currentVisitListBySitter.forEach((visit) => {
+	        if (visit.sitterID == sitterInfo.sitterID) {
+	            if (visit.status == 'completed') {
+	                popupTempLit += `<p style="color:black"> <img src="./assets/img/check-mark-green@3x.png" width=20 height=20>`;
+	            } else if (visit.status == 'late') {
+	                popupTempLit += `<p style="color:black"> <img src="./assets/img/red-dot@3x.png" width=20 height=20>`;
+	            } else if (visit.status == 'canceled') {
+	                popupTempLit += `<p style="color:black"> <img src="./assets/img/x-mark-red@3x.png" width=20 height=20>`;
+	            } else if (visit.status == 'arrived') {
+	                popupTempLit += `<p style="color:black"> <img src="./assets/img/arrive.png" width=20 height=20>`;
+	            } else if (visit.status == 'future') {
+	                popupTempLit += `<p style="color:black"> <img src="./assets/img/zoomin-bargraph@3x.png" width=20 height=20>`;
+	            }
+	            popupTempLit += `${visit.clientName}`;
+	            allClients.forEach((client) => {
+	                if (visit.clientID == client.client_id) {
+	                    popupTempLit += ` (${client.street1}`;
+	                    if (client.street2 != null) {
+	                        popupTempLit += `, ${client.street2 }</p>`;
+	                    }
+	                    popupTempLit += `)`;
+	                }
+	            })
+	            popupTempLit += `</p>`;
+	            if (visit.status == 'completed') {
+	                popupTempLit += `<p style="color:black">Arrived: ${visit.arrived}  Completed: ${visit.completed} </p>`;
+
+	            }
+	        }
+	    })
+	    return popupTempLit;
 	}
 	function createVisitReport(visitDictionary, visitID) {
 	    let dateReport;
@@ -576,65 +696,6 @@ var managerApp = (function(jquery, global,document) {
 	                                        </div>`;
 
 	    return popupBasicInfo;
-	}
-	function createSitterPopup(sitterInfo) {
-
-	    let currentVisitListBySitter = visitsBySitterDict[sitterInfo.sitterID];
-		let numberVisits = currentVisitListBySitter.length;
-
-	    currentVisitListBySitter.sort(function(a, b) {
-	        let aDate = fullDate + ' ' + a.completed;
-	        let bDate = fullDate + ' ' + b.completed;
-	        return new Date(aDate) - new Date(bDate);
-	    });
-
-		let popupTempLit = `
-
-			<h1 style="color:black">${sitterInfo.sitterName} </h1>
-				<p style="color:black">${sitterInfo.street1},  ${sitterInfo.city}</p>
-				<p style="color:black">Number of visits: ${numberVisits}</p>
-				<div>
-					<button id="sitterPopupShow${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised">SHOW VISITS</button>
-				</div>
-				<div>
-					<button type="button" id="sitterMiles-'${sitterInfo.sitterID}" class="btn btn-block btn-info m-t-10 darken-2  btn-raised">MILEAGE</button>
-				</div>
-				<div>
-					<p style="color:white"><img src="./assets/img/postit-20x20.png" width=20 height=20>&nbsp&nbsp<input type="text" name="messageSitter" id="messageSitter"></p>
-				</div>
-		`;
-	    
-	    currentVisitListBySitter.forEach((visit) => {
-	        if (visit.sitterID == sitterInfo.sitterID) {
-	            if (visit.status == 'completed') {
-	                popupTempLit += `<p style="color:black"> <img src="./assets/img/check-mark-green@3x.png" width=20 height=20>`;
-	            } else if (visit.status == 'late') {
-	                popupTempLit += `<p style="color:black"> <img src="./assets/img/red-dot@3x.png" width=20 height=20>`;
-	            } else if (visit.status == 'canceled') {
-	                popupTempLit += `<p style="color:black"> <img src="./assets/img/x-mark-red@3x.png" width=20 height=20>`;
-	            } else if (visit.status == 'arrived') {
-	                popupTempLit += `<p style="color:black"> <img src="./assets/img/arrive.png" width=20 height=20>`;
-	            } else if (visit.status == 'future') {
-	                popupTempLit += `<p style="color:black"> <img src="./assets/img/zoomin-bargraph@3x.png" width=20 height=20>`;
-	            }
-	            popupTempLit += `${visit.clientName}`;
-	            allClients.forEach((client) => {
-	                if (visit.clientID == client.client_id) {
-	                    popupTempLit += ` (${client.street1}`;
-	                    if (client.street2 != null) {
-	                        popupTempLit += `, ${client.street2 }</p>`;
-	                    }
-	                    popupTempLit += `)`;
-	                }
-	            })
-	            popupTempLit += `</p>`;
-	            if (visit.status == 'completed') {
-	                popupTempLit += `<p style="color:black">Arrived: ${visit.arrived}  Completed: ${visit.completed} </p>`;
-
-	            }
-	        }
-	    })
-	    return popupTempLit;
 	}
 	function updateSummaryGraph(activeSitterList, sittersVisits) {
 
@@ -1467,7 +1528,6 @@ var managerApp = (function(jquery, global,document) {
 				alert('Invalid coordinates for sitter home');
 			}
 		}
- 
 	}
 	function flyToVisit(visitDetails) {
 
@@ -1544,9 +1604,13 @@ var managerApp = (function(jquery, global,document) {
 	function removeAllMapMarkers() {
 		console.log('REMOVING MAP MARKERS, CURRENT Number of map markers: ' + mapMarkers.length);
 	    mapMarkers.forEach((marker) => {
-	    	console.log(typeof(marker));
+	    	let htmlMapMarkerObj = marker.getElement();
+	    	console.log('Map marker HTML Object element: ' + htmlMapMarkerObj);
 	        marker.remove();
+	        marker = null;
 	    });
+		console.log('REMOVed MAP MARKERS, CURRENT Number of map markers: ' + mapMarkers.length);
+
 	    mapMarkers = [];
 	}
 	function removeSitterMapMarker() {
@@ -1654,4 +1718,4 @@ var managerApp = (function(jquery, global,document) {
 		password : pasword
 
 	}
-}(this.jquery, window, document));
+} (this.jquery, window, document));
