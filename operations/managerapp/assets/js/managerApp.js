@@ -6,7 +6,7 @@ var managerApp = (function(jquery, global,document) {
 	var username = '';
 	var password = '';
 	var userRole = 'm';
-	var isAjax = false;
+	var isAjax = true;
 
 	// [SitterVisit, SitterVisit, ..., SitterVisit]
 	var allVisits = []; 
@@ -161,7 +161,7 @@ var managerApp = (function(jquery, global,document) {
 	        console.log('Response error ');
 	    }
 	}
-	function loginAjax() {
+	function loginAjax(loginDate) {
 	    isAjax = true;
 	    removeSittersFromSitterList();
 	    removeAllMapMarkers();
@@ -191,8 +191,12 @@ var managerApp = (function(jquery, global,document) {
 	        document.getElementById('login').innerHTML = 'UPDATE';
 	    }
 
-	    fullDate = getFullDate();
-
+	    if (loginDate == null) {
+	        fullDate = getFullDate();
+	    } else {
+	        fullDate = loginDate;
+	    }
+	    console.log('LTMGR manager Login Ajax');
 	    let loginAjaxFetchResponse = await LTMGR.managerLoginAjax(username, password, userRole);
 	    allSitters = await LTMGR.getManagerSittersAjax();
 	    allVisits = await LTMGR.getManagerVisitsAjax(fullDate, fullDate);
@@ -404,7 +408,7 @@ var managerApp = (function(jquery, global,document) {
 				displaySitterKeys.forEach((skey)=> {
 					let displayKeyVal = displaySitters[skey];
 					if (displayKeyVal == "ON") {
-						console.log('Sitter ID display: ' + displayKeyVal);
+						console.log('Sitter ID: ' + skey + ' display: ' + displayKeyVal);
 						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
 						visitsBySitterKeys.forEach((showKey)=> {
 
@@ -416,7 +420,7 @@ var managerApp = (function(jquery, global,document) {
 					} 
 				});
 				theVisits.forEach((visitDisplay)=> {
-					console.log(visitDisplay.clientName);
+					//console.log(visitDisplay.clientName);
 					createMapMarker(visitDisplay);
 				});
 			} else if (className == 'dontShow') {
@@ -428,12 +432,13 @@ var managerApp = (function(jquery, global,document) {
 				e.target.innerHTML = 'SHOW VISITS';
 				removeAllMapMarkers();
 				let theVisits = [];
+				let displaySitterKeys = Object.keys(displaySitters);
 
 				displaySitterKeys.forEach((skey)=> {
 
 					let displayKeyVal = displaySitters[skey];
 					if (displayKeyVal == "ON") {
-						console.log('Sitter ID display: ' + displayKeyVal);
+						console.log('Sitter ID ' + skey +' display: ' + displayKeyVal);
 						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
 						visitsBySitterKeys.forEach((showKey)=> {
 
@@ -1072,7 +1077,7 @@ var managerApp = (function(jquery, global,document) {
 
 	    futureDate.setDate(futureDate.getDate() + 45);
 	    let futureMonth = futureDate.getMonth() + 1;
-	    console.log(futureDate + ' month: ' + futureMonth +  ' date:' + futureDate.getDate() );
+	    //console.log(futureDate + ' month: ' + futureMonth +  ' date:' + futureDate.getDate() );
 
 	    let todayMonth = todayDate.getMonth() + 1;
 	    let todayYear = todayDate.getFullYear();
@@ -1602,15 +1607,12 @@ var managerApp = (function(jquery, global,document) {
 	    //            }
 	}
 	function removeAllMapMarkers() {
-		console.log('REMOVING MAP MARKERS, CURRENT Number of map markers: ' + mapMarkers.length);
 	    mapMarkers.forEach((marker) => {
 	    	let htmlMapMarkerObj = marker.getElement();
 	    	console.log('Map marker HTML Object element: ' + htmlMapMarkerObj);
 	        marker.remove();
 	        marker = null;
 	    });
-		console.log('REMOVed MAP MARKERS, CURRENT Number of map markers: ' + mapMarkers.length);
-
 	    mapMarkers = [];
 	}
 	function removeSitterMapMarker() {

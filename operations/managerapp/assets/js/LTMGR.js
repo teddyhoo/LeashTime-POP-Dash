@@ -362,9 +362,11 @@ var LTMGR = (function() {
 				'cache-control' : 'no-cache'
 			}
 		};
+		console.log(url + ' --> ' + options);
 		let responseJSON = await fetch(url, options)
 													.then((response)=> 
 														{
+															console.log('response json: ' + response);
 															return response.json();
 														});
 		return responseJSON;
@@ -457,18 +459,20 @@ var LTMGR = (function() {
 	}
 	async function getMasterVisitReportListAjax(startDate, endDate) {
 
-		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
+		let url = 'https://leashtime.com/visit-report-list-ajax.php?start=2019-06-11&end=2019-06-11';
+		//'+startDate+'&end='+endDate;
 		let options = {
 			method : 'GET',
 			headers : {
-				'accept' : 'application/json',
-				'content-type' : 'application/json',
-				'credentials' : 'same-origin'
+				'Accept': 'application/json',
+				'Content-Type' : 'application/json',
+				'cache-control' : 'no-cache'
 			}
 		}
 		let vrListJson = await fetch(url,options)
 											.then((response)=> {
-												return response.json();
+												console.log(response);
+												return response;
 											});
 		
 		let report = {};
@@ -532,7 +536,6 @@ var LTMGR = (function() {
 		const response = await fetch(url);
 		const myJson = await response.json();
 	}
-
 	async function getManagerData() {
 		sitterList = [];
 		visitList =[];
