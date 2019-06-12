@@ -366,13 +366,13 @@ var LTMGR = (function() {
 		let responseJSON = await fetch(url, options)
 													.then((response)=> 
 														{
-															console.log('response json: ' + response);
+															//console.log('response json: ' + response);
 															return response.json();
 														});
 		return responseJSON;
 	}
 	async function getManagerSittersAjax() {
-		console.log('Get manager sitters ajax');
+		//console.log('Get manager sitters ajax');
 		let url = 'https://leashtime.com/mmd-sitters.php';	
 		const options = {
 			method : 'GET',
@@ -387,13 +387,13 @@ var LTMGR = (function() {
 			return response.json();
 		});
 		sitterJSON.sitters.forEach((sitter)=> {
-			console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
+			//console.log('Sitter ID: ' + sitter.providerid + ', Sitter name: ' + sitter.sitter);
 			sitterList.push(new SitterProfile(sitter));
 		});
 		return sitterList;
 	}
 	async function getManagerVisitsAjax(startDate, endDate) {
-		console.log('Get manager visits ajax with sitter list: ' + sitterList.length);
+		//console.log('Get manager visits ajax with sitter list: ' + sitterList.length);
 		let url = 'https://leashtime.com/mmd-visits.php';
 		let listSitterID = [];
 		sitterList.forEach((sitter) => {
@@ -436,7 +436,7 @@ var LTMGR = (function() {
 		let url = 'https://leashtime.com/mmd-clients.php';
 		let listClientID = [];		
 		visitList.forEach((visitItem)=> {
-			console.log(visitItem.clientID);
+			//console.log(visitItem.clientID);
 			listClientID.push(visitItem.clientID);
 		});
 		const options = {
@@ -459,8 +459,7 @@ var LTMGR = (function() {
 	}
 	async function getMasterVisitReportListAjax(startDate, endDate) {
 
-		let url = 'https://leashtime.com/visit-report-list-ajax.php?start=2019-06-11&end=2019-06-11';
-		//'+startDate+'&end='+endDate;
+		let url = 'https://leashtime.com/visit-report-list-ajax.php?start='+startDate+'&end='+endDate;
 		let options = {
 			method : 'GET',
 			headers : {
@@ -471,18 +470,18 @@ var LTMGR = (function() {
 		}
 		let vrListJson = await fetch(url,options)
 											.then((response)=> {
-												console.log(response);
-												return response;
+												//console.log(response);
+												return response.json();
 											});
 		
 		let report = {};
 		let reportList = [];
 		
 		if(vrListJson == null ) {
-			console.log('getMasterVisitReportListAjax: null vrListJson');
+			//console.log('getMasterVisitReportListAjax: null vrListJson');
 			return vrListJson;
 		} else if (vrListJson['error'] == 'no reports found') {
-			console.log('getMasterVisitReportListAjax: no reports found');
+			//console.log('getMasterVisitReportListAjax: no reports found');
 			return [];
 		} else {
 			vrListJson.forEach((vrItem) => {
@@ -506,7 +505,7 @@ var LTMGR = (function() {
 		}
 		let vrListRequest = await fetch(url,options);
 		let vrListResponse = await vrListRequest.json();
-		console.log('getVisitListAjax -> ' + vrListResponse);
+		//console.log('getVisitListAjax -> ' + vrListResponse);
 		let report = {};
 		if (vrListResponse['visitReport'] == 'none') {
 			return vrListResponse;
@@ -519,7 +518,7 @@ var LTMGR = (function() {
 					}
 				});
 			} else {
-				console.log('Returning null to ltmngr');
+				//console.log('Returning null to ltmngr');
 				report['report'] = 'none';
 			}
 		}
@@ -591,7 +590,7 @@ var LTMGR = (function() {
 		let reportList = []
 
 		if (vrListJson['visitReport'] == 'none') {
-			console.log('Returning none');
+			//console.log('Returning none');
 			return vrListJson;
 		} else {
 			if(vrListJson != null ) {
@@ -601,7 +600,7 @@ var LTMGR = (function() {
 					reportList.push(vrObject)
 				});
 			} else {
-				console.log('Returning null to ltmngr');
+				//console.log('Returning null to ltmngr');
 				reportList[0] = 'none';
 			}
 		}
@@ -626,7 +625,7 @@ var LTMGR = (function() {
 					}
 				});
 			} else {
-				console.log('Returning null to ltmngr');
+				//console.log('Returning null to ltmngr');
 				report['report'] = 'none';
 			}
 		}

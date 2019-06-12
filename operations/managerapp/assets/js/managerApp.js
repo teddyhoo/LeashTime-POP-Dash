@@ -6,7 +6,7 @@ var managerApp = (function(jquery, global,document) {
 	var username = '';
 	var password = '';
 	var userRole = 'm';
-	var isAjax = true;
+	var isAjax = false;
 
 	// [SitterVisit, SitterVisit, ..., SitterVisit]
 	var allVisits = []; 
@@ -191,11 +191,8 @@ var managerApp = (function(jquery, global,document) {
 	        document.getElementById('login').innerHTML = 'UPDATE';
 	    }
 
-	    if (loginDate == null) {
-	        fullDate = getFullDate();
-	    } else {
-	        fullDate = loginDate;
-	    }
+		fullDate = getFullDate();
+
 	    console.log('LTMGR manager Login Ajax');
 	    let loginAjaxFetchResponse = await LTMGR.managerLoginAjax(username, password, userRole);
 	    allSitters = await LTMGR.getManagerSittersAjax();
@@ -389,7 +386,6 @@ var managerApp = (function(jquery, global,document) {
 		let sitterID = e.target.getAttribute("id");
 		let buttonClass = e.target.getAttribute("class");
 		let classesArray = buttonClass.split(" ");
-		//sitterOnOffAction(classesArray);
 
 		classesArray.forEach((className) =>{
 
@@ -420,7 +416,6 @@ var managerApp = (function(jquery, global,document) {
 					} 
 				});
 				theVisits.forEach((visitDisplay)=> {
-					//console.log(visitDisplay.clientName);
 					createMapMarker(visitDisplay);
 				});
 			} else if (className == 'dontShow') {
@@ -450,7 +445,6 @@ var managerApp = (function(jquery, global,document) {
 					} 
 				});
 				theVisits.forEach((visitDisplay)=> {
-					console.log(visitDisplay.clientName);
 					createMapMarker(visitDisplay);
 				});
 
@@ -1706,6 +1700,7 @@ var managerApp = (function(jquery, global,document) {
 	return {
 
 		login : login,
+		loginAjax : loginAjax,
 		prevDay : prevDay,
 		nextDay : nextDay,
 		showVisitBySitter : showVisitBySitter,
