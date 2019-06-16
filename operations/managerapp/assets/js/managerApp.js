@@ -1,38 +1,34 @@
 var managerApp = (function(jquery, global,document) {
 	const base_url = 'https://leashtime.com';
 	const kHourlyEarnRate = 36.00;
-
+	var totalVisitCount = parseInt(0);
+	var totalCancelVisitCount = parseInt(0);
 	var fullDate;
 	var username = '';
 	var password = '';
 	var userRole = 'm';
 	var isAjax = false;
 
-	// [SitterVisit, SitterVisit, ..., SitterVisit]
 	var allVisits = []; 
-	// [SitterProfile, SitterProfile, ..., SitterProfile]
 	var allSitters = []; 
-	//[PetOwnerProfile,PetOwnerProfile, ... , PetOwnerProfile]
 	var allClients = [];
-	// [VisitReportVisitDetails, VisitReportVisitDetails, ..., VisitReportVisitDetails]
 	var visitReportList = [];
-	// sitterID --> [SitterVisit, SitterVisit, ..., SitterVisit]	
 	var visitsBySitterDict = {};  
 
 	var mapMarkers = []; 
 	var sitterMapMarkers = [];
 	var displaySitters = {};
-	var displayClientMapMarkers = [];
-
+	var sitterPolygonDict = {};
 	var trackSitterMileage = [];
 	var visitButtonList = [];
 	var visitPhotoCache = {};
-
-	var totalVisitCount = parseInt(0);
-	var totalCancelVisitCount = parseInt(0);
-
+	var total_miles = 0;
+	var total_duration_all = 0;
+	var onWhichDay = '';
+	const dayArrStr = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+	const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 	var re = /([0-9]+):([0-9]+):([0-9]+)/;
-
+	const colorPolygon = ['#FFFF00','#FFB400','#0AB400','#0AB4B4','#0AFFB4','#0AFFFF']
 	const masterVreportList = async() => {
 	    if (!isAjax) {
 	        let vReport = await LTMGR.getMasterVisitReportList(fullDate, fullDate);
@@ -55,14 +51,8 @@ var managerApp = (function(jquery, global,document) {
 	    'water': 'icon-mood-water-color@3x.png'
 	};
 
-	var total_miles = 0;
-	var total_duration_all = 0;
-	var onWhichDay = '';
-	const dayArrStr = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-	const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-
 	var map = new mapboxgl.Map({
 	    container: 'map',
 	    style: 'mapbox://styles/mapbox/streets-v9',
@@ -72,8 +62,8 @@ var managerApp = (function(jquery, global,document) {
 	map.on("load", () => {
 
 		console.log('map loaded');
-
 	});
+
 
 	function login(loginDate) {
 	    console.log('Logging in');
@@ -272,6 +262,51 @@ var managerApp = (function(jquery, global,document) {
 
 	    updateSummaryGraph(activeSitters, allSitterVisits);
 	}
+
+	function createSitterPolygon(sitterID, visitListForSitter) {
+
+		let polyCount = parseInt(Object.keys(sitterPolygonDict).length);
+		let alphaPos = 0.76;
+		console.log(alphaPos);
+
+		let fillColorNum = colorPolygon[polyCount];
+		let sitterVisitDict = {};
+		sitterVisitDict['id'] = sitterID;
+		sitterVisitDict['type'] = 'fill';
+		sitterVisitDict['layout'] = {};
+		sitterVisitDict['paint'] = {
+			'fill-color': fillColorNum,
+			'fill-opacity': alphaPos
+		};
+
+		let sourceDic = {}
+		sourceDic['type'] = 'geojson';
+		let dataDict = {}
+		dataDict['type'] = 'Feature';
+		sourceDic['data'] = dataDict;
+		let geometry = {};
+		geometry['type'] = 'Polygon';
+		dataDict['geometry'] = geometry;
+
+		let coordinates = [];
+		let coordWrap = [];
+
+		coordWrap.push(coordinates);
+
+		visitListForSitter.forEach((sitterVisit)=> {
+			let latitude = parseFloat(sitterVisit.lat);
+			let longitude = parseFloat(sitterVisit.lon);
+
+			let pair = [];
+			pair.push(longitude);
+			pair.push(latitude);
+			coordinates.push(pair);
+		});
+		geometry['coordinates'] = coordWrap;
+		sitterVisitDict['source'] = sourceDic;
+		console.log(sitterVisitDict);
+		return sitterVisitDict;
+	}
 	function createMapMarker(visitInfo) {
 
 	    let el = document.createElement('div');
@@ -358,29 +393,6 @@ var managerApp = (function(jquery, global,document) {
 	        });
 	    }
 	}
-	
-	function redrawMapMarkersForShownSitters() {
-		removeAllMapMarkers();
-
-		let theVisits = [];
-		let displaySitterKeys = Object.keys(displaySitters);
-		displaySitterKeys.forEach((skey)=> {
-			let displayKeyVal = displaySitters[skey];
-			if (displayKeyVal == "ON") {
-				let visitsBySitterKeys = Object.keys(visitsBySitterDict);
-				visitsBySitterKeys.forEach((showKey)=> {
-					if (showKey == skey) {
-						theVisits = theVisits.concat(visitsBySitterDict[skey])
-					}
-				});
-			} 
-		});
-		theVisits.forEach((visitDisplay)=> {
-			createMapMarker(visitDisplay);
-		});
-
-	}
-
 	function sitterShowOnOff(e) {
 
 		let sitterID = e.target.getAttribute("id");
@@ -389,8 +401,7 @@ var managerApp = (function(jquery, global,document) {
 
 		classesArray.forEach((className) =>{
 
-			if(className == 'calcMileage') {
-			} else if(className == 'showVisits'){
+			if(className == 'showVisits'){
 				displaySitters[sitterID] = 'ON';
 				classesArray.pop();
 				classesArray.push('dontShow');
@@ -399,21 +410,29 @@ var managerApp = (function(jquery, global,document) {
 				e.target.innerHTML = 'HIDE VISITS';
 
 				removeAllMapMarkers();
+
 				let theVisits = [];
+
 				let displaySitterKeys = Object.keys(displaySitters);
+
 				displaySitterKeys.forEach((skey)=> {
 					let displayKeyVal = displaySitters[skey];
 					if (displayKeyVal == "ON") {
-						console.log('Sitter ID: ' + skey + ' display: ' + displayKeyVal);
 						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
 						visitsBySitterKeys.forEach((showKey)=> {
-
 							if (showKey == skey) {
-								theVisits = theVisits.concat(visitsBySitterDict[skey])
-							}
+								theVisits = theVisits.concat(visitsBySitterDict[skey]);
+								if(sitterPolygonDict[skey] == null) {
+									let sitterPolygon = createSitterPolygon(skey, theVisits);
+									sitterPolygonDict[skey] = sitterPolygon;
+									map.addLayer(sitterPolygon);
+								} else {
+									//map.addLayer(sitterPolygonDict[skey]);
+								}
 
-						})
-					} 
+							}
+						});		
+					}
 				});
 				theVisits.forEach((visitDisplay)=> {
 					createMapMarker(visitDisplay);
@@ -426,22 +445,26 @@ var managerApp = (function(jquery, global,document) {
 				e.target.setAttribute("class", newClass);
 				e.target.innerHTML = 'SHOW VISITS';
 				removeAllMapMarkers();
+				removeSitterPolygons();
 				let theVisits = [];
 				let displaySitterKeys = Object.keys(displaySitters);
-
+				let polykeys = Object.keys(sitterPolygonDict);
+				
 				displaySitterKeys.forEach((skey)=> {
-
 					let displayKeyVal = displaySitters[skey];
 					if (displayKeyVal == "ON") {
-						console.log('Sitter ID ' + skey +' display: ' + displayKeyVal);
+						polykeys.forEach((pkey)=> {
+							if (pkey == skey) {
+								let sitterPoly = sitterPolygonDict[pkey];
+								map.addLayer(pkey);
+							}
+						});
 						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
 						visitsBySitterKeys.forEach((showKey)=> {
-
 							if (showKey == skey) {
 								theVisits = theVisits.concat(visitsBySitterDict[skey])
 							}
-
-						})
+						});
 					} 
 				});
 				theVisits.forEach((visitDisplay)=> {
@@ -450,10 +473,7 @@ var managerApp = (function(jquery, global,document) {
 
 			}
 		});
-
 	}
-
-
 	function createSitterMapMarker(sitterInfo) {
 	    let el = document.createElement('div');
 	    let latitude = parseFloat(sitterInfo.sitterLat);
@@ -463,7 +483,7 @@ var managerApp = (function(jquery, global,document) {
 	        popupView = createSitterPopup(sitterInfo);
 	        let popupWithClickListener = document.createElement('div');
 	        popupWithClickListener.innerHTML = popupView;
-	        console.log('This value is: ' + this);
+	        //console.log('This value is: ' + this);
 			let that = this;
 
 	        popupWithClickListener.addEventListener('click',sitterShowOnOff);
@@ -488,7 +508,6 @@ var managerApp = (function(jquery, global,document) {
 	        }
 	    }
 	}
-
 	function createSitterPopup(sitterInfo) {
 
 	    let currentVisitListBySitter = visitsBySitterDict[sitterInfo.sitterID];
@@ -805,13 +824,13 @@ var managerApp = (function(jquery, global,document) {
 	    allVisits.forEach((visitDetails) => {
 	        let visitStatus = visitDetails.status;
 	        let visitReportStatus = visitDetails.vrStatus;
-	        console.log('visit status: ' + visitStatus + ', ' + visitReportStatus);
+	        //console.log('visit status: ' + visitStatus + ', ' + visitReportStatus);
 	        if (filterStatus == visitDetails.status) {
 	        	// arrive, complete, canceled, future, late
 	            visitFilterArray.push(visitDetails);
 
 	        }  else if (filterStatus == 'published' || filterStatus == 'submitted') {
-	        	console.log(visitDetails.vrStatus);
+	        	//console.log(visitDetails.vrStatus);
 	        	if (visitDetails.vrStatus == filterStatus) {
 	        		visitFilterArray.push(visitDetails);
 	        	}
@@ -821,7 +840,7 @@ var managerApp = (function(jquery, global,document) {
 	    });
 
 	    visitFilterArray.forEach((visit) => {
-	    	console.log('Visit Report status: ' + visit.vrStatus);
+	    	//console.log('Visit Report status: ' + visit.vrStatus);
 	        createMapMarker(visit, 'marker');
 	    });
 
@@ -848,7 +867,6 @@ var managerApp = (function(jquery, global,document) {
 	        }
 	    });
 	}
-
 	function showAllClients() {
 
 		buildSitterButtons(allVisits, allSitters);
@@ -873,7 +891,7 @@ var managerApp = (function(jquery, global,document) {
 	    return listOfVisitsToSort;
 	}
 	function showVisitBySitter(sitterProfile) {
-	    console.log('Showing visits by sitter');
+	    //console.log('Showing visits by sitter');
 	    removeVisitDivElements();
 	    removeAllMapMarkers();
 	    createSitterMapMarker(sitterProfile);
@@ -1006,7 +1024,7 @@ var managerApp = (function(jquery, global,document) {
 	            const directions = response.body;
 	            let waypoints = directions['waypoints'];
 	            let routes = directions.routes;
-	            console.log('Number of route elements: ');
+	            //console.log('Number of route elements: ');
 	            let d2 = routes[0];
 	            //parseDistanceData(d2, waypoints, sitterID);
 	            LTMGR.addDistanceMatrixPair(d2,waypoints);
@@ -1093,15 +1111,25 @@ var managerApp = (function(jquery, global,document) {
 	    let dayWeekLabel = document.getElementById('dayWeek');
 	    let monthLabel = document.getElementById('month');
 	    let dateLabel = document.getElementById("dateLabel");
-
+	    console.log('DATE INFO IS: ' + dateInfo);
 	    let dayWeekTemp = dateInfo.getDay();
+	    console.log('Day of the week: ' + dayWeekTemp);
 
 	    dayWeekLabel.innerHTML = dayArrStr[dayWeekTemp] + ', ';
 	    monthLabel.innerHTML = monthsArrStr[dateInfo.getMonth() -1];
 	    dateLabel.innerHTML = dateInfo.getDate();
 	}
-	function prevDay() {
+	function cleanupResetNextPrev() {
 	    removeAccordionControls();
+		removeSittersFromSitterList();
+	    removeAllMapMarkers();
+	    removeSitterMapMarker();
+	    removeVisitDivElements();
+
+	}
+	function prevDay() {
+		cleanupResetNextPrev();
+
 	    onWhichDay.setDate(onWhichDay.getDate() - 1)
 	    let monthDate = onWhichDay.getMonth();
 	    let monthDay = onWhichDay.getDate();
@@ -1110,31 +1138,25 @@ var managerApp = (function(jquery, global,document) {
 
 	    let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate + '-' + monthDay;
 
-	    updateDateLabels(onWhichDay);
-
 	    fullDate = dateRequestString;
-	    prevDaySteps(dateRequestString);
+	    let newDate = new Date(fullDate)
+	    prevDaySteps(fullDate);
 
-	    updateDateLabels()
-	    removeSittersFromSitterList();
-	    removeAllMapMarkers();
-	    removeVisitDivElements();
+	    updateDateLabels(newDate);
+
 	}
 	function nextDay() {
-
-	    removeAccordionControls();
+		cleanupResetNextPrev();
 
 	    onWhichDay.setDate(onWhichDay.getDate() + 1)
 	    let monthDate = onWhichDay.getMonth() + 1;
 	    let monthDay = onWhichDay.getDate();
 	    let dateRequestString = onWhichDay.getFullYear() + '-' + monthDate + '-' + monthDay;
-	    updateDateInfo();
+	    updateDateLabels(onWhichDay);
 	    fullDate = dateRequestString;
 	    prevDaySteps(dateRequestString);
 
-	    removeSittersFromSitterList();
-	    removeAllMapMarkers();
-	    removeVisitDivElements();
+
 	}
 	async function prevDaySteps(loginDate) {
 
@@ -1169,7 +1191,7 @@ var managerApp = (function(jquery, global,document) {
 	        .then((vListItems) => {
 	            vListItems.forEach((item) => {
 	                visitReportList.push(item);
-	                console.log(item.visitID + ' -> ' + item.status);
+	                //console.log(item.visitID + ' -> ' + item.status);
 	            });
 	            flyToFirstVisit();
 	            buildSitterButtons(allVisits, allSitters);
@@ -1601,101 +1623,36 @@ var managerApp = (function(jquery, global,document) {
 	    //            }
 	}
 	function removeAllMapMarkers() {
+		console.log('Num markers before remove: ' + mapMarkers.length);
 	    mapMarkers.forEach((marker) => {
 	    	let htmlMapMarkerObj = marker.getElement();
-	    	console.log('Map marker HTML Object element: ' + htmlMapMarkerObj);
 	        marker.remove();
 	        marker = null;
 	    });
+		console.log('Num markers after remove: ' + mapMarkers.length);
 	    mapMarkers = [];
 	}
 	function removeSitterMapMarker() {
+		console.log('Num sitter markers before remove: ' + sitterMapMarkers.length);
+
 		sitterMapMarkers.forEach((sitterMarker)=> {
 			console.log(typeof(sitterMarker));
 			sitterMarker.remove();
 		});
+		console.log('Num sitter markers after remove: ' + sitterMapMarkers.length);
+
 		sitterMapMarker = [];
 	}
-	function createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList) {
+	function removeSitterPolygons() {
+		sitterPolygonDict.forEach((polyLayer)=> {
 
-	    let popupBasicInfo = '<h1>' + sitterInfo.sitterName + '</h1>';
-	    popupBasicInfo += '<p>' + sitterInfo.street1 + ',  ' + sitterInfo.city + '</p>';
-	    let distanceResponse = mileageInfo.route;
-	    let waypoints = mileageInfo.waypoints;
-	    let total_distance = distanceResponse.distance / 1000;
-	    let total_duration = distanceResponse.duration / 60;
-	    let route_legs = distanceResponse.legs;
-	    let num_legs = distanceResponse.legs.length;
-	    let total_dist_check = 0;
-	    let total_duration_check = 0;
-	    let first_distance = 0;
-	    let last_distance = 0;
-	    let first_duration = 0;
-	    let last_duration = 0;
-	    let route_index = 0;
-	    route_legs.forEach((leg) => {
-	        let step_arr = leg.steps;
-	        num_legs = num_legs - 1;
-	        route_index = route_index + 1;
-	        total_dist_check = total_dist_check + parseFloat(leg.distance);
-	        total_duration_check = total_duration_check + parseFloat(leg.duration);
-	        if (route_index == 0) {
-	            first_distance = leg.distance;
-	        }
-	        if (route_index == distanceResponse.legs.length - 1) {
-	            last_distance = leg.distance
-	        }
-	    });
-	    total_miles = total_miles + (total_distance * .62137);
-	    total_duration_all = total_duration_all + total_duration;
-	    total_distance = total_distance * .62137;
-	    let per_visit_distance = total_distance / (waypoints.length - 2);
-	    let per_visit_duration = total_duration / (waypoints.length - 2);
-	    popupBasicInfo += '<p style="color:white">Total Miles: ' + total_distance + '<BR>';
-	    popupBasicInfo += '<p style="color:white"> Duration: ' + total_duration + '<BR>';
-	    popupBasicInfo += '<p style="color:white">Number of visits: </p' + visitList.length + '<BR>';
-	    popupBasicInfo += '<ul>';
-	    visitList.forEach((visit) => {
-	        popupBasicInfo += '<li>' + visit.clientName;
-	        if (visit.sitterName == sitterInfo.sitterName) {
-	            createMapMarker(visit, "");
-	        }
-	    })
-	    popupBasicInfo += '</ul>';
-	    popupBasicInfo += '<p><img src=\"./assets/img/postit\-20x20.png\" width=20 height=20>&nbsp&nbsp<input type=\"text\" name=\"messageSitter\" id=\"messageSitter\"></p>';
+			map.removeLayer(polyLayer);
 
-	    return popupBasicInfo;
+		})
 	}
-	function createSitterMapMarkerWithMileage(sitterInfo, mileageInfo, visitList) {
-	    let el = document.createElement('div');
-	    let latitude = parseFloat(sitterInfo.sitterLat);
-	    let longitude = parseFloat(sitterInfo.sitterLon);
-	    let popupView;
-	    if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
-	        popupView = createSitterPopupWithMileage(sitterInfo, mileageInfo, visitList);
-	        el.class = 'sitter';
-	        el.id = 'sitter';
-
-	        let popup = new mapboxgl.Popup({
-	                offset: 25
-	            })
-	            .setHTML(popupView);
-
-	        if (latitude > 90 || latitude < -90) {
-	            console.log("Lat error");
-	        } else {
-	            let marker = new mapboxgl.Marker(el)
-	                .setLngLat([longitude, latitude])
-	                .setPopup(popup)
-	                .addTo(map);
-
-	        }
-	    }
-	    visitList.forEach((visit) => {
-	        createMapMarker(visit, "");
-	    })
+	function removeDisplaySitters() {
+		displaySitters = [];
 	}
-
 
 	return {
 
