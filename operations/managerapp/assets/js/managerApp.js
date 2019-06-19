@@ -13,22 +13,26 @@ var managerApp = (function(jquery, global,document) {
 	var allSitters = []; 
 	var allClients = [];
 	var visitReportList = [];
-	var visitsBySitterDict = {};  
 
 	var mapMarkers = []; 
 	var sitterMapMarkers = [];
-	var displaySitters = {};
-	var sitterPolygonDict = {};
 	var trackSitterMileage = [];
 	var visitButtonList = [];
+
+	var visitsBySitterDict = {};  
+	var displaySitters = {};
+	var sitterPolygonDict = {};
 	var visitPhotoCache = {};
+
 	var total_miles = 0;
 	var total_duration_all = 0;
 	var onWhichDay = '';
+
+	const colorPolygon = ['#FFFF00','#FFB400','#0AB400','#0AB4B4','#0AFFB4','#0AFFFF','#0AbFFF','#0AdFFF','#0A1FFF','#0A2FFF','#0A3FFF'];
 	const dayArrStr = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 	const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 	var re = /([0-9]+):([0-9]+):([0-9]+)/;
-	const colorPolygon = ['#FFFF00','#FFB400','#0AB400','#0AB4B4','#0AFFB4','#0AFFFF']
+
 	const masterVreportList = async() => {
 	    if (!isAjax) {
 	        let vReport = await LTMGR.getMasterVisitReportList(fullDate, fullDate);
@@ -227,7 +231,6 @@ var managerApp = (function(jquery, global,document) {
 	            }
 	        });
 	        if (hasVisits) {
-	            //createSitterMapMarker(sitter);
 	            activeSitters.push(sitter);
 	        }
 	    });
@@ -262,50 +265,7 @@ var managerApp = (function(jquery, global,document) {
 
 	    updateSummaryGraph(activeSitters, allSitterVisits);
 	}
-
-	function createSitterPolygon(sitterID, visitListForSitter) {
-
-		let polyCount = parseInt(Object.keys(sitterPolygonDict).length);
-		let alphaPos = 0.76;
-		console.log(alphaPos);
-
-		let fillColorNum = colorPolygon[polyCount];
-		let sitterVisitDict = {};
-		sitterVisitDict['id'] = sitterID;
-		sitterVisitDict['type'] = 'fill';
-		sitterVisitDict['layout'] = {};
-		sitterVisitDict['paint'] = {
-			'fill-color': fillColorNum,
-			'fill-opacity': alphaPos
-		};
-
-		let sourceDic = {}
-		sourceDic['type'] = 'geojson';
-		let dataDict = {}
-		dataDict['type'] = 'Feature';
-		sourceDic['data'] = dataDict;
-		let geometry = {};
-		geometry['type'] = 'Polygon';
-		dataDict['geometry'] = geometry;
-
-		let coordinates = [];
-		let coordWrap = [];
-
-		coordWrap.push(coordinates);
-
-		visitListForSitter.forEach((sitterVisit)=> {
-			let latitude = parseFloat(sitterVisit.lat);
-			let longitude = parseFloat(sitterVisit.lon);
-
-			let pair = [];
-			pair.push(longitude);
-			pair.push(latitude);
-			coordinates.push(pair);
-		});
-		geometry['coordinates'] = coordWrap;
-		sitterVisitDict['source'] = sourceDic;
-		console.log(sitterVisitDict);
-		return sitterVisitDict;
+	function createDelauneyTriangulation(sitterID, visitCoordinatesArray) {
 	}
 	function createMapMarker(visitInfo) {
 
@@ -393,86 +353,142 @@ var managerApp = (function(jquery, global,document) {
 	        });
 	    }
 	}
+	function createSitterPolygon(sitterID, visitListForSitter) {
+
+		let polyCount = parseInt(Object.keys(sitterPolygonDict).length);
+		let alphaPos = 0.56;
+		let fillColorNum = colorPolygon[polyCount];
+		let sitterVisitDict = {};
+		let sourceDic = {};
+		let dataDict = {};
+		let geometry = {};
+		let coordinates = [];
+		let coordWrap = [];
+
+		sitterVisitDict['id'] = 'polygon'+sitterID;
+		sitterVisitDict['type'] = 'fill';
+		sitterVisitDict['layout'] = {};
+		sitterVisitDict['paint'] = {
+			'fill-color': fillColorNum,
+			'fill-opacity': alphaPos
+		};
+
+		sourceDic['type'] = 'geojson';
+		dataDict['type'] = 'Feature';
+		sourceDic['data'] = dataDict;
+		geometry['type'] = 'Polygon';
+		dataDict['geometry'] = geometry;
+		coordWrap.push(coordinates);
+
+		visitListForSitter.forEach((sitterVisit)=> {
+			let latitude = parseFloat(sitterVisit.lat);
+			let longitude = parseFloat(sitterVisit.lon);
+
+			let pair = [];
+			pair.push(longitude);
+			pair.push(latitude);
+			coordinates.push(pair);
+		});
+		geometry['coordinates'] = coordWrap;
+		sitterVisitDict['source'] = sourceDic;
+		console.log(sitterVisitDict);
+		return sitterVisitDict;
+	}
+	function filterShowSitterONkeyVal(sitterIDkey) {	
+
+		let theVisits = [];
+		let visitsBySitterKeys = Object.keys(visitsBySitterDict);
+
+		visitsBySitterKeys.forEach((showKey)=> {
+			if (showKey == sitterIDkey) {
+				theVisits = visitsBySitterDict[sitterIDkey];
+				//console.log('matched sitter ID: ' + sitterIDkey + '  with array of assigned visits: ' + theVisits);
+				if(sitterPolygonDict[sitterIDkey] == null) {
+					console.log('NO polygon for sitter with id: ' + sitterIDkey);
+					let sitterPolygon = createSitterPolygon(sitterIDkey, theVisits);
+					sitterPolygonDict[sitterIDkey] = sitterPolygon;
+					map.addLayer(sitterPolygon);
+
+				} else {
+					console.log('POLYGON exists for sitter with id: ' + sitterIDkey);
+					map.addLayer(sitterPolygonDict[sitterIDkey]);
+				}
+
+			}
+		});		
+
+		return theVisits;
+	}
+	function sitterShowClassStatus(sitterClassArray, component) {
+		removeAllMapMarkers();
+		//removeSitterPolygons();
+		let showType = '';
+
+		sitterClassArray.forEach((className)=> {
+
+			if(className == 'showVisits') {
+				sitterClassArray.pop();
+				sitterClassArray.push('dontShow');
+				let newClass = sitterClassArray.join(' ');
+				component.setAttribute("class", newClass)
+				component.innerHTML = 'HIDE VISITS';
+				showType = 'showVisits';
+			} else if (className == 'dontShow') {
+				sitterClassArray.pop();
+				sitterClassArray.push('showVisits');
+				let newClass = sitterClassArray.join(' ');
+				component.setAttribute("class", newClass)
+				component.innerHTML = 'SHOW VISITS';
+				showType ='dontShow';
+			}
+
+
+		});
+
+		return showType;
+	}
 	function sitterShowOnOff(e) {
 
 		let sitterID = e.target.getAttribute("id");
+		let accordionNode = document.getElementById('visitListBySitterAccordions').children;
+		for (i = 0; i < accordionNode.length; i++) {
+  			if(accordionNode[i].id == sitterID) {
+				console.log(accordionNode[i]);
+				accordionNode[i].setAttribute('style', 'background-color:#FFFF00');
+  			}
+		}
 		let buttonClass = e.target.getAttribute("class");
 		let classesArray = buttonClass.split(" ");
+		let showHideType = sitterShowClassStatus(classesArray, e.target);
+		let theVisits = [];
+		let displaySitterKeys = Object.keys(displaySitters);
+		let polykeys = Object.keys(sitterPolygonDict);
 
-		classesArray.forEach((className) =>{
+		if (showHideType == 'showVisits') {
+			let sittersVisits = filterShowSitterONkeyVal(sitterID);
+			theVisits = theVisits.concat(sittersVisits);
+			theVisits.forEach((visitDisplay)=> {
+				//console.log('VISIT MARKER MAKE: ' + visitDisplay.clientName);
+				createMapMarker(visitDisplay);
+			});
 
-			if(className == 'showVisits'){
-				displaySitters[sitterID] = 'ON';
-				classesArray.pop();
-				classesArray.push('dontShow');
-				let newClass = classesArray.join(' ');
-				e.target.setAttribute("class", newClass)
-				e.target.innerHTML = 'HIDE VISITS';
-
-				removeAllMapMarkers();
-
-				let theVisits = [];
-
-				let displaySitterKeys = Object.keys(displaySitters);
-
-				displaySitterKeys.forEach((skey)=> {
-					let displayKeyVal = displaySitters[skey];
-					if (displayKeyVal == "ON") {
-						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
-						visitsBySitterKeys.forEach((showKey)=> {
-							if (showKey == skey) {
-								theVisits = theVisits.concat(visitsBySitterDict[skey]);
-								if(sitterPolygonDict[skey] == null) {
-									let sitterPolygon = createSitterPolygon(skey, theVisits);
-									sitterPolygonDict[skey] = sitterPolygon;
-									map.addLayer(sitterPolygon);
-								} else {
-									//map.addLayer(sitterPolygonDict[skey]);
-								}
-
-							}
-						});		
-					}
-				});
-				theVisits.forEach((visitDisplay)=> {
-					createMapMarker(visitDisplay);
-				});
-			} else if (className == 'dontShow') {
-				displaySitters[sitterID] = 'OFF';
-				classesArray.pop();
-				classesArray.push('showVisits');
-				let newClass = classesArray.join(' ');
-				e.target.setAttribute("class", newClass);
-				e.target.innerHTML = 'SHOW VISITS';
-				removeAllMapMarkers();
-				removeSitterPolygons();
-				let theVisits = [];
-				let displaySitterKeys = Object.keys(displaySitters);
-				let polykeys = Object.keys(sitterPolygonDict);
-				
-				displaySitterKeys.forEach((skey)=> {
-					let displayKeyVal = displaySitters[skey];
-					if (displayKeyVal == "ON") {
-						polykeys.forEach((pkey)=> {
-							if (pkey == skey) {
-								let sitterPoly = sitterPolygonDict[pkey];
-								map.addLayer(pkey);
-							}
-						});
-						let visitsBySitterKeys = Object.keys(visitsBySitterDict);
-						visitsBySitterKeys.forEach((showKey)=> {
-							if (showKey == skey) {
-								theVisits = theVisits.concat(visitsBySitterDict[skey])
-							}
-						});
-					} 
-				});
-				theVisits.forEach((visitDisplay)=> {
-					createMapMarker(visitDisplay);
-				});
-
-			}
-		});
+		} else if (showHideType == 'dontShow') {
+			polykeys.forEach((pkey)=> {
+				if (pkey == sitterID) {
+					let sitterPoly = sitterPolygonDict[pkey];
+					map.removeLayer('polygon'+sitterID);
+				}
+			});
+			let visitsBySitterKeys = Object.keys(visitsBySitterDict);
+			visitsBySitterKeys.forEach((showKey)=> {
+				if (showKey == sitterID) {
+					theVisits = theVisits.concat(visitsBySitterDict[sitterID])
+				}
+			});
+			theVisits.forEach((visitDisplay)=> {
+				createMapMarker(visitDisplay);
+			});
+		}	
 	}
 	function createSitterMapMarker(sitterInfo) {
 	    let el = document.createElement('div');
@@ -483,9 +499,6 @@ var managerApp = (function(jquery, global,document) {
 	        popupView = createSitterPopup(sitterInfo);
 	        let popupWithClickListener = document.createElement('div');
 	        popupWithClickListener.innerHTML = popupView;
-	        //console.log('This value is: ' + this);
-			let that = this;
-
 	        popupWithClickListener.addEventListener('click',sitterShowOnOff);
 	        
 	        el.class = 'sitter';
@@ -1143,7 +1156,6 @@ var managerApp = (function(jquery, global,document) {
 	    prevDaySteps(fullDate);
 
 	    updateDateLabels(newDate);
-
 	}
 	function nextDay() {
 		cleanupResetNextPrev();
@@ -1155,8 +1167,6 @@ var managerApp = (function(jquery, global,document) {
 	    updateDateLabels(onWhichDay);
 	    fullDate = dateRequestString;
 	    prevDaySteps(dateRequestString);
-
-
 	}
 	async function prevDaySteps(loginDate) {
 
@@ -1202,8 +1212,9 @@ var managerApp = (function(jquery, global,document) {
 	    let sitterListDiv = document.getElementById('visitListBySitterAccordions');
 	    let sitterListElement = document.createElement('div');
 	    sitterListElement.setAttribute("class", "sitter card panel");
+	    sitterListElement.setAttribute("id",sitter.sitterID);
 
-	    let sitterCardHead = createSitterCardHead(sitter, "sitterListAccordions", sitter.sitterID);
+	    let sitterCardHead = createSitterCardHead(sitter, "visitListBySitterAccordions", sitter.sitterID);
 	    let headerElement = createHeaderTools(sitter);
 	    let toolDiv = createToolDiv(sitter);
 
@@ -1543,7 +1554,7 @@ var managerApp = (function(jquery, global,document) {
 			if (sitterInfo.sitterLat != null & sitterInfo.sitterLon != null) {
 				map.flyTo({
 					center : [sitterInfo.sitterLon, sitterInfo.sitterLat],
-					zoom:  12
+					zoom:  30
 				});
 			} else {
 				alert('Invalid coordinates for sitter home');
@@ -1629,8 +1640,9 @@ var managerApp = (function(jquery, global,document) {
 	        marker.remove();
 	        marker = null;
 	    });
-		console.log('Num markers after remove: ' + mapMarkers.length);
 	    mapMarkers = [];
+		console.log('Num markers after remove: ' + mapMarkers.length);
+
 	}
 	function removeSitterMapMarker() {
 		console.log('Num sitter markers before remove: ' + sitterMapMarkers.length);
@@ -1639,16 +1651,16 @@ var managerApp = (function(jquery, global,document) {
 			console.log(typeof(sitterMarker));
 			sitterMarker.remove();
 		});
+		sitterMapMarker = [];
 		console.log('Num sitter markers after remove: ' + sitterMapMarkers.length);
 
-		sitterMapMarker = [];
 	}
 	function removeSitterPolygons() {
-		sitterPolygonDict.forEach((polyLayer)=> {
-
-			map.removeLayer(polyLayer);
-
-		})
+		let polyKeys = Object.keys(sitterPolygonDict);
+		polyKeys.forEach((polyLayer)=> {
+			map.removeLayer('polygon'+sitterID);
+		});
+		//polyKeys = {};
 	}
 	function removeDisplaySitters() {
 		displaySitters = [];
