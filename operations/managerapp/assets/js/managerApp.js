@@ -28,7 +28,7 @@ var managerApp = (function(jquery, global,document) {
 	var total_duration_all = 0;
 	var onWhichDay = '';
 
-	const colorPolygon = ['#FFFF00','#FFB400','#0AB400','#0AB4B4','#0AFFB4','#0AFFFF','#0AbFFF','#0AdFFF','#0A1FFF','#0A2FFF','#0A3FFF'];
+	const colorPolygon = ['#FFFF00','#FFB400','#0AB400','#0AB4B4','#0AFFB4','#0AFFFF','#0ACCFF','#00DDFF','#BB22FF','#99CCFF','#BBDDFF'];
 	const dayArrStr = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 	const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 	var re = /([0-9]+):([0-9]+):([0-9]+)/;
@@ -54,8 +54,6 @@ var managerApp = (function(jquery, global,document) {
 	    'treat': 'icon-mood-treat-color@3x.png',
 	    'water': 'icon-mood-water-color@3x.png'
 	};
-
-
 	mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 	var map = new mapboxgl.Map({
 	    container: 'map',
@@ -67,8 +65,6 @@ var managerApp = (function(jquery, global,document) {
 
 		console.log('map loaded');
 	});
-
-
 	function login(loginDate) {
 	    console.log('Logging in');
 	    removeSittersFromSitterList();
@@ -353,6 +349,26 @@ var managerApp = (function(jquery, global,document) {
 	        });
 	    }
 	}
+	function createConvex(sitterID, visitCoordArray) {
+		let turfPoints = [];
+		visitCoordArray.forEach((coord)=> {
+			//console.log(coord);
+			let tCoord = turf.point(coord);
+			turfPoints.push(tCoord);
+		});
+		let arrayOfCoord = [];
+		arrayOfCoord.push(turfPoints);
+		/*let turfCollection = turf.featureCollection({'features' : arrayOfCoord});
+		let hull = turf.convex(turfCollection);
+		map.addLayer({
+			id: sitterID+'hull',
+			type: 'convex',
+			source: hull,
+			paint: {
+				'hull-color': '#486DE0'
+			}
+   		 }, 'polyline');*/
+	}
 	function createSitterPolygon(sitterID, visitListForSitter) {
 
 		let polyCount = parseInt(Object.keys(sitterPolygonDict).length);
@@ -364,6 +380,7 @@ var managerApp = (function(jquery, global,document) {
 		let geometry = {};
 		let coordinates = [];
 		let coordWrap = [];
+
 
 		sitterVisitDict['id'] = 'polygon'+sitterID;
 		sitterVisitDict['type'] = 'fill';
@@ -388,13 +405,16 @@ var managerApp = (function(jquery, global,document) {
 			pair.push(longitude);
 			pair.push(latitude);
 			coordinates.push(pair);
+
 		});
 		geometry['coordinates'] = coordWrap;
 		sitterVisitDict['source'] = sourceDic;
-		console.log(sitterVisitDict);
+		//console.log(coordinates);
+		createConvex(sitterID, coordinates);
 		return sitterVisitDict;
 	}
 	function filterShowSitterONkeyVal(sitterIDkey) {	
+
 
 		let theVisits = [];
 		let visitsBySitterKeys = Object.keys(visitsBySitterDict);
@@ -402,25 +422,86 @@ var managerApp = (function(jquery, global,document) {
 		visitsBySitterKeys.forEach((showKey)=> {
 			if (showKey == sitterIDkey) {
 				theVisits = visitsBySitterDict[sitterIDkey];
-				//console.log('matched sitter ID: ' + sitterIDkey + '  with array of assigned visits: ' + theVisits);
 				if(sitterPolygonDict[sitterIDkey] == null) {
-					console.log('NO polygon for sitter with id: ' + sitterIDkey);
 					let sitterPolygon = createSitterPolygon(sitterIDkey, theVisits);
 					sitterPolygonDict[sitterIDkey] = sitterPolygon;
 					map.addLayer(sitterPolygon);
-
 				} else {
-					console.log('POLYGON exists for sitter with id: ' + sitterIDkey);
 					map.addLayer(sitterPolygonDict[sitterIDkey]);
 				}
-
 			}
 		});		
-
 		return theVisits;
 	}
-	function sitterShowClassStatus(sitterClassArray, component) {
+	function sitterShowOnOff(e) {
+
+		let sitterID = e.target.getAttribute("id");
+		let accordionNode = document.getElementById('visitListBySitterAccordions').children;
+		for (i = 0; i < accordionNode.length; i++) {
+  			if(accordionNode[i].id == sitterID) {
+				accordionNode[i].setAttribute('style', 'background-color:#FFFF00');
+  			}
+		}
+		sitterMapMarkers.forEach((sitter)=> {
+			/*let sitID = sittter.getPopup().options.className;
+			let matchID = 'sitterPopup'+sitterID;
+			if (matchID == sitID) {
+
+				console.log(sitterID);
+				console.log(marker.getElement());
+			}*/
+
+		});
+
+		let buttonClass = e.target.getAttribute("class");
+		let classesArray = buttonClass.split(" ");
+		let showHideType = sitterShowClassStatus(classesArray, e.target);
+		let theVisits = [];
 		removeAllMapMarkers();
+
+		let polykeys = Object.keys(sitterPolygonDict);
+
+		if (showHideType == 'showVisits') {
+			displaySitters[sitterID] = 'ON';
+			let sittersVisits = filterShowSitterONkeyVal(sitterID);
+			theVisits = sittersVisits;
+			let displaySitterKeys = Object.keys(displaySitters);
+			console.log(displaySitterKeys);
+			displaySitterKeys.forEach((onKey)=> {
+				if (displaySitters[onKey] == 'ON') {
+					let sitterVisitOnArray = visitsBySitterDict[onKey];
+					sitterVisitOnArray.forEach((visitItem) => {
+						theVisits.push(visitItem);
+					})
+				}
+			});
+			theVisits.forEach((visitDisplay)=> {
+				createMapMarker(visitDisplay);
+			});
+
+		} else if (showHideType == 'dontShow') {
+			displaySitters[sitterID] = 'OFF';
+
+			polykeys.forEach((pkey)=> {
+				if (pkey == sitterID) {
+					let sitterPoly = sitterPolygonDict[pkey];
+					map.removeLayer('polygon'+sitterID);
+				}
+			});
+
+			let visitsBySitterKeys = Object.keys(visitsBySitterDict);
+			visitsBySitterKeys.forEach((showKey)=> {
+				if (showKey == sitterID) {
+					theVisits = theVisits.concat(visitsBySitterDict[sitterID])
+				}
+			});
+			theVisits.forEach((visitDisplay)=> {
+				createMapMarker(visitDisplay);
+			});
+		}	
+	}
+	function sitterShowClassStatus(sitterClassArray, component) {
+		//removeAllMapMarkers();
 		//removeSitterPolygons();
 		let showType = '';
 
@@ -446,49 +527,6 @@ var managerApp = (function(jquery, global,document) {
 		});
 
 		return showType;
-	}
-	function sitterShowOnOff(e) {
-
-		let sitterID = e.target.getAttribute("id");
-		let accordionNode = document.getElementById('visitListBySitterAccordions').children;
-		for (i = 0; i < accordionNode.length; i++) {
-  			if(accordionNode[i].id == sitterID) {
-				console.log(accordionNode[i]);
-				accordionNode[i].setAttribute('style', 'background-color:#FFFF00');
-  			}
-		}
-		let buttonClass = e.target.getAttribute("class");
-		let classesArray = buttonClass.split(" ");
-		let showHideType = sitterShowClassStatus(classesArray, e.target);
-		let theVisits = [];
-		let displaySitterKeys = Object.keys(displaySitters);
-		let polykeys = Object.keys(sitterPolygonDict);
-
-		if (showHideType == 'showVisits') {
-			let sittersVisits = filterShowSitterONkeyVal(sitterID);
-			theVisits = theVisits.concat(sittersVisits);
-			theVisits.forEach((visitDisplay)=> {
-				//console.log('VISIT MARKER MAKE: ' + visitDisplay.clientName);
-				createMapMarker(visitDisplay);
-			});
-
-		} else if (showHideType == 'dontShow') {
-			polykeys.forEach((pkey)=> {
-				if (pkey == sitterID) {
-					let sitterPoly = sitterPolygonDict[pkey];
-					map.removeLayer('polygon'+sitterID);
-				}
-			});
-			let visitsBySitterKeys = Object.keys(visitsBySitterDict);
-			visitsBySitterKeys.forEach((showKey)=> {
-				if (showKey == sitterID) {
-					theVisits = theVisits.concat(visitsBySitterDict[sitterID])
-				}
-			});
-			theVisits.forEach((visitDisplay)=> {
-				createMapMarker(visitDisplay);
-			});
-		}	
 	}
 	function createSitterMapMarker(sitterInfo) {
 	    let el = document.createElement('div');
@@ -516,6 +554,9 @@ var managerApp = (function(jquery, global,document) {
 	                .setLngLat([longitude, latitude])
 	                .setPopup(popup)
 	                .addTo(map);
+
+	            console.log(marker.getPopup().options.className);
+	            console.log(marker.getElement());
 
 	            sitterMapMarkers.push(marker);
 	        }
@@ -837,13 +878,10 @@ var managerApp = (function(jquery, global,document) {
 	    allVisits.forEach((visitDetails) => {
 	        let visitStatus = visitDetails.status;
 	        let visitReportStatus = visitDetails.vrStatus;
-	        //console.log('visit status: ' + visitStatus + ', ' + visitReportStatus);
 	        if (filterStatus == visitDetails.status) {
-	        	// arrive, complete, canceled, future, late
 	            visitFilterArray.push(visitDetails);
 
 	        }  else if (filterStatus == 'published' || filterStatus == 'submitted') {
-	        	//console.log(visitDetails.vrStatus);
 	        	if (visitDetails.vrStatus == filterStatus) {
 	        		visitFilterArray.push(visitDetails);
 	        	}
@@ -853,7 +891,6 @@ var managerApp = (function(jquery, global,document) {
 	    });
 
 	    visitFilterArray.forEach((visit) => {
-	    	//console.log('Visit Report status: ' + visit.vrStatus);
 	        createMapMarker(visit, 'marker');
 	    });
 
@@ -1138,7 +1175,6 @@ var managerApp = (function(jquery, global,document) {
 	    removeAllMapMarkers();
 	    removeSitterMapMarker();
 	    removeVisitDivElements();
-
 	}
 	function prevDay() {
 		cleanupResetNextPrev();
@@ -1332,7 +1368,18 @@ var managerApp = (function(jquery, global,document) {
 
 	    let visitDiv = document.createElement('div');
 	    visitDiv.setAttribute("id", "visit-" + visitInfo.visitID);
-	    visitDiv.setAttribute("class", "card-head card-head-sm collapsed");
+
+	    let visitClassStatus = 'card-head card-head-sm collapsed';
+	    if (visitInfo.status == 'late') {
+	    	visitClassStatus += ' style-warning';
+	    } else if (visitInfo.status == 'canceled') {
+	    	visitClassStatus += ' style-canceled';
+	    } else if (visitInfo.status == 'arrived') {
+	    	visitClassStatus += ' style-success';
+	    } else if (visitInfo.status == 'future') {
+	    	visitClassStatus += ' style-info';
+	    }
+	    visitDiv.setAttribute("class", visitClassStatus);
 	    visitDiv.setAttribute("data-toggle", "collapse");
 	    visitDiv.setAttribute("data-parent", "#visitDetailDiv-" + visitInfo.visitID);
 	    visitDiv.setAttribute("data-target", "#visitDetails-" + visitInfo.visitID);
@@ -1642,7 +1689,6 @@ var managerApp = (function(jquery, global,document) {
 	    });
 	    mapMarkers = [];
 		console.log('Num markers after remove: ' + mapMarkers.length);
-
 	}
 	function removeSitterMapMarker() {
 		console.log('Num sitter markers before remove: ' + sitterMapMarkers.length);
@@ -1653,7 +1699,6 @@ var managerApp = (function(jquery, global,document) {
 		});
 		sitterMapMarker = [];
 		console.log('Num sitter markers after remove: ' + sitterMapMarkers.length);
-
 	}
 	function removeSitterPolygons() {
 		let polyKeys = Object.keys(sitterPolygonDict);

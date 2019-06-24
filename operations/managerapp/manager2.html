@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LeashTime Manager Dashboard</title>
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="per_sitting_businesses">
+    <meta name="description" content="PetOwner PetCare Management | Health & Wellness.  ">
+    <!-- END META -->
+
+    <!-- BEGIN FRAMEWORK STYLESHEETS -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+     <link type="text/css" rel="stylesheet" href="../../assets/css/libs/bootstrap/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
+    <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+
+    <!-- BEGIN LEASHTIME STYLESHEETS -->
+    <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
+    <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/manager-styles.css" rel="stylesheet" type="text/css">
+    <!-- END STYLESHEETS -->
+    <script src='assets/js/LTMGR.js'></script>
+    <!--<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />-->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.js"></script>
+    <script src="https://unpkg.com/@mapbox/mapbox-sdk/umd/mapbox-sdk.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+</head>
+<!--<body class="header-fixed">-->
+
+<body class="menubar-hoverable header-fixed menubar-pin ">
+<div id="base" style="padding-left:0;">
+  <div class="offcanvas"></div>
+
+  <div id="main-header">
+            <div class="row">
+                <div class="col-xs-12 full-bleed no-margin Full-height">
+                    <div class="transparent no-margin no-padding">
+                        <div id='map' class="mapView stick-bottom-left stick-bottom-right" style="height:100vh"></div>
+                    </div>
+
+                    <div class="overlay stick-top-right stick-top-left height-1 blue white-text p-t-0">
+                        <div class="pull-left">
+                            <ul>
+                                <li id="status" class="dropdown hidden-xs">
+                                    <a href="javascript:void(0);" class="btn btn-icon-toggle btn-default" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-area-chart white-text"></i><sup class="badge style-info"></sup>
+                                    </a>
+                                    <ul class="dropdown-menu animation-expand">
+                                        <li class="dropdown-header">SERVICE REPORT
+                                        </li>
+
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light">TOTAL VISITS<strong>TODAY</strong></span>
+                                                    <strong id="numTotal" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-warning" style="width: 44%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light">LATE VISITS </span>
+                                                    <strong id="numLatePercent" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-warning" id="progLate" style="width: 44%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light"><strong>CANCELLED</strong></span>
+                                                    <strong id="cancelPercent" class="pull-right">33</strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-danger" style="width: 13%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light"><strong>VISIT REPORTS TO REVIEW</strong></span>
+                                                    <strong id="numVRpercent" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div id="vrReviewBar" class="progress-bar progress-bar-success" style="width: 30%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-progress">
+                                            <a href="javascript:void(0);">
+                                                <div class="dropdown-label">
+                                                    <span class="text-light"><strong>PUBLISHED VISIT REPORTS</strong></span>
+                                                    <strong id="numVRsentPercent" class="pull-right"></strong>
+                                                </div>
+                                                <div class="progress">
+                                                    <div id="vrSentBar" class="progress-bar progress-bar-success" style="width: 30%"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-icon-toggle text-center">
+                                <i class="fa fa-eye white-text"></i>
+                            </a>
+                            <a class="btn btn-icon-toggle text-center" href="#offcanvas-sitters" data-toggle="offcanvas" data-backdrop="false">
+                                <i class="fa fa-paw white-text"></i>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <!-- LOGIN  -->
+                    <div class="stick-top-right m-t-20 m-r-20">
+                        <section id="lt-loginPanel" class="ltLogin m-t-25 section-info">
+                            <div class="section-body">
+                                <div class="card style-info force-padding">
+                                    <span class="text-small">
+                                      <input type="text" value="" id="userName" name="username" class="full-bleed text-center text-default">
+                                      <input type="text" value="" id="passWord" name="password" class="full-bleed text-center text-default">
+                                      <button type = "button" id="login" class="btn btn-block btn-info m-t-10 darken-2  btn-raised"  onClick=managerApp.login()>LOGIN</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+<div class="offcanvas"><!-- BEGIN OFFCANVAS SITTER & VISITS -->
+<div id="offcanvas-sitters" class="offcanvas-pane width-8 blue active">
+  <div class="offcanvas-head ">
+    <header class="white-text sm-text"><small>SITTERS AND VISITS</small></header>
+    <div class="offcanvas-tools">
+      <a class="btn btn-icon-toggle btn-default-light pull-right white-text" data-dismiss="offcanvas">
+        <i class="md md-close"></i>
+      </a>
+    </div>
+  </div>
+  <div class="offcanvas-body no-padding">
+    <!-- CALENDAR NAV -->
+    <div id="calendarNav" class="d-flex justify-content-between mt-4 mb-2 style-default rounded p-1">
+      <button id="prev" type="button" class="btn btn-md btn-primary darken-2 ink-reaction" role="button" onClick="managerApp.prevDay()" aria-label="Yesterday">
+        <i class="fa fa-angle-left"></i></button>
+      <div class="text-input">
+        <span id="dayWeek"></span><span id="month">...Login...</span><span id="dateLabel"></span>
+      </div>
+      <button id="next" type="button" class="btn btn-md btn-primary ink-reaction" role="button" onClick="managerApp.nextDay()" aria-label="Tommorrow"><i class="fa fa-angle-right"></i></button>
+    </div>   
+
+    <!-- FILTER NAV -->
+    <div id="filterOptions" class="filter-list btn-group-toggle d-flex justify-content-between no-padding" aria-label="Map Filters">
+      <button id="filter-alerts" type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" onClick="managerApp.filterMapViewByVisitStatus('late')">ALERTS</button>
+      <button id="filter-review" type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" onClick="managerApp.filterMapViewByVisitStatus('submitted')">REVIEW</button>
+      <button id="filter-delivered" type="button" class="btn btn-primary active" data-toggle="button" aria-pressed="true" onClick="managerApp.filterMapViewByVisitStatus('published')">DELIVERED</button>
+    </div>
+
+    <!-- VISIT NAV -->
+    <div class="panel-group" id="visitListBySitterAccordions">
+    </div>
+  </div>
+</div>
+</div>
+        
+</div>
+    <!-- END BASE -->
+
+    <!-- JAVASCRIPT -->
+
+    <!--<script src="./assets/js/lTmanagerapp.js"></script>-->
+    <script src="../../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../assets/js/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+    <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <script src="../../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+
+    <script src="../../assets/js/core/source/App.js"></script>
+    <script src="../../assets/js/core/source/AppVendor.js"></script>
+    <script src="../../assets/js/libs/moment/moment.js"></script>
+
+    <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
+    <script src="../../assets/js/core/source/AppCard.js"></script>
+    <script src="./assets/js/managerApp.js"></script>
+
+    <div id="device-breakpoints">
+        <div class="device-xs visible-xs" data-breakpoint="xs"></div>
+        <div class="device-sm visible-sm" data-breakpoint="sm"></div>
+        <div class="device-md visible-md" data-breakpoint="md"></div>
+        <div class="device-lg visible-lg" data-breakpoint="lg"></div>
+    </div>
+</body>
+
+</html>
