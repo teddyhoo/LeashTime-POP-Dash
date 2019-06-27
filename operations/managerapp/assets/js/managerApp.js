@@ -261,8 +261,7 @@ var managerApp = (function(jquery, global,document) {
 
 	    updateSummaryGraph(activeSitters, allSitterVisits);
 	}
-	function createDelauneyTriangulation(sitterID, visitCoordinatesArray) {
-	}
+
 	function createMapMarker(visitInfo) {
 
 	    let el = document.createElement('div');
@@ -530,17 +529,19 @@ var managerApp = (function(jquery, global,document) {
 	}
 	function createSitterMapMarker(sitterInfo) {
 	    let el = document.createElement('div');
+	    el.setAttribute('class','sitter');
+	    el.setAttribute('id','sitter');
 	    let latitude = parseFloat(sitterInfo.sitterLat);
 	    let longitude = parseFloat(sitterInfo.sitterLon);
 	    let popupView;
 	    if (latitude != null && longitude != null && latitude < 90 && latitude > -90) {
 	        popupView = createSitterPopup(sitterInfo);
-	        let popupWithClickListener = document.createElement('div');
+	        let popupWithClickListener = document.createElement('div')
 	        popupWithClickListener.innerHTML = popupView;
 	        popupWithClickListener.addEventListener('click',sitterShowOnOff);
 	        
-	        el.class = 'sitter';
-	        el.id = 'sitter';
+	        //el.class = 'sitter';
+	        //el.id = 'sitter';
 
 	        let popup = new mapboxgl.Popup({
 	        	offset: 25,

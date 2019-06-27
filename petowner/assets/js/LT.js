@@ -11,14 +11,13 @@ var LT = (function() {
 	var visit_list = [];
 	var time_windows_list= [];
 	var petOwnerAndPets;
+	var isAjax = true;
 
 	// ********************************************************************************************
 	// *       CLASS OBJECTS REPRESENTING DATA COMPONENTS
 	// ********************************************************************************************
 	class PetOwner {
 		constructor(pet_owner_data) {
-
-
 			this.client_id = pet_owner_data.clientid;
 			this.petOwnerData = pet_owner_data;
 			this.petImages = [];
@@ -26,9 +25,7 @@ var LT = (function() {
 			this.parsePetOwnerData(pet_owner_data);
 			this.parsePetInfo(pet_owner_data.pets);
 			this.parseCustomFields(pet_owner_data);
-
 		}
-
 		parsePetOwnerData(pData) {
 			//let profileKeys = pData.keys();
 			//profileKeys.forEach((key) => {
@@ -89,33 +86,37 @@ var LT = (function() {
 			this.emergency_dict = pData['emergency'];
 			this.neighbor_dict = pData['neighbor'];
 
-			this.emergency_name =this.emergency_dict['name'];
-			this.emergency_location = this.emergency_dict['location'];
-			this.emergency_homephone = this.emergency_dict['homephone'];
-			this.emergency_workphone = this.emergency_dict['workphone'];
-			this.emergency_cellphone= this.emergency_dict['cellphone'];
-			this.emergency_note = this.emergency_dict['note'];
-			this.emergency_hasKey = this.emergency_dict['haskey'];
+			if (this.emergency_dict != null) {
+				this.emergency_name =this.emergency_dict['name'];
+				this.emergency_location = this.emergency_dict['location'];
+				this.emergency_homephone = this.emergency_dict['homephone'];
+				this.emergency_workphone = this.emergency_dict['workphone'];
+				this.emergency_cellphone= this.emergency_dict['cellphone'];
+				this.emergency_note = this.emergency_dict['note'];
+				this.emergency_hasKey = this.emergency_dict['haskey'];
+			}
 
-			this.neighbor_name = this.neighbor_dict['name'];
-			this.neighbor_location = this.neighbor_dict['location'];
-			this.neighbor_homephone = this.neighbor_dict['homephone'];
-			this.neighbor_workphone = this.neighbor_dict['workphone'];
-			this.neighbor_cellphone= this.neighbor_dict['cellphone'];
-			this.neighbor_note = this.neighbor_dict['note'];
-			this.neighbor_hasKey = this.neighbor_dict['haskey'];
-		}
-
-		parsePetInfo(pet_info) {
-			let number_pets = pet_info.length;
-			for (let p = 0; p < number_pets; p++) {
-				let newPet = pet_info[p];
-				let clientPet = new Pet(newPet);
-				console.log('new pet data: ' + newPet + ' with PET object: ' + clientPet.petName);
-				this.pets.push(clientPet);
+			if(this.neighbor_dict != null) {
+				this.neighbor_name = this.neighbor_dict['name'];
+				this.neighbor_location = this.neighbor_dict['location'];
+				this.neighbor_homephone = this.neighbor_dict['homephone'];
+				this.neighbor_workphone = this.neighbor_dict['workphone'];
+				this.neighbor_cellphone= this.neighbor_dict['cellphone'];
+				this.neighbor_note = this.neighbor_dict['note'];
+				this.neighbor_hasKey = this.neighbor_dict['haskey'];
 			}
 		}
-
+		parsePetInfo(pet_info) {
+			if (pet_info != null) {
+				let number_pets = pet_info.length;
+				for (let p = 0; p < number_pets; p++) {
+					let newPet = pet_info[p];
+					let clientPet = new Pet(newPet);
+					console.log('new pet data: ' + newPet + ' with PET object: ' + clientPet.petName);
+					this.pets.push(clientPet);
+				}
+			}
+		}
 		parseCustomFields(custom_fields) {
 			this.customStuff = [];
 			let keys = Object.keys(custom_fields);
@@ -174,7 +175,7 @@ var LT = (function() {
 		constructor(visitDictionary) {
 			let visitKeys = Object.keys(visitDictionary);
 			visitKeys.forEach((key) => {
-				//console.log(key + ' ' + visitDictionary[key]);
+				console.log(key + ' ' + visitDictionary[key]);
 			});
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
@@ -287,49 +288,29 @@ var LT = (function() {
 		}
 	}
 
-	// ********************************************************************************************
-	// *       HELPER FUNCTIONS
-	// ********************************************************************************************
-
-	function recursiveGetProperty(obj, lookup, callback) {
-		let level_depth = 1;
-		let count_level = 1;
-		for (var property in obj) {
-			count_level = count_level + 1;
-			if (property == lookup) {
-				callback(obj[property]);
-			} else if(obj[property] instanceof Object) {
-				level_depth = level_depth + 1;
-				recursiveGetProperty(obj[property], lookup, callback);
-			}
-		}
-	} 
-	// ***********************************************************************************
-	// *                                                                                                                                           *
-	// *            GET DATA ITEMS TO POPULATE THE PET OWNER PORTAL                     *
-	// *            VISITS, SERVICE LIST, TIME WINDOWS, SURCHARGES                              *
-	// *                                                                                                                                            *
-	// ***********************************************************************************
-
 	async function loginPetOwner(event) {
-		console.log(event.location);
-		let uName = document.getElementById('username').value;
-		let pWord = document.getElementById('password').value;
-		let poDate = '2019-04-01';
-		let endpoDate = '2019-05-31';
 
-		let loginURL = 'http://localhost:3300?type=petOwnerLogin&username='+uName+'&password='+pWord+'&dateStart='+poDate+'&dateEnd='+endpoDate;
-		let loginRequest = await fetch(loginURL).then((response)=> {
-			console.log('Return response login request');
-			return response.json()
-		});
-		event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
+		if(isAjax) {
+			loginPetOwnerPortalAjax(event);
+		} else {
+			console.log('Login pet owner portal NO AJAX');
+			console.log(event.location);
+			let uName = document.getElementById('username').value;
+			let pWord = document.getElementById('password').value;
+			let poDate = '2019-06-01';
+			let endpoDate = '2019-08-31';
+
+			let loginURL = 'http://localhost:3300?type=petOwnerLogin&username='+uName+'&password='+pWord+'&dateStart='+poDate+'&dateEnd='+endpoDate;
+			let loginRequest = await fetch(loginURL).then((response)=> {
+				console.log('Return response login request');
+				return response.json()
+			});
+			event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
+		}
 	}
-	async function facebookLogin() {
-		console.log('Facebook login button');
-	}
-	// Ajax calls
+
 	async function loginPetOwnerPortalAjax(event) {
+		console.log('Login pet owner portal ajax');
 		let uName = document.getElementById('username').value;
 		let pWord = document.getElementById('password').value;
 		let loginURL = 'https://leashtime.com/pop-login.php?user_name=' + uName + '&user_pass=' + pWord;
@@ -360,18 +341,20 @@ var LT = (function() {
 					visit_list.push(visit);
 				});
 		}
-		/*if (visitListResponse.servicetypes != null) {
+		if (visitListResponse.servicetypes != null) {
+			console.log(visitListResponse.servicetypes);
 			getServiceItems(visitListResponse.servicetypes);
 		}
 		if (visitListResponse.surchargetypes != null) {
+			console.log(visitListResponse.surchargetypes);
 			getSurchargeItems(visitListResponse.surchargetypes);
 		}
 		if (visitListResponse.timewindows != null) {
+			console.log(visitListResponse.timewindows);
 			getTimeWindows(visitListResponse.timewindows);
-		}*/
+		}
 		return visit_list;
 	}	
-
 	async function getClientProfileAjax() {
 		let clientProfileURL = 'https://leashtime.com/client-own-profile-data.php';
 		let options = {
@@ -387,15 +370,9 @@ var LT = (function() {
 		petOwnerAndPets = new PetOwner(profileResponse);
 		return petOwnerAndPets;
 	}
-
-	// CLIENT AND PET DATA FOR A PARTICULAR CLIENT
-	// https://leashtime.com/client-own-profile-data.php
-
 	// PET PHOTOS
 	// https://leashtime.com/pet-photo.php?id={petid}&version=display
 	// parameters: petid&version=display    [if set param, 300px max dimension; else, full size]
-
-
 	function getClientProfileInfo(client_dict) {
 		let client_id = client_dict['clientid'];
 		let pet_info;
@@ -423,6 +400,7 @@ var LT = (function() {
 			}
 		});
 	}
+
 	function getServiceItems(serviceDictionary) {
 		recursiveGetProperty(serviceDictionary, "servicetypes", function(sObj) {
 			let num_service_items  = sObj.length;
@@ -474,12 +452,7 @@ var LT = (function() {
 		});
 		return surcharge_list;
 	}
-	// ***********************************************************************************
-	// *                                                                                                                                           *
-	// *            REQUEST METHODS: SERVER CREATES NEW REQUEST                           *
-	// *            QUEUE ITEMS, TO BE APPROVED BY MANAGER                                          *
-	// *                                                                                                                                            *
-	// ***********************************************************************************
+
 	function sendCancelVisitRequest (url, visitID,  cancelNote) {
 		let urlEndpoint = url+'?type=cancel&cancelVisit=1&visitid='+visitID+'&visitnote='+cancelNote;
 
@@ -555,6 +528,21 @@ var LT = (function() {
 	}
 	function sendRequestSchedule(url, visitArray) {
 	}
+
+	function recursiveGetProperty(obj, lookup, callback) {
+		let level_depth = 1;
+		let count_level = 1;
+		for (var property in obj) {
+			count_level = count_level + 1;
+			if (property == lookup) {
+				callback(obj[property]);
+			} else if(obj[property] instanceof Object) {
+				level_depth = level_depth + 1;
+				recursiveGetProperty(obj[property], lookup, callback);
+			}
+		}
+	} 
+
 	return {
 		getVisits : getVisits,
 		getServiceItems: getServiceItems,
@@ -569,8 +557,7 @@ var LT = (function() {
 		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
 		getPetOwnerVisitsAjax : getPetOwnerVisitsAjax,
 		getClientProfileAjax : getClientProfileAjax,
-		loginPetOwner : loginPetOwner,
-		facebookLogin : facebookLogin
+		loginPetOwner : loginPetOwner
 	}
 	module.exports = {
 		visit_list : visit_list,

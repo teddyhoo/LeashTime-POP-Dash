@@ -17,36 +17,43 @@
 	var pendingVisits = [];
 	var dragBeginDate;
     var dragEndDate;
-    var isAjax = 'true';
+    var isAjax = false;
 
 	document.addEventListener('DOMContentLoaded', function() {
 		var calendarEl = document.getElementById('calendar');
 		calendar = new FullCalendar.Calendar(calendarEl, {
 			plugins: [ 'dayGrid', 'interaction' ],
-				editable : true,
-				defaultView : 'dayGridMonth',
-				dateClick: function(info) {
-						clickedDate = info.date;
-						console.log(petOwnerProfile.pets);
-						displayVisitRequest(clickedDate);
-				},
+			editable : true,
+			defaultView : 'dayGridMonth',
+			dateClick: function(info) {
+				clickedDate = info.date;
+				displayVisitRequest(clickedDate);
+			},
 
-				eventClick: function(info) {
-						let eventClicked = info.event._def;
-						let eKeys = Object.keys(eventClicked);
-						eKeys.forEach((keyItem)=> {
-							console.log(keyItem);
-						})
-						let eventProps = eventClicked.extendedProps;
-						let keys = Object.keys(eventProps);
-						keys.forEach((keyItem)=> {
-							//console.log(keyItem + ' ' + eventProps[keyItem]);
-						})
-						console.log('Appointment ID: ' + eventClicked.publicId + ' Status: ' + eventProps.status + ' Date: ' + info.date);
-						if (eventProps.status == 'canceled') {
-							displayUncancel(eventClicked.publicId,info.date);
-						}
-				},
+			eventClick: function(info) {
+				let eventClicked = info.event._def;
+				let eventProps = eventClicked.extendedProps;
+				eventProps.forEach((prop)=> {
+
+					console.log(prop);
+
+				})
+				if (eventProps.status == 'canceled') {
+					displayUncancel(eventClicked.publicId,info.date);
+				}
+
+
+				let eKeys = Object.keys(eventClicked);
+				eKeys.forEach((keyItem)=> {
+					console.log(keyItem);
+				})
+				let keys = Object.keys(eventProps);
+				keys.forEach((keyItem)=> {
+					console.log(keyItem + ' ' + eventProps[keyItem]);
+				})
+				console.log('Appointment ID: ' + eventClicked.publicId + ' Status: ' + eventProps.status + ' Date: ' + info.date);
+
+			},
 
 				eventDragStart :  function(info) {
 
@@ -68,13 +75,22 @@
 		});
 
 		calendar.render();
-
-		if(isAjax) {
-
-			getVisits();
-			
+		let startDate = getFullDate();
+		console.log(startDate);
+		getVisits(startDate);
+	});
+	async function getVisits(date) {
+		if (isAjax) {
+			let visitData = await LT.getPetOwnerVisitsAjax(this, '2019-04-01', '2019-05-31');
+			let calData;
+			visitData.forEach((visit)=> {
+				let eventData = createCalendarEvent(visit);
+				calendar.addEvent(eventData);
+			});
+			petOwnerProfile = await LT.getClientProfileAjax();	
 		} else {
 			$(document).ready(function () {
+				console.log('NOT ajax getting visit info');
 				$.ajax({
 					"url" : "http://localhost:3300",
 					"type" : "GET",
@@ -82,12 +98,19 @@
 					"dataTYPE" : "JSON"
 				})
 				.done((data)=> {
+
+					data.forEach((dateElement)=> {
+
+						console.log(dataElement);
+
+					})
 					$.ajax({
 						"url" : "http://localhost:3300",
 						"type" : "GET",
 						"data" : {"type" : "poClients"},
 						"dataTYPE" : "JSON"
 					}).done((clientdata)=>{
+						
 						addCalendarEvents(data);
 						petOwnerProfile = LT.getClientProfileInfo(clientdata);
 						calendar.render();
@@ -96,20 +119,16 @@
 				});
 			});
 		}
-	});
-
-	async function getVisits() {
-		let visitData = await LT.getPetOwnerVisitsAjax(this, '2019-04-01', '2019-05-31');
-		let calData;
-		visitData.forEach((visit)=> {
-			let eventData = createCalendarEvent(visit);
-			calendar.addEvent(eventData);
-		});
-
-		petOwnerProfile = await LT.getClientProfileAjax();
-		
 	}
 
+
+	function addCalendarEvents(eventData) {
+
+		eventData.forEach((eventInfo)=> {
+
+
+		})
+	}
 	function createCalendarEvent(visit) {
  		let eventTitle = visit.service;
 		if (visit.note != null) {
@@ -153,32 +172,7 @@
 		};
 		event_visits.push(event);
 		return event;
-
 	}
-
-	function isValidDate(startDate, endDate) {
-		let todayDate = new Date();
-		console.log(todayDate);
-		if (endDate < todayDate || startDate < todayDate) {
-			console.log('Date before today');
-			return false
-		}
-		if (startDate > todayDate && endDate > todayDate) {
-			console.log('Valid placement');
-			return true;
-		}
-	}
-	function convertDate(dateItem) {
-
-		let convertDate = new Intl.DateTimeFormat('en-US').format(dateItem);
-		var formatter = new Intl.DateTimeFormat('en-us', {
-			weekday: 'long'
-		});
-		formatter.formatToParts(dateItem);
-		console.log(formatter.weekday);
-		return convertDate
-	}
-
    	function displayVisitRequest(dateString) {
    		console.log('clicked on date: ' + dateString);
 		const visitRequestHTML = `
@@ -319,10 +313,7 @@
 		let showModal = document.getElementById("formModal");
 		showModal.setAttribute("class", "show");
 	}
-	function addCalendarEvents(eventData) {
 
-
-	}
 	function displayUncancel(calEvent, datePicked) {
         const uncancelHTML = `
             <div class="modal-dialog">
@@ -357,8 +348,6 @@
             console.log('Uncancel visit: ' + calEvent + ' on date: ' + calEvent + '/' + calEvent); 
         })
     }
-
-	
 	function populateTimeline() {
 
 		let timelineList = document.getElementById('timelineItems');
@@ -451,4 +440,53 @@
 
 		timelineList.innerHTML = timelineHTML;
 	}
+
+	function getFullDate() {
+	    var todayDate = new Date();
+	    onWhichDay = new Date(todayDate);
+	    let futureDate = new Date();
+
+	    futureDate.setDate(futureDate.getDate() + 45);
+	    let futureMonth = futureDate.getMonth() + 1;
+	    //console.log(futureDate + ' month: ' + futureMonth +  ' date:' + futureDate.getDate() );
+
+	    let todayMonth = todayDate.getMonth() + 1;
+	    let todayYear = todayDate.getFullYear();
+	    let todayDay = todayDate.getDate();
+	    let dayOfWeek = todayDate.getDay();
+
+	    let dayWeekLabel = document.getElementById('dayWeek');
+	    dayWeekLabel.innerHTML = dayArrStr[dayOfWeek] + ', ';
+
+	    let monthLabel = document.getElementById('month');
+	    monthLabel.innerHTML = monthsArrStr[todayMonth - 1];
+
+	    let dateLabel = document.getElementById("dateLabel");
+	    dateLabel.innerHTML = todayDay;
+
+	    return todayYear + '-' + todayMonth + '-' + todayDay;
+	}
+	function isValidDate(startDate, endDate) {
+		let todayDate = new Date();
+		console.log(todayDate);
+		if (endDate < todayDate || startDate < todayDate) {
+			console.log('Date before today');
+			return false
+		}
+		if (startDate > todayDate && endDate > todayDate) {
+			console.log('Valid placement');
+			return true;
+		}
+	}
+	function convertDate(dateItem) {
+
+		let convertDate = new Intl.DateTimeFormat('en-US').format(dateItem);
+		var formatter = new Intl.DateTimeFormat('en-us', {
+			weekday: 'long'
+		});
+		formatter.formatToParts(dateItem);
+		console.log(formatter.weekday);
+		return convertDate
+	}
+
 }(this.materialadmin)); 

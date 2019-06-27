@@ -10,7 +10,7 @@
 	var event_visits = [];
 	var calendar; 
     var currentServiceChosen;
-    var isAjax = true;
+    var isAjax = false;
   
 
     $(document).ready(function () {
@@ -63,13 +63,12 @@
                 let formEditControl = `
                 <div class="form-group">
                     <form action="javascript:;" onsubmit="editField(this)">
-                        <input type="text" class="form-control" id=${item.id} name=${item.id}  value="My name is ted and i am a big boy">
+                        <input type="text" class="form-control" id=${item.id} name=${item.id}  value=${currentTextVal}>
                         <label for=${item.id}></label>
                         <button type="submit">DONE</button>
                     </form>
                 </div>`;
                 item.innerHTML = formEditControl;
-                //item.textContent = currentTextVal;
                 
             });
         })
@@ -122,7 +121,7 @@
         petOwnerProfile.pets.forEach((petProfile)=> { 
             petProfileHTML += `<button id="${petProfile.petID}" class="btn btn-default btn-raised">${petProfile.petName}</button>`
         });
-    //<button class="btn btn-default btn-raised m-l-10">Lilly</button>
+        //<button class="btn btn-default btn-raised m-l-10">Lilly</button>
         petProfileHTML += `<hr />`;
 
 
@@ -208,7 +207,7 @@
                 <dd class="editField" id="homephone">${petOwnerProfile.homephone}</dd>
             <dt>Work Phone</dt>
                 <dd class="editField" id="workphone">${petOwnerProfile.workphone}</dd>
-    </dl>`;
+        </dl>`;
 
         basicProfileTab.innerHTML =  petOwnerBasicHTML;
     }
