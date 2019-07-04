@@ -10,7 +10,7 @@
 	var event_visits = [];
 	var calendar; 
     var currentServiceChosen;
-    var isAjax = false;
+    var isAjax = true;
   
 
     $(document).ready(function () {
@@ -59,8 +59,40 @@
         Array.from(elemItems).forEach((item)=> {
             item.addEventListener('click', ()=> {
                 let currentTextVal = item.textContent;
+                console.log(item);
                 console.log(item.id + ' : ' + currentTextVal);
-                let formEditControl = `
+
+                let formDiv = document.createElement('div');
+                let formElem = document.createElement('form');
+                let formInput = document.createElement('input');
+                let formLabel = document.createElement('label');
+                let formButton = document.createElement('button');
+
+                formDiv.setAttribute('class', 'form-group');
+               
+                formElem.setAttribute('action', 'javascript:; onsubmit=\"editField(this)\"');
+                
+                formInput.setAttribute('type', 'text');
+                formInput.setAttribute('class','form-control');
+                formInput.setAttribute('id', item.id);
+                formInput.setAttribute('name', item.id);
+                formInput.setAttribute('value', currentTextVal);
+
+                formDiv.appendChild(formElem);
+                formElem.appendChild(formInput);
+
+                formLabel.setAttribute('for',item.id);
+                formButton.setAttribute('class','btn btn-primary');
+                formButton.setAttribute('type', 'submit');
+                formButton.innerHTML = 'DONE';
+
+                formElem.appendChild(formLabel);
+                formElem.appendChild(formButton);
+                while (item.firstChild) {
+                    item.removeChild(item.firstChild);
+                }         
+                this.item.addChild(formDiv);       
+                /*let formEditControl = `
                 <div class="form-group">
                     <form action="javascript:;" onsubmit="editField(this)">
                         <input type="text" class="form-control" id=${item.id} name=${item.id}  value=${currentTextVal}>
@@ -68,7 +100,7 @@
                         <button type="submit">DONE</button>
                     </form>
                 </div>`;
-                item.innerHTML = formEditControl;
+                item.innerHTML = formEditControl;*/
                 
             });
         })

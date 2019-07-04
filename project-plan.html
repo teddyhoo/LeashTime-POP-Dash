@@ -1,0 +1,71 @@
+
+<html>
+<div>
+	<h1>Model-View Mgmt</h1>
+   		<h2>Server shadow persistence state management for incomplete Profile updates</h2>
+   		<h2>Client shadow persistence state management</h2>
+			<h3>Alert notification for unsubmitted profiles</h3>
+			<h3>Edit and save to persistence model for each individual field</h3>
+	   <h2>Calculate comprehensive invoice amount due for requested schedules
+	      - Apply surcharge policies
+	      - Calculate taxes
+	      - Apply discount policies
+
+	<h1>Views</h1>
+		<h2>Calendar View</h2>
+	      - Monthly, Weekly
+	      - Color code to reflect visit states
+	      - Drag and drop change request
+	      - Display Surcharge Dates
+
+	   - Schedule Request
+	     - Single visit
+	     - Multiple visits
+	     - Multiple, variation visits
+
+	   - Cancel Request
+	     - Single visit
+	     - Multi visit
+
+	   - Change Visit [adding new types]
+	      - Time of Day
+	      - Visit Date
+
+	<h2>Profile Edit View</h2>
+	 - Tabbed interface by logical categories (Pets, Parents, Home, Other Info)
+     - Single field edit and save
+
+	<h2>Visit Report</h2> 
+      - Note
+      - Gratuity
+
+	<h2>Pet Photo Gallery</h2>
+      - Grid view
+      - Enlarged carousel view
+      - Enter caption
+
+	<h2>Profile Editor</h2>
+
+Networking
+   - API endpoints
+     - Cancel visit(s)
+     - Uncancel visit(s)
+     - Request schedule visit(s)
+     - Change (visits)
+     - Get Pet Parent Profile
+     - Send profile update changes
+     - Get visit report
+     - Send gratuity
+
+
+Server
+   - Translate API endpoint requests to Request Queue items
+      - Multi-visit cancel within single request item
+      - Change request automated approval
+   - Manage Profile update persistence model
+      - Track shadow state for incomplete profile submissions
+      - Append network API endpoint 
+
+</html>
+
+

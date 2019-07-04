@@ -6,12 +6,14 @@ var LT = (function() {
  	// * exported arrays and pet owners and pets object
  	// ********************************************************************************************
 
-	var service_list = [];
+ 	var responseDictionary = {};
+	var listServices = [];
 	var surcharge_list= [];
 	var visit_list = [];
 	var time_windows_list= [];
 	var petOwnerAndPets;
 	var isAjax = true;
+	var clientType;
 
 	// ********************************************************************************************
 	// *       CLASS OBJECTS REPRESENTING DATA COMPONENTS
@@ -112,7 +114,7 @@ var LT = (function() {
 				for (let p = 0; p < number_pets; p++) {
 					let newPet = pet_info[p];
 					let clientPet = new Pet(newPet);
-					console.log('new pet data: ' + newPet + ' with PET object: ' + clientPet.petName);
+					//console.log('new pet data: ' + newPet + ' with PET object: ' + clientPet.petName);
 					this.pets.push(clientPet);
 				}
 			}
@@ -175,18 +177,25 @@ var LT = (function() {
 		constructor(visitDictionary) {
 			let visitKeys = Object.keys(visitDictionary);
 			visitKeys.forEach((key) => {
-				console.log(key + ' ' + visitDictionary[key]);
+				//console.log(key + ' ' + visitDictionary[key]);
 			});
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
 			this.service = visitDictionary['servicelabel'];
 			this.service_code = visitDictionary['servicecode'];
 
+
 			this.arrived = visitDictionary['arrived'];
 			this.completed = visitDictionary['completed'];
+
+
+
 			this.date = visitDictionary['date'];     						// YYYY-MM-DD
 			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
 			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
+			
+			//console.log(this.date + ': ' + this.appointmentid + ' ' + this.status + ' ' + this.service + ' ' + this.arrived + ' ' + this.completed);
+
 			this.completion_time = visitDictionary['completed']; // YYYY-MM-DD HH:MM:SS
 			this.visitReport = visitDictionary['visit_report'];			// YYYY-MM-DD HH:MM:SS
 			this.visitNote = visitDictionary['note'];
@@ -245,25 +254,25 @@ var LT = (function() {
 		}
 	};
 	class ServiceItem {
-		constructor(serviceItemName, serviceCode, serviceCharge, serviceHours, serviceTax, serviceFormattedHours) {
-
-			this.serviceName = serviceItemName;
-			this.serviceCode = serviceCode;
-			this.serviceCharge = serviceCharge;
-			this.serviceHours = serviceHours;
-			this.serviceTax = serviceTax;
-			this.serviceFormattedHours = serviceFormattedHours;
-
+		constructor(serviceDictionary) {
+			this.serviceName = serviceDictionary['label'];
+			this.serviceCode = serviceDictionary['servicetypeid'];
+			this.serviceCharge = serviceDictionary['charge'];
+			this.serviceDescription = serviceDictionary['description'];
+			this.serviceTax = serviceDictionary['taxrate'];
+			this.extraPetCharge = serviceDictionary['extrapetcharge'];
+			//this.serviceHours = serviceDictionary['hours'];
+			//this.serviceFormattedHours = serviceFormattedHours;
 		}
 	};
 	class TimeWindowItem {
-		constructor(timeWindowLabel, timeWindowBegin, timeWindowEnd,index) {
-			this.label = timeWindowLabel;
-			this.begin = timeWindowBegin;
-			this.endTW = timeWindowEnd;
+		constructor(timeWindowDict, index) {
+			this.twLabel = timeWindowDict['label'];
+			this.begin = timeWindowDict['start'];
+			this.endTW = timeWindowDict['end'];
 			this.indexVal = index;
 		}
-	}
+	};
 	class SurchargeItem {
 
 		constructor(surchargeDictionary) {
@@ -286,9 +295,25 @@ var LT = (function() {
 			this.surchargeDate = surchargeDictionary['date'];
 
 		}
-	}
+	};
 
+	function checkClient() {
+		console.log(location.hostname);
+		console.log(navigator.appCodeName);
+		console.log(navigator.appName);
+		console.log(navigator.appVersion);
+		console.log(navigator.cookieEnabled);
+		//console.log(navigator.geolocation);
+		console.log(navigator.online);
+		console.log(navigator.platform);
+		console.log(navigator.product);
+
+		clientType = navigator.userAgent;
+		return navigator.platform;
+	}
 	async function loginPetOwner(event) {
+
+		checkClient();
 
 		if(isAjax) {
 			loginPetOwnerPortalAjax(event);
@@ -302,14 +327,21 @@ var LT = (function() {
 
 			let loginURL = 'http://localhost:3300?type=petOwnerLogin&username='+uName+'&password='+pWord+'&dateStart='+poDate+'&dateEnd='+endpoDate;
 			let loginRequest = await fetch(loginURL).then((response)=> {
-				console.log('Return response login request');
+				console.log('Return response login request: ' + response.json());
+				let responseKeys = Object.keys(response.json());
+				responseKeys.forEach((key) => {
+					console.log(key);
+				});
 				return response.json()
 			});
+
 			event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
 		}
 	}
-
 	async function loginPetOwnerPortalAjax(event) {
+
+		checkClient();
+
 		console.log('Login pet owner portal ajax');
 		let uName = document.getElementById('username').value;
 		let pWord = document.getElementById('password').value;
@@ -324,7 +356,7 @@ var LT = (function() {
 		event.location = "./online/pop-calendar.html";
 	}
 	async function getPetOwnerVisitsAjax(event, startDate, endDate) {
-		let clientVisitsURL = 'https://leashtime.com/client-own-scheduler-data.php?start=' +startDate + '&end=' + endDate + '&visits=1&servicetypes=1&surchargetypes=1&timewindows=1';
+		let clientVisitsURL = 'https://leashtime.com/client-own-scheduler-data.php?start=' +startDate + '&end=' + endDate + '&visits=1&servicetypes=1&surchargetypes=1&timeframes=1';
 		let options = {
 			method : 'GET',
 			headers : {
@@ -335,6 +367,7 @@ var LT = (function() {
 		}
 		let visitPORequest = await fetch(clientVisitsURL,options);
 		let visitListResponse = await visitPORequest.json();
+		responseDictionary = visitListResponse;
 		if (visitListResponse.visits != null) {
 				visitListResponse.visits.forEach((visitDict)=> {
 					const visit = new Visit(visitDict);
@@ -342,19 +375,60 @@ var LT = (function() {
 				});
 		}
 		if (visitListResponse.servicetypes != null) {
-			console.log(visitListResponse.servicetypes);
-			getServiceItems(visitListResponse.servicetypes);
+			parseService(visitListResponse.servicetypes);
+
 		}
 		if (visitListResponse.surchargetypes != null) {
-			console.log(visitListResponse.surchargetypes);
-			getSurchargeItems(visitListResponse.surchargetypes);
+
+			parseSurcharges(visitListResponse.surchargetypes);
+
 		}
-		if (visitListResponse.timewindows != null) {
-			console.log(visitListResponse.timewindows);
-			getTimeWindows(visitListResponse.timewindows);
+		if (visitListResponse.timeframes != null) {
+
+			parseTimeWindows(visitListResponse.timeframes);		
+
 		}
 		return visit_list;
 	}	
+
+	function getServices() {
+
+		return listServices;
+	}
+	function getTimeWindows() {
+
+		return time_windows_list;
+	}
+	function getSurcharges() {
+
+		return surcharge_list;
+	}
+	function getPets() {
+
+		return petOwnerAndPets.pets;
+	}
+
+	function parseService(service_dict) {
+
+		service_dict.forEach((serviceDicItem) =>{
+			let serviceObj = new ServiceItem(serviceDicItem);
+			listServices.push(serviceObj);
+		});
+	}
+	function parseTimeWindows(time_window_dict) {
+		let i = 0;
+		time_window_dict.forEach((timeWindow) =>{
+			let serviceObj = new TimeWindowItem(timeWindow,i);
+			i++;
+			time_windows_list.push(serviceObj);
+		});
+	}
+	function parseSurcharges(surcharge_dict) {
+		surcharge_dict.forEach((surchargeItem) =>{
+			let serviceObj = new SurchargeItem(surchargeItem);
+			surcharge_list.push(serviceObj);
+		});
+	}
 	async function getClientProfileAjax() {
 		let clientProfileURL = 'https://leashtime.com/client-own-profile-data.php';
 		let options = {
@@ -400,41 +474,6 @@ var LT = (function() {
 			}
 		});
 	}
-
-	function getServiceItems(serviceDictionary) {
-		recursiveGetProperty(serviceDictionary, "servicetypes", function(sObj) {
-			let num_service_items  = sObj.length;
-			let service_list_obj = [];
-			for (var s = 0; s < num_service_items; s++) {
-				let service_dict = sObj[s];
-				const service = new ServiceItem(service_dict['label'],
-					service_dict['servicetypeid'],
-					service_dict['charge'],
-					service_dict['description'],
-					service_dict['taxrate'],
-					service_dict['extrapetcharge'])
-
-				service_list.push(service);
-			}
-		});
-
-		return service_list;
-	}
-	function getTimeWindows(timeWindowsDictionary) {
-		recursiveGetProperty(timeWindowsDictionary, "timeframes", function(tWObj) {
-			let num_tw_items  = tWObj.length;
-			for (var s = 0; s < num_tw_items; s++) {
-				let time_window_dict = tWObj[s];
-				const time_window = new TimeWindowItem(time_window_dict['label'],
-					time_window_dict['start'],
-					time_window_dict['end'],
-					s);
-
-				time_windows_list.push(time_window);
-			}
-		});
-		return time_windows_list;
-	}
 	function getSurchargeItems(surchargeDictionary) {
 		recursiveGetProperty(surchargeDictionary, "surchargetypes", function(sObj) {
 			let num_surcharge_items  = sObj.length;
@@ -452,7 +491,6 @@ var LT = (function() {
 		});
 		return surcharge_list;
 	}
-
 	function sendCancelVisitRequest (url, visitID,  cancelNote) {
 		let urlEndpoint = url+'?type=cancel&cancelVisit=1&visitid='+visitID+'&visitnote='+cancelNote;
 
@@ -528,7 +566,6 @@ var LT = (function() {
 	}
 	function sendRequestSchedule(url, visitArray) {
 	}
-
 	function recursiveGetProperty(obj, lookup, callback) {
 		let level_depth = 1;
 		let count_level = 1;
@@ -545,9 +582,10 @@ var LT = (function() {
 
 	return {
 		getVisits : getVisits,
-		getServiceItems: getServiceItems,
-		getTimeWindows: getTimeWindows,
-		getSurchargeItems: getSurchargeItems,
+		getServices : getServices,
+		getSurcharges : getSurcharges,
+		getTimeWindows : getTimeWindows,
+		getPets : getPets,
 		getClientProfileInfo : getClientProfileInfo,
 		getClientProfileAjax : getClientProfileAjax,
 		sendCancelVisitRequest : sendCancelVisitRequest,
@@ -556,12 +594,12 @@ var LT = (function() {
 		sendRequestSchedule : sendRequestSchedule,
 		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
 		getPetOwnerVisitsAjax : getPetOwnerVisitsAjax,
-		getClientProfileAjax : getClientProfileAjax,
-		loginPetOwner : loginPetOwner
+		loginPetOwner : loginPetOwner,
+		checkClient : checkClient
 	}
 	module.exports = {
 		visit_list : visit_list,
-		service_list : service_list,
+		listServices : listServices,
 		surcharge_list : surcharge_list,
 		time_windows_list : time_windows_list,
 		petOwnerAndPets : petOwnerAndPets,
