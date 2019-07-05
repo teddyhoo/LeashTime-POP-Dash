@@ -10,6 +10,9 @@
 	var clickedDate;
 	var dragBeginDate;
     var dragEndDate;
+    var beginDateService;
+    var endDateService;
+
 	var event_visits = [];
 	var pendingVisits = [];
 	var all_visits = [];
@@ -31,6 +34,7 @@
 			defaultView : 'dayGridMonth',
 			dateClick: function(info) {
 				clickedDate = info.date;
+				console.log(clickedDate);
 				displayVisitRequest(clickedDate);
 			},
 
@@ -101,13 +105,21 @@
 			});
 		}
 	}
+	function displayVisitReport(event, visitID) {
+
+		console.log('VISIT REPORT VIEW: ' + event + ' ' + visitID);
+
+	}
+
+	function displayUncancel(event, visitID) {
+
+		console.log('UNCANCEL : ' + event + ' ' + visitID);
+
+	}
 	function clickedEvent(eventInfo) {
 		let eventClicked = eventInfo.event._def;
-		console.log(eventClicked);
 		let eventProps = eventClicked.extendedProps;
 		let visitStatus = eventProps.status;
-		let visitNote;
-		let timeWindow;
 		let selectedVisitID = eventClicked.publicId;
 
 		if (visitStatus == 'canceled') {
@@ -116,7 +128,7 @@
 
 		} else if (visitStatus == 'completed') {
 
-			console.log('completed visit');
+			displayVisitReport(eventClicked, selectedVisitID);
 
 		} else if (visitStatus == 'future' ||visitStatus == 'INCOMPLETE') {
 
@@ -224,6 +236,13 @@
 			}
 		});
 	}
+	function addEndDateListener() {
+
+		let endDatePicker = document.getElementById('untilDate');
+		endDatePicker.addEventListener("click",function(event) {
+
+		} );
+	}
 	function addServicePicker(visitRequestHMTLtemplate) {
 		let servicePickerModal = document.getElementById('formModal');
 		servicePickerModal.innerHTML = visitRequestHMTLtemplate;
@@ -235,7 +254,6 @@
 				node.addEventListener("click", function(event) {
 					let re=/(service)([0-9]+)/;
 					currentServiceChosen = re.exec(node.id)[2];
-					console.log('Current service chosen: ' + currentServiceChosen);
 				})
 			}
 		});
@@ -244,80 +262,83 @@
 		let requestServiceButton = document.getElementById('requestServiceButton');
 		requestServiceButton.addEventListener("click", function(event)  {
 
+			let dateBeginYear = beginDateService.getFullYear();
 		 	let dateBeginField = document.getElementById('dateToday');
-		 	let dateEndField = document.getElementById('untilDate');
 		 	let beginDate = dateToday.innerHTML;
-		 	console.log('Passed in date' + beginDate);
+			let dateEndField = document.getElementById('untilDate');
+			let endDate = dateEndField.innerHTML;
+			console.log('Until date widget: ' + dateEndField.innerHTML + ' end date: ' +endDate);
 
-		 	let endDate = dateEndField.innerHTML;
 		 	if (endDate == '' || endDate == null) {
 		 		endDate = 'NONE';
-		 	}
-		 	let dateObj = new Date(beginDate);
-			console.log('Before explicit set date: ' + dateObj.getFullYear());
-		 	dateObj.setYear('2019');
-		 	let realYear = dateObj.getFullYear();
-		 	let realMonth = dateObj.getMonth()+1;
-		 	let eventDateFormat = realYear+'-'+realMonth+'-'+dateObj.getDate();
-		 	console.log(eventDateFormat);
-		 	let serviceList = LT.getServices();
-		 	serviceList.forEach((service)=> {
+				let dateObj = new Date(beginDate);
+			 	dateObj.setYear(dateBeginYear);
+			 	let realYear = dateObj.getFullYear();
+			 	let realMonth = dateObj.getMonth()+1;
+			 	let eventDateFormat = realYear+'-'+realMonth+'-'+dateObj.getDate();
+			 	let serviceList = LT.getServices();
 
-		 		if (currentServiceChosen == service.serviceCode) {
-		 			currentServiceChosen = service.serviceName;
-		 			console.log(currentServiceChosen);
-		 		}
+			 	serviceList.forEach((service)=> {
+			 		if (currentServiceChosen == service.serviceCode) {
+			 			currentServiceChosen = service.serviceName;
+			 		}
+			 	});
 
-		 	})
-		 	let formalDateBegin = new Date(beginDate);
-		 	console.log(formalDateBegin);
+			 	let newEvent = {
+					id : 'pend-1',
+					groupid : 'petsit',
+					title: currentServiceChosen,
+					start : eventDateFormat,
+					backgroundColor : 'orange',
+					eventTextColor : 'white',
+					note: 'NO NOTE',
+					timeWindow : currentTimeWindowBegin + ' - ' + currentTimeWindowEnd,
+					color : 'orange',
+					status : 'pending',
+					isPending: false
+				};
 
-			console.log('BEGIN: ' + dateObj);
+				addVisitRequestItems(newEvent);
+
+			 } else {
+
+		 		let formatEndDate = new Date(endDate);
+		 		formatEndDate.setYear(dateBeginYear);
+		 		let dateEndTimeStamp = (new Date(formatEndDate).getTime());
+		 		let dateBeginTimeStamp = (new Date(beginDateService).getTime());
+		 		let microSecondsDiff = Math.abs(dateBeginTimeStamp - dateEndTimeStamp);
+		 		let daysDiff = Math.floor(microSecondsDiff/(1000*60*60*24));
+		 		console.log(daysDiff);
+
+			 }
+	
+
+			/*console.log('BEGIN: ' + dateObj);
 		 	console.log('END: ' + endDate);
 		 	console.log('SERVICE: ' + currentServiceChosen);
 			console.log('TIME BEGIN: ' + currentTimeWindowBegin);
 			console.log('TIME END: ' + currentTimeWindowEnd);
-		 	console.log('PETS: ' + currentPetsChosen);
+		 	console.log('PETS: ' + currentPetsChosen);*/
 
-			let newEvent = {
-				id : 'pend-1',
-				groupid : 'petsit',
-				title: currentServiceChosen,
-				start : eventDateFormat,
-				backgroundColor : 'orange',
-				eventTextColor : 'white',
-				note: 'NO NOTE',
-				timeWindow : currentTimeWindowBegin + ' - ' + currentTimeWindowEnd,
-				color : 'orange',
-				status : 'pending',
-				isPending: false
-
-			};
-
-			addVisitRequestItems(newEvent);
-
-			let visitsOnCal = calendar.getEvents();
-			console.log(visitsOnCal.length);
 			let showModal = document.getElementById("formModal");
 			showModal.setAttribute("aria-hidden", "true");
 			showModal.setAttribute("class", "modal fade");
 			showModal.setAttribute("tabindex", "-1");
-			calendar.render();
+			//calendar.render();
 		});
 	}
 	function addVisitRequestItems(visitEvent) {
 			event_visits.push(visitEvent);
 			calendar.addEvent(visitEvent);
-
 	}
    	function displayVisitRequest(dateString) {
+   		beginDateService = new Date(dateString);
+   		//console.log(beginDateService.getFullYear());
    		let chosenDate = new Date(dateString);
    		let chosenDay = chosenDate.getDay();
 		let dayString = dayArrStr[chosenDay];
-
    		let chosenMonth = chosenDate.getMonth();
 		let monthString = monthsArrStr[chosenMonth];
-
    		let chosenFullYear = chosenDate.getFullYear();
    		let dateChosen = chosenDate.getDate();
 
@@ -326,7 +347,7 @@
    		let surcharges = LT.getSurcharges();
    		let petsInfo = LT.getPets();
 
-		console.log('Month: ' + monthString + ', Date: ' + dateChosen + '  Year: ' + chosenFullYear + ' Day: ' + dayString);
+		//console.log('Month: ' + monthString + ', Date: ' + dateChosen + '  Year: ' + chosenFullYear + ' Day: ' + dayString);
 
 		const visitRequestHTML = `
 	                <div class="modal-dialog">

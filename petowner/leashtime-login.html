@@ -23,90 +23,120 @@
 		<link type="text/css" rel="stylesheet" href="../assets/css/leashtime-theme/vivify.min.css" />
 	</head>
 	
-	<body class="header-fixed">
+	<body class="">
 	
 
   
-  <div class="row">  
+  <div id="LEASHTIME-PORTAL" class="row">  
     
-  <div class="col-sm-12 col-md-4 blue=bg">
-     <section class="style-primary" style="height: 100vh;">
-      <div class="col-sm-12" style="margin: 10em auto;text-align: center;">
-        
-			  <div class="contain-xs align-center lg-padding">
-          <h3 class="text-primary-bright">LEASHTIME LOGIN</h3>
-			    
-			  </div>
+<section id="ltPanel-Left" class="col-sm-12 col-md-4 blue hidden-md-down text-default-bright"> 
+   <div class="" style="height: 100vh;">
+    <div class="col-sm-12" style="margin-top: 4em">
+      <div class="p-l-20">
+       <img src="online/assets/img/leashtime-logo-big@3x.png" class="width-10 img-responsive" />
+        <h3 class="text-light m-t-0"><span class="ltBrand-careLogo">CARE<span>PORTAL</span>™</span> <b>Login</b></h3>
+        <p class="lead">Leashtime's Care Portal helps you communicate with your pet's service providers to better manage the health and wellbeing of your pets. <br>
+          <b>Best thing is its Free!</b>
+          </p>	    
       </div>
-    </section>
     </div>
-    
+  </div>
+</section>
+<section id="ltPanel-Left" class="sm-padding col-sm-12 col-md-4 blue hidden-md hidden-lg-up text-default-bright">
+    <div class="col-sm-12">
+       <img src="online/assets/img/leashtime-logo@3x.png" class="width-2 img-responsive pull-left hidden-sm-down" />
+       <img src="online/assets/img/leashtime-logo@3x.png" class="width-2 img-responsive pull-right hidden-md-up" style="margin-top:-35px;"/>
+        <h3 class="text-light"><span class="ltBrand-careLogo">CARE<span>PORTAL</span>™</span> <b>Login</b></h3>
+    </div>
+</section>  
+     
 		<!-- BEGIN LOGIN SECTION -->
-		<div class="col-sm-12 col-md-8">
-		<section class="section-account">
-			<div class="card contain-sm style-transparent">
-				<div class="card-body">
-					<div class="row">
-						<div class="col-sm-12">
-						
-							<div class="col-sm-6"><p>
-								<a href="facebookLogin()" class="btn btn-block btn-raised btn-info"><i class="fa fa-facebook pull-left"></i>Login with Facebook</a>
-						  </p></div>
-             
-             <script>
-             	function login(event) {
-             		console.log('login functin called')
-             	}
-             </script>
-              <div class="col-sm-6"><p>
-                <a href="./online/pop-calender.html" class="btn btn-block btn-raised btn-info"><i class="fa fa-google pull-left"></i>Login with Google</a>
-              </p></div>
-						<br><br>
-							<div class="text-divider"><span>LOGIN IN TO YOUR LEASHTIME ACCOUNT</span></div>	
-							<br/>
-							<span class="text-lg text-bold text-primary">LEASHTIME PET OWNER LOGIN</span>
-							<br/><br/>
-							<form class="form floating-label" action="javascript:LT.loginPetOwner(this)" accept-charset="utf-8" method="get">
-								<div class="form-group">
-									<input type="text" class="form-control" id="username" name="username" value="carbarone">
-									<label for="username">Username</label>
-								</div>
-								<div class="form-group">
-									<input type="password" class="form-control" id="password" name="password" value="popit123">
-									<label for="password">Password</label>
-									<p class="help-block"><a href="#">Forgotten?</a></p>
-								</div>
-								<br/>
-								<div class="row">
-									<div class="col-xs-6 text-left">
-										<div class="checkbox checkbox-inline checkbox-styled">
-											<label>
-												<input type="checkbox"> <span>Remember me</span>
-											</label>
-										</div>
-									</div><!--end .col -->
-									<div class="col-xs-6 text-right">
-										<button class="btn btn-primary-bright btn-raised" type="submit">Login</button>
-									</div><!--end .col -->
-								</div><!--end .row -->
-							</form>
-						<div class="col-sm-12">
-							<br><br>
-								<h3 class="text-light">
-									No account yet?
-								</h3>
-								<a class="btn btn-block btn-raised btn-primary" href="#" id='signup'>Sign up here</a>
-								<br><br>
-								</div>
-            </div>
-							</div><!--end .row -->
-						</div><!--end .card-body -->
-					</div><!--end .card -->
-				</section>
-				<!-- END LOGIN SECTION -->
+		
+<div id="ltPanel-Right" class="col-sm-12 col-md-8">
+<section class="section-account" style="margin:4em 0">   
+ 
+<header class="lt-message text-center col-md-offset-2 col-sm-12 col-md-8">
+    <h1 class="text-light">Welcome Back</h1>
+    <p class="lead">Login to collaborate with your pet's caregivers and manage their profile, care services & schedule, and much more.</p>
+ </header>
+   
+<main class="align-center col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+ 
+ <script>
+  function login(event) {
+    console.log('login functin called')
+  }
+ </script>
+ 
+  <form class="form floating-label" action="javascript:LT.loginPetOwner(this)" accept-charset="utf-8" method="get">
+    <div class="form-group">
+      <input type="text" class="form-control" id="username" name="username" value="carbarone">
+      <label for="username" class="">Username</label>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" id="password" name="password" value="popit123">
+      <label for="password" class="">Password</label>
+      <p class="help-block"><a href="#">Forgotten?</a></p>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-xs-6 text-left">
+        <div class="checkbox checkbox-inline checkbox-styled">
+          <label class="style-default">
+            <input type="checkbox"> <span>Remember me</span>
+          </label>
+        </div>
+      </div><!--end .col -->
+      <div class="col-xs-6 text-right">
+        <button class="btn btn-block btn-raised btn-info btn-lg" type="submit">Login</button>
+      </div><!--end .col -->
+    </div><!--end .row -->
+  </form>
+<!--
+  
+  <nav class="ltSocial m-t-25">
+ <div class="text-divider m-t-25"><span>LOGIN IN WITH YOUR SOCIAL ACCOUNT</span></div>
+  <div class="col-sm-6 m-t-10">
+    <p><a href="facebookLogin()" class="btn btn-block btn-raised btn-default-dark"><i class="fa fa-facebook"></i> Login with Facebook</a></p>
+  </div>
+  <div class="col-sm-6 m-t-10">
+   <p><a href="./online/pop-calender.html" class="btn btn-block btn-raised btn-default-dark "><i class="fa fa-google"></i> Login with Google</a></p>
+  </div>
+</nav>
+-->
+
+<div class="text-divider" style="padding: 2em 0 1em"></div>
+
+<div class="col-sm-12">
+    <h3 class="text-light m-t-0">Don't have a <span class="ltBrand-careLogo">PET<span>CARE</span>™</span> Portal Account yet?</h3>
+    <div class="text-center">
+    <a class="btn btn-block btn-raised btn-info btn-lg width-12" href="#" id='signup'>Sign up here</a>
+  </div>
+</div>
+
+
+</main>
+</section>
+
+
+  
+
     </div>  
     </div>
     
+    <style>
+      #LEASHTIME-PORTAL {
+        font-size: 1.2em;
+      }
+      .ltBrand-careLogo {
+        letter-spacing: .5;
+        font-weight:500;
+        font-size: 1.1em
+      }
+      .ltBrand-careLogo span {
+        font-weight:700;
+      }
+    </style>
       
 				<!-- BEGIN JAVASCRIPT -->
 				<script src="../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
@@ -128,3 +158,5 @@
 
 			</body>
 		</html>
+
+

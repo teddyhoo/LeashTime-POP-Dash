@@ -1,71 +1,123 @@
 
 <html>
-<div>
-	<h1>Model-View Mgmt</h1>
-   		<h2>Server shadow persistence state management for incomplete Profile updates</h2>
-   		<h2>Client shadow persistence state management</h2>
-			<h3>Alert notification for unsubmitted profiles</h3>
-			<h3>Edit and save to persistence model for each individual field</h3>
-	   <h2>Calculate comprehensive invoice amount due for requested schedules
-	      - Apply surcharge policies
-	      - Calculate taxes
-	      - Apply discount policies
+	<body>
+		<h1>LEASHTIME - PET PARENT PORTAL PROJECT PLAN </h1>
+		<div class="lt-models">
+			<h2>Model-View Mgmt</h2>
+		   		<h3>Server shadow persistence state management for incomplete Profile updates</h3>
+		   			<ul>
+		   				<li>Incremental updates of profile request fields</li>
+		   				<li>Check for pending profile request fields and include in Network response</li>
+		   			</ul>
+		   		<h3>Client shadow persistence state management</h3>
+		   			<ul>
+						<li>Alert notification for unsubmitted profiles</li>
+						<li>Edit and save to persistence model for each individual field</li>
+					</ul>
+			   <h3>Calculate comprehensive invoice amount due for requested schedules</h3>
+					<ul>
+						<li>Apply surcharge policies</li>
+			      		<li>Calculate taxes</li>
+			      		<li>Apply discount policies</li>
+			      	</ul>
+				<h3>Visit Card Persistence</h3>
+			      	<ul>
+			      		<li>Local storage of previous visit requests</li>
+			      		<li>User interaction design mechanism to two-click request new visit using information from previous visit requests</li>
+			      	</ul>
+		</div>
+		<div class="lt-views">
+			<h2>Views</h2>
+				<img src="./pop-wireframe.jpeg" width=600, height = 400>
 
-	<h1>Views</h1>
-		<h2>Calendar View</h2>
-	      - Monthly, Weekly
-	      - Color code to reflect visit states
-	      - Drag and drop change request
-	      - Display Surcharge Dates
+				<h3>Calendar View</h3>
+				<img src="./calendar-visit-views.jpeg" width=600, height = 400>
 
-	   - Schedule Request
-	     - Single visit
-	     - Multiple visits
-	     - Multiple, variation visits
+					<ul>
+				      <li>Monthly, Weekly</li>
+				      <li>Color code to reflect visit states</li>
+				      <li>Drag and drop change request</li>
+				      <li>Display Surcharge Dates</li>
+				  </ul>
+				<h3>Schedule Request</h3>
+					<img src="./requestSchedule.jpeg" width=600, height = 400>
 
-	   - Cancel Request
-	     - Single visit
-	     - Multi visit
+					<ul>
+						<li>Single visit</li>
+						<li>Multiple visits</li>
+						<li>Multiple, variation visits</li>
+					</ul>
 
-	   - Change Visit [adding new types]
-	      - Time of Day
-	      - Visit Date
+			   <h3>Cancel Request</h3>
+				   	<ul>
+						<li>Single visit</li>
+						<li>Multi visit</li>
+					</ul>
 
-	<h2>Profile Edit View</h2>
-	 - Tabbed interface by logical categories (Pets, Parents, Home, Other Info)
-     - Single field edit and save
+			   <h3>Change Visit [adding new types]</h3>
+					<ul>
+				   		<li>Time of Day</li>
+						<li>Visit Date</li>
+					</ul>
 
-	<h2>Visit Report</h2> 
-      - Note
-      - Gratuity
+				<h3>Profile Edit View</h3>
+					<ul>
+						<li>Tabbed interface by logical categories (Pets, Parents, Home, Other Info)</li>
+						<li>Single field edit and save</li>
+					</ul>
+				<h3>Visit Report</h3> 
+					<ul>
+						<li>Note</li>
+						<li>Gratuity</li>
+					</ul>
 
-	<h2>Pet Photo Gallery</h2>
-      - Grid view
-      - Enlarged carousel view
-      - Enter caption
+				<h3>Pet Photo Gallery</h3>
+					<ul>
+						<li>Grid view</li>
+						<li>Enlarged carousel view</li>
+						<li>Enter caption</li>
+					</ul>
 
-	<h2>Profile Editor</h2>
-
-Networking
-   - API endpoints
-     - Cancel visit(s)
-     - Uncancel visit(s)
-     - Request schedule visit(s)
-     - Change (visits)
-     - Get Pet Parent Profile
-     - Send profile update changes
-     - Get visit report
-     - Send gratuity
-
-
-Server
-   - Translate API endpoint requests to Request Queue items
-      - Multi-visit cancel within single request item
-      - Change request automated approval
-   - Manage Profile update persistence model
-      - Track shadow state for incomplete profile submissions
-      - Append network API endpoint 
-
+				<h3>Profile Editor</h3>
+					<ul>
+						<li>Tabbed sections</li>
+						<li>Add new Pet Profile</li>
+						<li>Upload profile image</li>
+					</ul>
+		</div>
+		<div class="lt-network">
+			<h2>Networking</h2>
+		   		<h3>NEW API endpoints</h3>
+			   		<ul>
+			     		<li>Cancel visit(s)</li>
+			 			<li>Uncancel visit(s)</li>
+						<li>Request schedule visit(s)</li>
+						<li>Change (visits)</li>
+						<li>Get Pet Parent Profile</li>
+						<li>Send profile update changes</li>
+						<li>Get visit report</li>
+						<li>Send gratuity</li>
+					</ul>
+				<h3>Modifications to current API endpoints</h3>
+					<ul>
+						<li>Pending request parse</li>
+						<li>Visit report link info</li>
+					</ul>
+		</div>
+		<div class="lt-server">
+			<h2>Server</h2>
+			   <h3>Translate API endpoint requests to Request Queue items</h3>
+				   	<ul>
+						<li>Multi-visit cancel within single request item</li>
+						<li>Change request automated approval</li>
+					</ul>
+			   <h3>Manage Profile update persistence model</h3>
+				   <ul>
+						<li>Track shadow state for incomplete profile submissions</li>
+						<li>Append network API endpoint </li>
+					</ul>
+		</div>
+	</body>
 </html>
 
 
