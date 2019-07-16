@@ -176,39 +176,52 @@ var LT = (function() {
 	class Visit {
 		constructor(visitDictionary) {
 			let visitKeys = Object.keys(visitDictionary);
+			//console.log('------VISIT INFO: ' + visitDictionary['date'] + '-----------');
 			visitKeys.forEach((key) => {
 				//console.log(key + ' ' + visitDictionary[key]);
 			});
+
+			this.date = visitDictionary['date'];     						// YYYY-MM-DD
+
 			this.appointmentid = visitDictionary['appointmentid'];
+			this.sitterID = visitDictionary['providerptr'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
 			this.service = visitDictionary['servicelabel'];
 			this.service_code = visitDictionary['servicecode'];
 
-
-			this.arrived = visitDictionary['arrived'];
-			this.completed = visitDictionary['completed'];
-
-
-
-			this.date = visitDictionary['date'];     						// YYYY-MM-DD
+			this.packageType = visitDictionary['packagetype'];
+			if (visitDictionary['status'] == 'completed') {
+				this.arrived = visitDictionary['arrived'];
+				this.arrival_time  = visitDictionary['arrived'];
+				this.completed = visitDictionary['completed'];
+				this.completion_time = visitDictionary['completed']; // YYYY-MM-DD HH:MM:SS
+				this.visitreport = visitDictionary['visitreport'];
+				console.log(this.visitreport);
+				this.visitReportStatus = visitDictionary['visitreportstatus'];
+				let reportStatusKeys = Object.keys(this.visitReportStatus);
+				console.log('-------- visit id: ' + this.appointmentid + ' ----------------');
+				reportStatusKeys.forEach((key)=> {
+					console.log(key + ' --> ' + this.visitReportStatus[key]);
+				});
+			}			
 			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
 			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
+			this.timeOfDay = visitDictionary['timeofday'];
+			this.visitHours = visitDictionary['hours'];
+			this.formattedHours = visitDictionary['formattedHours'];
+		
+			this.visitReport = visitDictionary['visitreport'];			// YYYY-MM-DD HH:MM:SS
 			
-			//console.log(this.date + ': ' + this.appointmentid + ' ' + this.status + ' ' + this.service + ' ' + this.arrived + ' ' + this.completed);
-
-			this.completion_time = visitDictionary['completed']; // YYYY-MM-DD HH:MM:SS
-			this.visitReport = visitDictionary['visit_report'];			// YYYY-MM-DD HH:MM:SS
 			this.visitNote = visitDictionary['note'];
+
 			this.charge = parseFloat(visitDictionary['charge']);
 			this.surchargeAmount = parseFloat(0);
 			this.isSurchargable = false;
-
 			if (visitDictionary['adjustment'] != null) {
 				this.adjustment = parseFloat(adjust_amt);
 			} else {
 				this.adjustment = parseFloat(0);
-			}
-			
+			}	
 			if (visitDictionary['tax'] != null) {
 				this.tax = parseFloat(visitDictionary['tax']);
 			} else {
@@ -274,15 +287,11 @@ var LT = (function() {
 		}
 	};
 	class SurchargeItem {
-
 		constructor(surchargeDictionary) {
-			
 			this.surchargeTypeID = surchargeDictionary['surchargetypeid'];
-			this.charge = surchargeDictionary['charge'];
 			this.surchargeLabel = surchargeDictionary['label'];
 			this.description = surchargeDictionary['description'];
-			this.surchargeAutomatic = surchargeDictionary['automatic'];
-			this.perVisit = surchargeDictionary['pervisit'];
+			this.surchargeDate = surchargeDictionary['date'];
 			this.surchargeType = surchargeDictionary['type'];
 			if (this.surchargeType == 'weekend') {
 				this.saturdayBool = surchargeDictionary['saturday'];
@@ -292,8 +301,9 @@ var LT = (function() {
 			} else if (this.surchargeType == 'before') {
 				this.beforeTime = surchargeDictionary['time']
 			}
-			this.surchargeDate = surchargeDictionary['date'];
-
+			this.charge = surchargeDictionary['charge'];
+			this.surchargeAutomatic = surchargeDictionary['automatic'];
+			this.perVisit = surchargeDictionary['pervisit'];
 		}
 	};
 
@@ -376,17 +386,12 @@ var LT = (function() {
 		}
 		if (visitListResponse.servicetypes != null) {
 			parseService(visitListResponse.servicetypes);
-
 		}
 		if (visitListResponse.surchargetypes != null) {
-
 			parseSurcharges(visitListResponse.surchargetypes);
-
 		}
 		if (visitListResponse.timeframes != null) {
-
 			parseTimeWindows(visitListResponse.timeframes);		
-
 		}
 		return visit_list;
 	}	

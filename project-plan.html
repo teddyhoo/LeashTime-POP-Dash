@@ -1,45 +1,66 @@
 
 <html>
+	<head>
+  		<link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+
+	</head>
 	<body>
+		<h1>PRODUCT LINKS</h1>
+		<ul>
+			<li>Login Pet Care Portal for Pet Owners <a href="../petowner/leashtime-login.html">CLICK</a></li>
+			<li>Manager Dashboard <a href="../operations/managerapp/manager.html">CLICK</a></li>
+			<li>API documentation <a href="LeashTime-API.html">CLICK</a></li>
+		</ul>
 		<h1>LEASHTIME - PET PARENT PORTAL PROJECT PLAN </h1>
 		<div class="lt-models">
 			<h2>Model-View Mgmt</h2>
 		   		<h3>Server shadow persistence state management for incomplete Profile updates</h3>
 		   			<ul>
-		   				<li>Incremental updates of profile request fields</li>
-		   				<li>Check for pending profile request fields and include in Network response</li>
+		   				<li class="lt-now">Incremental updates of profile request fields</li>
+		   				<li class="lt-now">Check for pending profile request fields and include in Network response</li>
 		   			</ul>
 		   		<h3>Client shadow persistence state management</h3>
 		   			<ul>
-						<li>Alert notification for unsubmitted profiles</li>
-						<li>Edit and save to persistence model for each individual field</li>
+						<li class="lt-now">Alert notification for unsubmitted profiles</li>
+						<li class="lt-now">Edit and save to persistence model for each individual field</li>
 					</ul>
 			   <h3>Calculate comprehensive invoice amount due for requested schedules</h3>
 					<ul>
-						<li>Apply surcharge policies</li>
-			      		<li>Calculate taxes</li>
-			      		<li>Apply discount policies</li>
+						<li class="lt-now">Apply surcharge policies</li>
+			      		<li class="lt-now">Calculate taxes</li>
+			      		<li class="lt-now">Apply discount policies</li>
 			      	</ul>
 				<h3>Visit Card Persistence</h3>
 			      	<ul>
-			      		<li>Local storage of previous visit requests</li>
-			      		<li>User interaction design mechanism to two-click request new visit using information from previous visit requests</li>
+			      		<li class="lt-now">Local storage of previous visit requests</li>
+			      		<li class="lt-now">User interaction design mechanism to two-click request new visit using information from previous visit requests</li>
 			      	</ul>
 		</div>
 		<div class="lt-views">
 			<h2>Views</h2>
+
 				<img src="./pop-wireframe.jpeg" width=600, height = 400>
 
 				<h3>Calendar View</h3>
+
 				<img src="./calendar-visit-views.jpeg" width=600, height = 400>
 
 					<ul>
 				      <li>Monthly, Weekly</li>
-				      <li>Color code to reflect visit states</li>
+				      <li>Color code visit states:
+				      		<ul>
+				      			<li>Red - canceled past</li>
+				      			<li>Light red - canceled future</li>
+				      			<li>Orange - pending approval</li>
+				      			<li>
+				      </li>
 				      <li>Drag and drop change request</li>
 				      <li>Display Surcharge Dates</li>
+				      <li>Pending visit alert notification and Popup View</li>
+				      <li>Announcement alert notification and Popup View</li>
 				  </ul>
-				<h3>Schedule Request</h3>
+
+				<h3>Schedule Request View</h3>
 					<img src="./requestSchedule.jpeg" width=600, height = 400>
 
 					<ul>
@@ -48,39 +69,41 @@
 						<li>Multiple, variation visits</li>
 					</ul>
 
-			   <h3>Cancel Request</h3>
+			   <h3>Cancel Request View</h3>
 				   	<ul>
 						<li>Single visit</li>
 						<li>Multi visit</li>
 					</ul>
 
-			   <h3>Change Visit [adding new types]</h3>
+			   <h3>Change Visit [adding new types] View</h3>
+
 					<ul>
 				   		<li>Time of Day</li>
 						<li>Visit Date</li>
 					</ul>
 
-				<h3>Profile Edit View</h3>
+				<h3>Visit Report View</h3> 
+
 					<ul>
-						<li>Tabbed interface by logical categories (Pets, Parents, Home, Other Info)</li>
-						<li>Single field edit and save</li>
-					</ul>
-				<h3>Visit Report</h3> 
-					<ul>
+						<li>Visit Photo</li>
+						<li>Icon buttons</li>
+						<li>Visit Note</li>
 						<li>Note</li>
 						<li>Gratuity</li>
 					</ul>
 
-				<h3>Pet Photo Gallery</h3>
+				<h3>Pet Photo Gallery View</h3>
 					<ul>
 						<li>Grid view</li>
-						<li>Enlarged carousel view</li>
-						<li>Enter caption</li>
+						<li>Carousel view</li>
+						<li>Enter caption and title</li>
+						<li>Apply filter</li>
 					</ul>
 
 				<h3>Profile Editor</h3>
 					<ul>
 						<li>Tabbed sections</li>
+						<li>Incremental save with single edit and save fields</li>
 						<li>Add new Pet Profile</li>
 						<li>Upload profile image</li>
 					</ul>
