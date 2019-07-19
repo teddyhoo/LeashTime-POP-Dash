@@ -176,13 +176,17 @@ var LT = (function() {
 	class Visit {
 		constructor(visitDictionary) {
 			let visitKeys = Object.keys(visitDictionary);
-			//console.log('------VISIT INFO: ' + visitDictionary['date'] + '-----------');
 			visitKeys.forEach((key) => {
-				//console.log(key + ' ' + visitDictionary[key]);
+				console.log(key + ' ' + visitDictionary[key]);
 			});
 
-			this.date = visitDictionary['date'];     						// YYYY-MM-DD
+			this.pendingState = parseInt(visitDictionary['pendingchange']);
+			if(this.pendingState != null) {
+				this.pendingType = visitDictionary['pendingchangetype'];
+				//console.log('Visit state pending: ' + this.pendingType);
+			}
 
+			this.date = visitDictionary['date'];     						// YYYY-MM-DD
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.sitterID = visitDictionary['providerptr'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
@@ -190,33 +194,37 @@ var LT = (function() {
 			this.service_code = visitDictionary['servicecode'];
 
 			this.packageType = visitDictionary['packagetype'];
+			if (this.packageType != 'ongoing') {
+				console.log(this.packageType)
+			}
 			if (visitDictionary['status'] == 'completed') {
+				
 				this.arrived = visitDictionary['arrived'];
-				this.arrival_time  = visitDictionary['arrived'];
+				let arriveDate = new Date(this.arrived);
+				let hours = arriveDate.getHours();
+				let minutes = arriveDate.getMinutes();
+				this.arrival_time  = hours + ':' + minutes;
+
 				this.completed = visitDictionary['completed'];
-				this.completion_time = visitDictionary['completed']; // YYYY-MM-DD HH:MM:SS
-				this.visitreport = visitDictionary['visitreport'];
-				console.log(this.visitreport);
+				let completeDate = new Date(this.completed);
+				let cHours = completeDate.getHours();
+				let cMinutes = completeDate.getMinutes();
+				this.completion_time = cHours + ':' + cMinutes; // YYYY-MM-DD HH:MM:SS
+
+				this.visitReport = visitDictionary['visitreport'];
 				this.visitReportStatus = visitDictionary['visitreportstatus'];
-				let reportStatusKeys = Object.keys(this.visitReportStatus);
-				console.log('-------- visit id: ' + this.appointmentid + ' ----------------');
-				reportStatusKeys.forEach((key)=> {
-					console.log(key + ' --> ' + this.visitReportStatus[key]);
-				});
 			}			
 			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
 			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
 			this.timeOfDay = visitDictionary['timeofday'];
 			this.visitHours = visitDictionary['hours'];
 			this.formattedHours = visitDictionary['formattedHours'];
-		
-			this.visitReport = visitDictionary['visitreport'];			// YYYY-MM-DD HH:MM:SS
-			
+					
 			this.visitNote = visitDictionary['note'];
-
 			this.charge = parseFloat(visitDictionary['charge']);
 			this.surchargeAmount = parseFloat(0);
 			this.isSurchargable = false;
+
 			if (visitDictionary['adjustment'] != null) {
 				this.adjustment = parseFloat(adjust_amt);
 			} else {

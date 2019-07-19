@@ -15,6 +15,7 @@
 
 	var event_visits = [];
 	var pendingVisits = [];
+	var surcharge_events = [];
 	var all_visits = [];
     var surchargeItems =[];
 	var serviceList = [];    
@@ -39,6 +40,7 @@
 			},
 
 			eventClick: function(info) {
+
 				clickedEvent(info);
 			},
 
@@ -50,18 +52,42 @@
 			eventDrop : function(info) {
 				dragEndDate = info.event['start'];
 				if (isValidDate(dragBeginDate, dragEndDate)) {
-
+					console.log('Valid date');
+					displayDragDropChangeView(info);
+				} else {
+					info.revert()
 				}
 				console.log(dragEndDate);
 				if (confirm('revert change?')) {
-						info.revert();
-					}
+					info.revert();
 				}
+			},
+			eventRender : function(info) {
+				let infoKeys = Object.keys(info);
+				infoKeys.forEach((key)=> { 
+					if (key == 'view') {
+						let viewObj = info.view;
+						let viewKeys = Object.keys(viewObj);
+						viewKeys.forEach((viewItem)=> {
+							//console.log('View Item: ' + viewItem + ' --> ' + viewObj[viewItem] );
+						})
+
+					}
+				});
+				let calEventDiv = document.createElement('div');
+				calEventDiv.setAttribute('class' , 'cal-event-div');
+				calEventDiv.setAttribute('id', info.event.title);
+				let buttonEl = document.createElement('button');
+				buttonEl.innerHTML = 'VISIT';
+				calEventDiv.appendChild(buttonEl);
+				//info.el.appendChild(calEventDiv);
+			}
 		});
 
 		calendar.render();
 		let startDate = getFullDate();
-		console.log(startDate);
+		let beginEndDateRequestArray = calDaysBeforeAfter(startDate);
+		console.log(beginEndDateRequestArray[0] + ' - '  + beingEndDateRequestArray[1]);
 		getVisits(startDate);
 
 	});
@@ -70,17 +96,18 @@
 	async function getVisits(date) {
 
 		if (isAjax) {
-			let visitData = await LT.getPetOwnerVisitsAjax(this, '2019-06-01', '2019-07-31');
-			visitData.forEach((visit)=> {
+			all_visits = await LT.getPetOwnerVisitsAjax(this, '2019-06-01', '2019-07-31');
+			all_visits.forEach((visit)=> {
 				let eventData = createCalendarEvent(visit);
 				calendar.addEvent(eventData);
-			});
-			
+			});	
 			petOwnerProfile = await LT.getClientProfileAjax();	
+			displaySurcharges();
+			//populateTimeline();
 
 		} else {
 
-			$(document).ready(function () {
+			/*$(document).ready(function () {
 				console.log('NOT ajax getting visit info');
 				$.ajax({
 					"url" : "http://localhost:3300",
@@ -89,9 +116,6 @@
 					"dataTYPE" : "JSON"
 				})
 				.done((data)=> {
-					data.forEach((dateElement)=> {
-						console.log(dataElement);
-					})
 					$.ajax({
 						"url" : "http://localhost:3300",
 						"type" : "GET",
@@ -107,9 +131,114 @@
 						populateTimeline();
 	               });
 				});
-			});
+			});*/
 		}
 	}
+
+	function createCalendarEvent(visit) {
+
+		let visitDateObj;
+		let visitEndObj;
+		let visitColor = 'magenta';
+		let CbackgroundColor = 'black';
+		let CborderColor ='yellow';
+		let CtextColor = 'white';
+		let visitURL = '';
+ 		let eventTitle = visit.service;
+
+		if (visit.note != null) {
+			eventTitle += '\n' + visit.note;
+		}
+		if (visit.arrival_time != null) {
+			visitDateObj = new Date(visit.date + ' ' + visit.arrival_time);
+		} else {
+			visitDateObj = new Date(visit.date);
+		}
+		let eventDateStart = visitDateObj;
+		let eventDateEnd = visit.date;
+
+
+		if(visit.status == 'CANCELED' && visit.pendingType == null) {
+
+			visitColor = 'red';
+			CbackgroundColor = 'red';
+
+		} else if (visit.status == 'completed' && visit.pendingType == null) {
+
+			visitColor = 'green';
+			CbackgroundColor = 'green';
+			let visitReportDate = new Date(visit.completed);
+			eventDateStart =visitReportDate;
+
+		} else if (visit.status  == 'future' || visit.status == 'INCOMPLETE' || visit.status == 'incomplete') {
+			
+			visitColor = 'magenta';
+			CbackgroundColor = 'magenta'
+
+		} 
+
+		if (visit.pendingType == 'cancel') {
+			console.log('Pending visit: ' + visit.status + ' with: ' + visit.appointmentid + ' on date: ' + visit.date);
+			visitColor = 'orange';
+			CbackgroundColor = 'orange';
+			eventTitle += ' (PENDING APPROVAL)'
+			pendingVisits.push(visit);
+			//event_visits.push(event);
+		}
+
+		if (visit.pendingType != null) {
+			console.log('PENDING TYPE: ' + visit.pendingType);
+		}
+
+		let event = {
+			id : visit.appointmentid,
+			groupid: 'recurring',
+			title: eventTitle,
+			start : eventDateStart,
+			end : eventDateEnd,
+			note: visit.visitNote,
+			timeWindow : visit.time_window_start + ' - ' + visit.time_window_end,
+			arrivalTime : visit.arrival_time,
+			completionTime: visit.completion_time,
+			color : visitColor,
+			backgroundColor  : CbackgroundColor,
+			borderColor : CborderColor,
+			status : visit.status,
+			sitter: visit.sitter,
+			isPending: false
+		};
+		event_visits.push(event);
+		return event;
+	}
+	function displaySurcharges() {
+		surchargeItems = LT.getSurcharges();
+		surchargeItems.forEach((surcharge)=> {
+			console.log(surcharge.surchargeLabel);
+			let surchargeEventItem  =  createSurchargeEvent(surcharge);
+			surcharge_events.push(surchargeEventItem);
+			calendar.addEvent(surchargeEventItem);
+		});
+	}
+	function createSurchargeEvent(surchargeItem) {
+
+		let titleString = surchargeItem.surchargeLabel + ' '  + surchargeItem.surchargeDescription + ' - $' + surchargeItem.charge;
+		let dateObj = new Date(surchargeItem.surchargeDate);
+		console.log('SURCHARGE: ' + titleString);
+		let surchargeEvent = {
+			id : surchargeItem.surchargeTypeID,
+			groupid: 'surcharges',
+			title: titleString,
+			start : dateObj,
+			color : 'yellow',
+			backgroundColor  : 'yellow',
+			borderColor : 'yellow',
+			textColor : 'white'
+		};
+
+		return surchargeEvent;
+	}
+
+
 	function clickedEvent(eventInfo) {
 		let eventClicked = eventInfo.event._def;
 		let eventProps = eventClicked.extendedProps;
@@ -144,195 +273,9 @@
 			console.log(visitStatus);
 		}
 	}
-
-	function gratuityInteraction() {
+	function displayPendingStatus(eventInfo) {
 	}
-	function displayVisitReport(event, visitID) {
-
-		console.log('VISIT REPORT VIEW: ' + event + ' ' + visitID);
-
-		const visitReportHTML = `
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header blue white-text">
-	                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                            <h4 class="modal-title" id="formModalLabel">VISIT REPORT</h4>
-	                            <p>VISIT ID: ${visitID}
-	                        </div>
-	                        <form class="form-horizontal" role="form">
-	                            <div class="modal-body" id="visitReport">
-	                                <div class="alert alert-warning text-lg" role="alert">
-	                            <div class="modal-footer grey lighten-2">
-	                                <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestServiceButton">GRATUITY</button>
-	                                <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
-	                            </div>
-
-	                        </form>
-	                    </div>
-	                </div>
-	            </div>`;
-
-		let showModal = document.getElementById("formModal");
-		showModal.setAttribute("class", "show");
-		showModal.innerHTML = visitReportHTML;
-	}
-	function displayCancelChange(event, visitID) {
-		console.log('Cancel change');
-		let eventKeys = Object.keys(event);
-		eventKeys.forEach((key)=> {
-			console.log(key + ' --> ' + event[key]);
-			if (key == 'extendedProps') {
-				let propsDic = event['extendedProps']
-				let propsKeys = Object.keys(propsDic);
-				propsKeys.forEach((pKey) => {
-					console.log('PROP: ' + pKey + ' --> ' + propsDic[pKey]);
-				});
-			}
-		})
-		const cancelChange = `
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header blue white-text">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-						<h4 class="modal-title" id="formModalLabel">CHANGE OR CANCEL VISIT</h4>
-						<p>${event} ${visitID}</p>
-					</div>
-
-					<form class="form-horizontal" role="form">
-						<div class="modal-body" id="cancelVisit">
-							<div class="alert alert-warning text-lg" role="alert">
-								<div class="modal-footer grey lighten-2">
-									<button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestVisitCancel">CANCEL</button>
-									<button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
-								</div>
-							</div>
-						</div>
-					</form>
-					<form class="form-horizontal" role="form">
-						<div class="modal-body" id="cancelVisit">
-							<div class="alert alert-warning text-lg" role="alert">
-								<div class="modal-footer grey lighten-2">
-									<button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestVisitCancel">CHANGE VISIT</button>
-									<button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
-								</div>
-							</div>
-						</div>
-					</form>
-	            </div>
-	         </div>`;
-
-		let showModal = document.getElementById("formModal");
-		showModal.setAttribute("class", "show");
-		showModal.innerHTML = cancelChange;
-	}
-	function displayUncancel(event, visitID) {
-		console.log('UNCANCEL : ' + event + ' ' + visitID);
-		const uncancelDisplay = `
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header blue white-text">
-	                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                            <h4 class="modal-title" id="formModalLabel">UNCANCEL VISIT</h4>
-	                            <p>${event} ${visitID}</p>
-	                        </div>
-	                        <form class="form-horizontal" role="form">
-
-	                            <div class="modal-body" id="visitReport">
-	                                <div class="alert alert-warning text-lg" role="alert">
-	                            <div class="modal-footer grey lighten-2">
-	                                <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestServiceButton">GRATUITY</button>
-	                                <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
-	                            </div>
-
-	                        </form>
-	                    </div>
-	                </div>
-	            </div>`;
-
-		let showModal = document.getElementById("formModal");
-		showModal.setAttribute("class", "show");
-		showModal.innerHTML = uncancelDisplay;
-	}
-
-	function addCalendarEvents(eventData) {
-
-		eventData.forEach((eventInfo)=> {
-		});
-	}
-	function createCalendarEvent(visit) {
- 		let eventTitle = visit.service;
-		if (visit.note != null) {
-			eventTitle += '\n' + visit.note;
-		}
-		let eventStart = visit.time_window_start;
-		let eventEnd = visit.time_window_end;
-		let eventDateStart = visit.date + ' ' + eventStart;
-		let eventDateEnd = visit.date + ' ' + eventEnd;
-		let visitColor = '';
-		let visitURL = '';
-
-		if(visit.status == 'CANCELED') {
-			visitColor = 'red';
-		} else if (visit.status == 'completed') {
-			visitColor = 'green';
-			visitURL ='<LINK TO VISIT REPORT>';
-		} else if (visit.status  == 'future' || visit.status == 'INCOMPLETE' || visit.status == 'incomplete') {
-			visitColor = 'blue';
-		} else if (visit.status == 'late') {
-			visitColor = 'yellow';
-		} else if (visit.status == 'pending') {
-			visitColor = 'orange';
-			eventTitle += ' (PENDING APPROVAL)'
-			pendingVisits.push(visit);
-		}
-
-		let event = {
-			id : visit.appointmentid,
-			groupid: 'recurring',
-			title: eventTitle,
-			start : eventDateStart,
-			end : eventDateEnd,
-			note: visit.visitNote,
-			timeWindow : visit.time_window_start + ' - ' + visit.time_window_end,
-			arrivalTime : visit.arrival_time,
-			completionTime: visit.completion_time,
-			color : visitColor,
-			status : visit.status,
-			sitter: visit.sitter,
-			isPending: false
-		};
-		event_visits.push(event);
-		return event;
-	}
-	function createRequestService(serviceDate) {
-		let fullYearPre = serviceDate.getFullYear();
-		let dateObj = new Date(serviceDate);
-		let realYear = dateObj.getFullYear();
-		let realMonth = dateObj.getMonth()+1;
-		let eventDateFormat = fullYearPre+'-'+realMonth+'-'+dateObj.getDate();
-
-		let newEvent = {
-			id : 'pend' + eventDateFormat,
-			groupid : 'petsit',
-			title: currentServiceChosen,
-			start : eventDateFormat,
-			backgroundColor : 'orange',
-			eventTextColor : 'white',
-			note: 'NO NOTE',
-			timeWindow : currentTimeWindowBegin + ' - ' + currentTimeWindowEnd,
-			color : 'orange',
-			status : 'pending',
-			isPending: false
-		};
-
-		addVisitRequestItems(newEvent);
-		calendar.render();
-	}
-	function addVisitRequestItems(visitEvent) {
-			event_visits.push(visitEvent);
-			calendar.addEvent(visitEvent);
-	}
-   	function displayVisitRequest(dateString) {
+	function displayVisitRequest(dateString) {
    		beginDateService = new Date(dateString);
    		let chosenDate = new Date(dateString);
    		let chosenDay = chosenDate.getDay();
@@ -360,7 +303,7 @@
 
 	                            <div class="modal-body" id="servicePicker">
 	                                <div class="alert alert-warning text-lg" role="alert">
-	                                    <strong>Date:</strong> <span class="blue-text" id="dateToday">${dayString} ${monthString}  ${dateChosen}</span>
+	                                    <strong>Date:</strong> <span class="blue-text" id="dateToday">${dateChosen}</span>
 	                                    <div class="form-group pull-right control-width-normal">
 	                                        <div class="input-group date" id="demo-date">
 	                                            <div class="input-group-content">
@@ -407,7 +350,6 @@
 
 		let showModal = document.getElementById("formModal");
 		showModal.setAttribute("class", "show");
-		//showModal.innerHMTL = visitRequestHTML;
 
 	    addServicePicker(visitRequestHTML);
 	    addTimeWindowEventListeners();
@@ -422,6 +364,200 @@
 			showModal.setAttribute("tabindex", "-1");
 		});
 	}
+	function displayVisitReport(event, visitID) {
+
+		console.log('VISIT REPORT VIEW: ' + event + ' ' + visitID);
+
+		const visitReportHTML = `
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header blue white-text">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title" id="formModalLabel">VISIT REPORT</h4>
+						<p>VISIT ID: ${visitID}
+					</div>
+					<form class="form-horizontal" role="form">
+						<div class="modal-body" id="visitReport">
+							<div class="alert alert-warning text-lg" role="alert">
+								<div class="modal-footer grey lighten-2">
+	                                <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestServiceButton">GRATUITY</button>
+	                                <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
+	                            </div>
+	                    	</div>
+	                	</div>
+	                </form>
+	            </div>`;
+
+		let showModal = document.getElementById("formModal");
+		showModal.setAttribute("class", "show");
+		showModal.innerHTML = visitReportHTML;
+	}	
+	function displayCancelChange(event, visitID) {
+		console.log('Cancel change');
+		let serviceList = LT.getServices();
+   		let timeWindows = LT.getTimeWindows();
+   		let timeWindowVisit;
+
+		let eventKeys = Object.keys(event);
+
+		eventKeys.forEach((key)=> {
+			console.log(key + ' --> ' + event[key]);
+			if (key == 'extendedProps') {
+				let propsDic = event['extendedProps']
+				let propsKeys = Object.keys(propsDic);
+				propsKeys.forEach((pKey) => {
+					if (pKey == 'timeWindow') {
+						timeWindowVisit = propsDic[pKey];
+					}
+					console.log('PROP: ' + pKey + ' --> ' + propsDic[pKey]);
+				});
+			}
+		});
+		const cancelChange = `
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header blue white-text">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h4 class="modal-title" id="formModalLabel">${event.title} - ${timeWindowVisit} </h4>
+						<p>VISIT ID:  ${visitID}</p>
+					</div>
+					<div class="alert alert-warning text-lg" role="alert">
+						<strong>Date:</strong> <span class="blue-text" id="dateToday"></span>
+						<div class="form-group pull-right control-width-normal">
+							<div class="input-group date" id="demo-date">
+								<div class="input-group-content">
+									<input type="text" class="form-control" id='cancelUntilDate' value=''>
+									<label>Until date: </label>
+								</div>
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+						<br>
+					</div>
+
+					<form class="form-horizontal" role="form">
+						<div class="modal-body" id="cancelVisit">
+							<div class="alert alert-warning text-lg" role="alert">
+								<div class="modal-footer grey lighten-2">
+									<button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestVisitCancel">CANCEL</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
+								</div>
+							</div>
+						</div>
+					</form>
+					<form class="form-horizontal" role="form">
+						<div class="modal-body" id="cancelVisit">
+							<div class="alert alert-warning text-lg" role="alert">
+								<div class="modal-footer grey lighten-2">
+									<button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestVisitCancel">CHANGE VISIT</button>
+									<button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
+								</div>
+							</div>
+						</div>
+					</form>
+	            </div>
+	         </div>`;
+
+		let showModal = document.getElementById("formModal");
+		showModal.setAttribute("class", "show");
+		showModal.innerHTML = cancelChange;
+
+		createCancelClick(visitID);
+	}
+	function createCancelClick(visitID) {
+	}
+	function displayUncancel(event, visitID) {
+		console.log('UNCANCEL : ' + event + ' ' + visitID);
+		let serviceList = LT.getServices();
+   		let timeWindows = LT.getTimeWindows();
+   		//let surcharges = LT.getSurcharges();
+   		//let petsInfo = LT.getPets();
+   		let timeWindowVisit;
+
+		let eventKeys = Object.keys(event);
+
+		eventKeys.forEach((key)=> {
+			console.log(key + ' --> ' + event[key]);
+			if (key == 'extendedProps') {
+				let propsDic = event['extendedProps']
+				let propsKeys = Object.keys(propsDic);
+				propsKeys.forEach((pKey) => {
+					if (pKey == 'timeWindow') {
+						timeWindowVisit = propsDic[pKey];
+					}
+					console.log('PROP: ' + pKey + ' --> ' + propsDic[pKey]);
+				});
+
+			}
+		});
+		const uncancelDisplay = `
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header blue white-text">
+	                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	                            <h4 class="modal-title" id="formModalLabel">UNCANCEL ${event.title} - ${timeWindowVisit}</h4>
+	                            <p>VISIT ID: ${visitID}</p>
+	                        </div>
+	                        <form class="form-horizontal" role="form">
+
+	                            <div class="modal-body" id="visitReport">
+	                                <div class="alert alert-warning text-lg" role="alert">
+	                            <div class="modal-footer grey lighten-2">
+	                                <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestServiceButton">GRATUITY</button>
+	                                <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
+	                            </div>
+
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>`;
+
+		let showModal = document.getElementById("formModal");
+		showModal.setAttribute("class", "show");
+		showModal.innerHTML = uncancelDisplay;
+	}
+	function displayCancelPicker(visitID) {
+
+	}
+
+	function displayDragDropChangeView(info) {
+		let infoKeys = Object.keys(info);
+		infoKeys.forEach((keyInfo) => {
+			console.log(keyInfo + ' --> ' + info[keyInfo]);
+		});
+	}
+	function createRequestService(serviceDate) {
+		let fullYearPre = serviceDate.getFullYear();
+		let dateObj = new Date(serviceDate);
+		let realYear = dateObj.getFullYear();
+		let realMonth = dateObj.getMonth()+1;
+		let eventDateFormat = fullYearPre+'-'+realMonth+'-'+dateObj.getDate();
+		let millisecondsVisitID = dateObj.getMilliseconds();
+
+		let newEvent = {
+			id : millisecondsVisitID,
+			groupid : 'petsit',
+			title: currentServiceChosen,
+			start : eventDateFormat,
+			backgroundColor : 'orange',
+			eventTextColor : 'white',
+			note: 'NO NOTE',
+			timeWindow : currentTimeWindowBegin + ' - ' + currentTimeWindowEnd,
+			color : 'orange',
+			status : 'pending',
+			isPending: false
+		};
+
+		addVisitRequestItems(newEvent);
+		calendar.render();
+	}
+	function addVisitRequestItems(visitEvent) {
+			event_visits.push(visitEvent);
+			calendar.addEvent(visitEvent);
+	}
+	function sendGratuity() {
+	}
+
 	function addServicePicker(visitRequestHMTLtemplate) {
 		let servicePickerModal = document.getElementById('formModal');
 		servicePickerModal.innerHTML = visitRequestHMTLtemplate;
@@ -490,6 +626,12 @@
 
 		let requestServiceButton = document.getElementById('requestServiceButton');
 
+		serviceList.forEach((service)=> {
+			if (currentServiceChosen == service.serviceCode) {
+				currentServiceChosen = service.serviceName;
+			}
+		});
+
 		requestServiceButton.addEventListener("click", function(event)  {
 
 			let dateBeginYear = beginDateService.getFullYear();
@@ -501,17 +643,14 @@
 			if (endDate == '' || endDate == null) {
 		 		endDate = 'NONE';
 				let dateObj = new Date(beginDate);
+				let visitTempIDMilli = new Date()
 			 	dateObj.setYear(dateBeginYear);
 			 	let realYear = dateObj.getFullYear();
 			 	let realMonth = dateObj.getMonth()+1;
 			 	let eventDateFormat = realYear+'-'+realMonth+'-'+dateObj.getDate();
 			 	let serviceList = LT.getServices();
 
-			 	serviceList.forEach((service)=> {
-			 		if (currentServiceChosen == service.serviceCode) {
-			 			currentServiceChosen = service.serviceName;
-			 		}
-			 	});
+	
 
 			 	let newEvent = {
 					id : 'pend-1',
@@ -524,7 +663,7 @@
 					timeWindow : currentTimeWindowBegin + ' - ' + currentTimeWindowEnd,
 					color : 'orange',
 					status : 'pending',
-					isPending: false
+					isPending: true
 				};
 
 				addVisitRequestItems(newEvent);
@@ -631,24 +770,37 @@
 			}
 			
   			timelineHTML += `
-			<li class="timeline-inverted">
-			<div class="timeline-circ circ-lg style-success"></div>
-			<div class="timeline-entry">
-				<div class="card ${cardStyle}">
-					<div class="card-body small-padding">
-						<img src="./assets/img/${imgFile}" width=100 height=100>
-						<div class="pull-right text-sm"><small><span class="opacity-50">${currentVisit.date}</span> ${startTime} - ${endTime}</small></div>
-							<h4 class="no-padding no-margin">${currentVisit.service}</h4>
-								<p class="no-padding no-margin">${visitNoteVisit}</p>
+				<li class="timeline-inverted">
+				<div class="timeline-circ circ-lg style-success"></div>
+				<div class="timeline-entry">
+					<div class="card ${cardStyle}">
+						<div class="card-body small-padding">
+							<img src="./assets/img/${imgFile}" width=100 height=100>
+							<div class="pull-right text-sm"><small><span class="opacity-50">${currentVisit.date}</span> ${startTime} - ${endTime}</small></div>
+								<h4 class="no-padding no-margin">${currentVisit.service}</h4>
+									<p class="no-padding no-margin">${visitNoteVisit}</p>
 
+							</div>
 						</div>
 					</div>
-				</div>
-			</li>
+				</li>
 			`;
 		}
 
 		timelineList.innerHTML = timelineHTML;
+	}
+
+	function calDaysBeforeAfter(todayDate) {
+		let daysBeforeDate = new Date(todayDate);
+		let daysAfterDate = new Date(todayDate);
+
+		daysBeforeDate.setDate(daysBeforeDate.getDate() - 30);
+		daysAfterDate.setDate(daysAfterDate.getDate() + 30);
+
+		let dateArr = [];
+		dateArr.push(daysBeforeDate);
+		dateArr.push(daysAfterDate);
+		return dateArr;
 	}
 	function calcDateDayDiff(beginDate, endDate) {
 		let dateEndTimeStamp = (new Date(endDate).getTime());
