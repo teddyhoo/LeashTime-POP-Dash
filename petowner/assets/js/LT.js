@@ -175,28 +175,33 @@ var LT = (function() {
 	}
 	class Visit {
 		constructor(visitDictionary) {
-			let visitKeys = Object.keys(visitDictionary);
-			visitKeys.forEach((key) => {
-				console.log(key + ' ' + visitDictionary[key]);
-			});
+			//console.log('-------VISIT ID: ' + visitDictionary['appointmentid'] + ' --------------');
 
+			this.appointmentid = visitDictionary['appointmentid'];
+			this.date = visitDictionary['date'];     						// YYYY-MM-DD
 			this.pendingState = parseInt(visitDictionary['pendingchange']);
 			if(this.pendingState != null) {
 				this.pendingType = visitDictionary['pendingchangetype'];
 				//console.log('Visit state pending: ' + this.pendingType);
 			}
-
-			this.date = visitDictionary['date'];     						// YYYY-MM-DD
-			this.appointmentid = visitDictionary['appointmentid'];
 			this.sitterID = visitDictionary['providerptr'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
 			this.service = visitDictionary['servicelabel'];
 			this.service_code = visitDictionary['servicecode'];
-
 			this.packageType = visitDictionary['packagetype'];
 			if (this.packageType != 'ongoing') {
-				console.log(this.packageType)
+				//console.log('Package type: ' + this.packageType)
 			}
+			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
+			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
+			this.timeOfDay = visitDictionary['timeofday'];
+			this.visitHours = visitDictionary['hours'];
+			this.formattedHours = visitDictionary['formattedhours'];
+			this.visitNote = visitDictionary['note'];
+			this.charge = parseFloat(visitDictionary['charge']);
+			this.surchargeAmount = parseFloat(0);
+			this.isSurchargable = false;
+
 			if (visitDictionary['status'] == 'completed') {
 				
 				this.arrived = visitDictionary['arrived'];
@@ -211,19 +216,21 @@ var LT = (function() {
 				let cMinutes = completeDate.getMinutes();
 				this.completion_time = cHours + ':' + cMinutes; // YYYY-MM-DD HH:MM:SS
 
+				//console.log('COMPLETED VISIT: ' + this.arrival_time +' - ' + this.completion_time);
+
 				this.visitReport = visitDictionary['visitreport'];
 				this.visitReportStatus = visitDictionary['visitreportstatus'];
-			}			
-			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
-			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
-			this.timeOfDay = visitDictionary['timeofday'];
-			this.visitHours = visitDictionary['hours'];
-			this.formattedHours = visitDictionary['formattedHours'];
-					
-			this.visitNote = visitDictionary['note'];
-			this.charge = parseFloat(visitDictionary['charge']);
-			this.surchargeAmount = parseFloat(0);
-			this.isSurchargable = false;
+				if(this.visitReportStatus != null) {
+					this.visitReportURLInfo = this.visitReportStatus.url;
+					getVisitReport(this.visitReportURLInfo, this.appointmentid);
+					this.visitReportReceived = this.visitReportStatus.received;
+					this.visitReportPhoto = this.visitReportStatus.photo;
+					//console.log('VISIT REPORT: ' + this.visitReportURLInfo + ' ' + ' PHOTO: ' + this.visitReportReceived);
+				}
+			}		
+
+			//console.log('Date: ' + this.date + ', Start: ' + this.time_window_start + ', End: ' + this.time_window_end + ' TOD: ' + this .timeOfDay	);
+			this.fullDate = new Date(this.date + ' ' + this.time_window_start);
 
 			if (visitDictionary['adjustment'] != null) {
 				this.adjustment = parseFloat(adjust_amt);
@@ -241,11 +248,9 @@ var LT = (function() {
 			this.clientptr = sitter_visit_dict['clientptr'];
 			this.clientname = sitter_visit_dict['clientname'];
 		}
-		
 		updateStatus(status) {
 			this.status = status;
 		}
-
 		checkSurcharge(sur_list) {
 			let num_sur = sur_list.length;
 			for (let sitem = 0; sitem < num_sur; sitem++) {
@@ -272,6 +277,13 @@ var LT = (function() {
 			}
 
 			return this.totalVisitCharges;
+		}
+
+		addVisitReportDetails(visitReportInfo) {
+			this.visitPhotoURL = visitReportInfo['VISITPHOTOURL'];
+			this.mapImageURL = visitReportInfo['MAPROUTEURL'];
+			this.visitNote = visitReportInfo['NOTE'];
+			this.iconButtons = visitReportInfo['MOODBUTTONS'];
 		}
 	};
 	class ServiceItem {
@@ -404,6 +416,10 @@ var LT = (function() {
 		return visit_list;
 	}	
 
+	function getVisitList() {
+		
+		return visit_list;
+	}
 	function getServices() {
 
 		return listServices;
@@ -566,18 +582,42 @@ var LT = (function() {
 			alert("failed to fetch");
 		});
 	}
-	function sendRequestSingleVisit (url, serviceCode,  date,  timeWindow,  Note) {
-		// Create JSON [ of {}, with each dict visit request details ]
-		// Whether single visit or multiple visits, an array of dictionary items with following keys:
-		//    serviceCode
-		//    date
-		//    timeWindow
-		//    note
-		//    tax
-		//    surcharge
-		//    charge
+	async function sendRequestSchedule(visitJson) {
+		let url = 'https://leashtime.com/testxx.php';
+		let options = {
+			'method' : 'POST',
+			'headers' : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json'
+			}
+		};
+		let scheduleRequest = await(url, options);
+		let scheduleRequestResponse = await scheduleRequest.json();
+
 	}
-	function sendRequestSchedule(url, visitArray) {
+	async function getVisitReport(visitReportURL, visitID) {
+
+		//console.log(visitReportURL);
+		let url = visitReportURL;
+		let options = {
+			'method' : 'GET',
+			'headers' : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json'
+			}
+		}
+		let visitReportRequest = await fetch(url, options);
+		let visitReportResponse = await visitReportRequest.json();
+		visit_list.forEach((visit)=> {
+			if (visit.appointmentid == visitID) {
+				visit.addVisitReportDetails(visitReportResponse);
+			}
+		})
+		return visitReportResponse;
+
+	}
+	function getVisitReportPhoto(visitID) {
+
 	}
 	function recursiveGetProperty(obj, lookup, callback) {
 		let level_depth = 1;
@@ -595,12 +635,14 @@ var LT = (function() {
 
 	return {
 		getVisits : getVisits,
+		getVisitList : getVisitList,
 		getServices : getServices,
 		getSurcharges : getSurcharges,
 		getTimeWindows : getTimeWindows,
 		getPets : getPets,
 		getClientProfileInfo : getClientProfileInfo,
 		getClientProfileAjax : getClientProfileAjax,
+		getVisitReport : getVisitReport,
 		sendCancelVisitRequest : sendCancelVisitRequest,
 		sendUncancelRequest : sendUncancelRequest,
 		sendChangeVisitRequest : sendChangeVisitRequest,
