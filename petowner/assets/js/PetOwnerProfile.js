@@ -2,17 +2,9 @@
 
     "use strict";
 
-    var all_visits;
 	var petOwnerProfile;
-	var surchargeItems;
-	var serviceList;
-	var timeWindowList;
-	var event_visits = [];
-	var calendar; 
-    var currentServiceChosen;
     var isAjax = true;
   
-
     $(document).ready(function () {
         if (isAjax) {
 
@@ -50,7 +42,6 @@
         populatePets();
         populateCustom();
         addEditEvents();
-
     }
 
     function addEditEvents() {
@@ -69,9 +60,9 @@
                 let formButton = document.createElement('button');
 
                 formDiv.setAttribute('class', 'form-group');
-               
-                formElem.setAttribute('action', 'javascript:; onsubmit=\"editField(this)\"');
-                
+                formElem.setAttribute('id', item.id);
+                formElem.onsubmit = submitProfileFieldChange;
+
                 formInput.setAttribute('type', 'text');
                 formInput.setAttribute('class','form-control');
                 formInput.setAttribute('id', item.id);
@@ -88,28 +79,23 @@
 
                 formElem.appendChild(formLabel);
                 formElem.appendChild(formButton);
+
                 while (item.firstChild) {
                     item.removeChild(item.firstChild);
                 }         
-                this.item.addChild(formDiv);       
-                /*let formEditControl = `
-                <div class="form-group">
-                    <form action="javascript:;" onsubmit="editField(this)">
-                        <input type="text" class="form-control" id=${item.id} name=${item.id}  value=${currentTextVal}>
-                        <label for=${item.id}></label>
-                        <button type="submit">DONE</button>
-                    </form>
-                </div>`;
-                item.innerHTML = formEditControl;*/
-                
+                item.appendChild(formDiv);       
             });
         })
+    }
+
+    function submitProfileFieldChange(event) {
+        console.log('Submit form field change');
+        console.log(event);
     }
 
     function editField(editComponent) {
 
         console.log(editComponent);
-
     }
     function populateCustom() {
         let customTab = document.getElementById('tab-custom');
@@ -132,7 +118,6 @@
 
         customTab.innerHTML = customHTML;
     }
-
     function populatePets() {
 
         let petProfileTab = document.getElementById('tab-pet');
@@ -214,7 +199,6 @@
      });
         
      petProfileTab.innerHTML = petProfileHTML;
-
     }
     function populateProfileFields() {
 
