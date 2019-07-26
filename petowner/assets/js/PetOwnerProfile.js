@@ -35,6 +35,9 @@
         }
     });
 
+    var submitProfileFieldChange = function(event, itemID) {
+        console.log('submit change: ' + event.tagName + ' --> ' + event.innerHTML + ' --> ' + event.parentWindow);
+    };
     async function getPetOwnerProfile() {
         petOwnerProfile = await LT.getClientProfileAjax();
         populateProfileFields();
@@ -61,7 +64,7 @@
 
                 formDiv.setAttribute('class', 'form-group');
                 formElem.setAttribute('id', item.id);
-                formElem.onsubmit = submitProfileFieldChange;
+                //formElem.setAttribute('onsubmit', submitProfileFieldChange)
 
                 formInput.setAttribute('type', 'text');
                 formInput.setAttribute('class','form-control');
@@ -75,9 +78,10 @@
                 formLabel.setAttribute('for',item.id);
                 formButton.setAttribute('class','btn btn-primary');
                 formButton.setAttribute('type', 'submit');
+                formButton.setAttribute('onclick',submitProfileFieldChange(formDiv));
                 formButton.innerHTML = 'DONE';
 
-                formElem.appendChild(formLabel);
+                //formElem.appendChild(formLabel);
                 formElem.appendChild(formButton);
 
                 while (item.firstChild) {
@@ -88,10 +92,10 @@
         })
     }
 
-    function submitProfileFieldChange(event) {
+    /*function submitProfileFieldChange(event) {
         console.log('Submit form field change');
         console.log(event);
-    }
+    }*/
 
     function editField(editComponent) {
 

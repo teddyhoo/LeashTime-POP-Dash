@@ -14,6 +14,8 @@ var LT = (function() {
 	var petOwnerAndPets;
 	var isAjax = true;
 	var clientType;
+	var userNameGlobal;
+	var passwordGlobal;
 
 	// ********************************************************************************************
 	// *       CLASS OBJECTS REPRESENTING DATA COMPONENTS
@@ -373,8 +375,22 @@ var LT = (function() {
 		checkClient();
 
 		console.log('Login pet owner portal ajax');
-		let uName = document.getElementById('username').value;
-		let pWord = document.getElementById('password').value;
+		userNameGlobal = window.localStorage.getItem('username');
+		passwordGlobal = window.localStorage.getItem('password');
+
+		let uName;
+		let pWord;
+
+		if (userNameGlobal == null) {
+			uName = document.getElementById('username').value;
+			pWord = document.getElementById('password').value;
+			window.localStorage.setItem('username', uName);
+			window.localStorage.setItem('password',pWord);
+		} else {
+			uName = userNameGlobal;
+			pWord = passwordGlobal;
+		}
+
 		let loginURL = 'https://leashtime.com/pop-login.php?user_name=' + uName + '&user_pass=' + pWord;
 		
 		let loginRequest = await fetch(loginURL).then((response)=> {
