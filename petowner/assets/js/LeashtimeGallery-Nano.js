@@ -8,10 +8,7 @@
 		let startDate = LTDateLib.getFullDate();
 		console.log('Date: ' + startDate);
 		getPhotoInfo(LTDateLib.calDaysBefore(startDate) , LTDateLib.calDaysAfter(startDate));
-
-	});
-
-	jQuery("#data-nanogallery2").nanogallery2({
+		jQuery("#data-nanogallery2").nanogallery2({
 			thumbnailHeight:  'auto',
 			thumbnailWidth:   220,
 			galleryDisplayTransition : 'slideUp',
@@ -49,13 +46,14 @@
 				{ src: 'Lilly-close.jpg', srct:  'Lilly-close.jpg', title: 'Close up' },
 			]
 		});
+	});
+
+
 
 	async function getPhotoInfo(start, end) {
 		all_visits = await LT.getPetOwnerVisitsAjax(this, start, end);
 		all_visits.forEach((visit)=> {
 			console.log(visit.appointmentid);
-		}	
-
-
+		});
 	}	
 }(this.materialadmin, window.jQuery)); 

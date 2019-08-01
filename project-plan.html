@@ -1,146 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<html>
-	<head>
-  		<link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
+<head>
+    <title>Pet Parent Portal - Login</title>
 
-	</head>
-	<body>
-		<h1>PRODUCT LINKS</h1>
-		<ul>
-			<li>Login Pet Care Portal for Pet Owners <a href="../petowner/leashtime-login.html">CLICK</a></li>
-			<li>Manager Dashboard <a href="../operations/managerapp/manager.html">CLICK</a></li>
-			<li>API documentation <a href="LeashTime-API.html">CLICK</a></li>
-		</ul>
-		<h1>LEASHTIME - PET PARENT PORTAL PROJECT PLAN </h1>
-		<div class="lt-models">
-			<h2>Model-View Mgmt</h2>
-		   		<h3>Server shadow persistence state management for incomplete Profile updates</h3>
-		   			<ul>
-		   				<li class="lt-now">Incremental updates of profile request fields</li>
-		   				<li class="lt-now">Check for pending profile request fields and include in Network response</li>
-		   			</ul>
-		   		<h3>Client shadow persistence state management</h3>
-		   			<ul>
-						<li class="lt-now">Alert notification for unsubmitted profiles</li>
-						<li class="lt-now">Edit and save to persistence model for each individual field</li>
-					</ul>
-			   <h3>Calculate comprehensive invoice amount due for requested schedules</h3>
-					<ul>
-						<li class="lt-now">Apply surcharge policies</li>
-			      		<li class="lt-now">Calculate taxes</li>
-			      		<li class="lt-now">Apply discount policies</li>
-			      	</ul>
-				<h3>Visit Card Persistence</h3>
-			      	<ul>
-			      		<li class="lt-now">Local storage of previous visit requests</li>
-			      		<li class="lt-now">User interaction design mechanism to two-click request new visit using information from previous visit requests</li>
-			      	</ul>
-		</div>
-		<div class="lt-views">
-			<h2>Views</h2>
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="your,keywords">
+    <meta name="description" content="Short explanation about this website">
+    <!-- END META -->
 
-				<img src="./pop-wireframe.jpeg" width=600, height = 400>
+    <!-- BEGIN STYLESHEETS -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-default/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-default/lt-materialadmin.css" />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-default/font-awesome.min.css" />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-default/material-design-iconic-font.min.css" />
 
-				<h3>Calendar View</h3>
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-theme/lt-stlyes.css" />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-theme/layout.css" />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-theme/colors.css" />
+    <link type="text/css" rel="stylesheet" href=" ../assets/css/leashtime-theme/vivify.min.css" />
+    <style>
+        .lt-now {
+            border-top: 0 !important;
+            padding: .5em 1em .1em !important;
+            margin: 0;
+        }
 
-				<img src="./calendar-visit-views.jpeg" width=600, height = 400>
+        @media only screen and (max-width: 600px) {
+            .card-type-pricing .list-unstyled li {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section style="margin-top:2em;">
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <div class="style-gray jumbotron text-center m-b-0">
+                    <h3 class="thin" style="margin:1em auto">PRODUCT LINKS</h3>
+                </div>
+            </div>
 
-					<ul>
-				      <li>Monthly, Weekly</li>
-				      <li>Color code visit states:
-				      		<ul>
-				      			<li>Red - canceled past</li>
-				      			<li>Light red - canceled future</li>
-				      			<li>Orange - pending approval</li>
-				      			<li>
-				      </li>
-				      <li>Drag and drop change request</li>
-				      <li>Display Surcharge Dates</li>
-				      <li>Pending visit alert notification and Popup View</li>
-				      <li>Announcement alert notification and Popup View</li>
-				  </ul>
+            <div class="col-xs-12 col-sm-8">
+                <ul class="list divider-full-bleed">
+                    <li class="tile">
+                        <a href="https://leashtime.com/client/sandbox/petowner/leashtime-login.html" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="fa fa-paw"></i>
+                            </div>
+                            <div class="tile-text"><b>Pet Care Portal</b> for Pet Owners</div>
+                            <div href="https://leashtime.com/client/sandbox/petowner/leashtime-login.html" class="btn btn-default btn-flat ink-reaction">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="tile">
+                        <a href="https://leashtime.com/client/sandbox/operations/managerapp/manager.html" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="fa fa-dashboard"></i>
+                            </div>
+                            <div class="tile-text"><b>Mobile Manager</b> Dashboard</div>
+                            <div href="https://leashtime.com/client/sandbox/operations/managerapp/manager.html" class="btn btn-default btn-flat ink-reaction">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="tile">
+                        <a href="https://leashtime.com/client/sandbox/ProjectManagement/LeashTime-API.html" class="tile-content ink-reaction">
+                            <div class="tile-icon">
+                                <i class="fa fa-leanpub"></i>
+                            </div>
+                            <div class="tile-text"><b>API Documentation</b></div>
+                            <div href="https://leashtime.com/client/sandbox/ProjectManagement/LeashTime-API.html" class="btn btn-default btn-flat ink-reaction">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-				<h3>Schedule Request View</h3>
-					<img src="./requestSchedule.jpeg" width=600, height = 400>
+    <section style="padding-top: 0;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-type-pricing">
+                    <div class="card-body text-center style-info">
+                        <h2 class="text-light">PET CARE PORTAL</h2>
+                        <p class="opacity-50"><em>For Pet Owner | Current Project Activity</em></p>
+                    </div>
+                    <div class="card-body no-padding">
+                        <ul class="list-unstyled text-left">
+                            <li>
+                                <div class="row">
+                                    <div class="hidden-sm-down col-xs-12 col-sm-3 m-b-0 style-default full-height">
+                                        <div class="jumbotron text-center m-b-0 ">
+                                            <h4 class="no-margin thin">Model-View-Controller Management</h4>
+                                        </div>
+                                    </div>
+                                    <div class="hidden-md-up col-xs-12 col-sm-3 m-b-0 style-default">
+                                        <div class="jumbotron text-center m-b-0 ">
+                                            <h4 class="no-margin thin">Model-View-Controller Management</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-9">
+                                        <ul class="list text-left">
+                                            <li class="tile">
+                                                <div class="tile-text">Server shadow persistence state management for incomplete Profile updates</div>
+                                                <ul class="list-styled text-left">
+                                                    <li class="lt-now">Incremental updates of profile request fields [SEPT 15]</li>
+                                                    <li class="lt-now">Check for pending profile request fields and include in Network response [AUG 15]</li>
+                                                </ul>
+                                            </li>
 
-					<ul>
-						<li>Single visit</li>
-						<li>Multiple visits</li>
-						<li>Multiple, variation visits</li>
-					</ul>
+                                            <li class="tile">
+                                                <div class="tile-text">Client shadow persistence state management</div>
+                                                <ul class="list-styled text-left">
+                                                    <li class="lt-now">Alert notification for unsubmitted profiles[AUG 15]</li>
+                                                    <li class="lt-now">Edit and save to persistence model for each individual field[AUG 15]</li>
+                                                </ul>
+                                            </li>
 
-			   <h3>Cancel Request View</h3>
-				   	<ul>
-						<li>Single visit</li>
-						<li>Multi visit</li>
-					</ul>
+                                            <li class="tile">
+                                                <div class="tile-text">Calculate comprehensive invoice amount due for requested schedules [AUG 15]</div>
+                                                <ul class="list-styled text-left">
+                                                    <li class="lt-now">Apply surcharge policies [AUG 15]</li>
+                                                    <li class="lt-now">Calculate taxes [AUG 15]</li>
+                                                    <li class="lt-now">Apply discount policies [TBD]</li>
+                                                </ul>
+                                            </li>
 
-			   <h3>Change Visit [adding new types] View</h3>
+                                            <li class="tile">
+                                                <div class="tile-text">Visit Card Persistence [TBD]</div>
+                                                <ul class="list-styled text-left">
+                                                    <li class="lt-now">Local storage of previous visit requests [AUG 22]</li>
+                                                    <li class="lt-now">User interaction design mechanism to two-click request new visit using information from previous visit requests [AUG 22]</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="row">
+                                    <div class="hidden-sm-down col-xs-12 col-sm-3 m-b-0 style-default full-height">
+                                        <div class="jumbotron text-center m-b-0 ">
+                                            <h4 class="no-margin thin">Pages/Views</h4>
+                                        </div>
+                                    </div>
+                                    <div class="hidden-md-up col-xs-12 col-sm-3 m-b-0 style-default">
+                                        <div class="jumbotron text-center m-b-0 ">
+                                            <h4 class="no-margin thin">Pages/Views</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-9">
+                                        <ul class="list text-left">
+                                            <li class="tile">
+                                                <div class="col-xs-12 col-sm-7">
+                                                    <div class="tile-text">Calendar Views | Monthly, Weekly</div>
+                                                    <img src="./calendar-visit-views.jpeg" class="img-responsive">
 
-					<ul>
-				   		<li>Time of Day</li>
-						<li>Visit Date</li>
-					</ul>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-5 p-t-25"><br>
+                                                    <b>Color code visit states: [AUG 7]</b>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Red - canceled past</li>
+                                                        <li class="lt-now">Light red - canceled future</li>
+                                                        <li class="lt-now">Orange - pending approval</li>
+                                                        <hr>
+                                                        <li class="lt-now">Drag and drop change request</li>
+                                                        <li class="lt-now">Display Surcharge Dates</li>
+                                                        <li class="lt-now">Pending visit alert notification and Popup View</li>
+                                                        <li class="lt-now">Announcement alert notification and Popup View</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
 
-				<h3>Visit Report View</h3> 
+                                            <li class="tile">
+                                                <div class="col-xs-12 col-sm-7">
+                                                    <div class="tile-text">Schedule Request View [AUG 1]</div>
+                                                    <img src="./requestSchedule.jpeg" class="img-responsive">
 
-					<ul>
-						<li>Visit Photo</li>
-						<li>Icon buttons</li>
-						<li>Visit Note</li>
-						<li>Note</li>
-						<li>Gratuity</li>
-					</ul>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-5 p-t-25">
+                                                    <div class="tile-text">Request Visit View [DONE]/div>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Single visit [DONE]</li>
+                                                        <li class="lt-now">Multiple visits [AUG 8]</li>
+                                                        <li class="lt-now">Multiple, variation visits [AUG 15]</li>
+                                                    </ul>
+                                                    <div class="tile-text">Cancel Request View [AUG 4]</div>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Single visit [AUG 4]</li>
+                                                        <li class="lt-now">Multi visit [AUG 4]</li>
+                                                    </ul>
+                                                    <div class="tile-text">Change Visit [adding new types] View [AUG 14]</div>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Time of Day [AUG 14]</li>
+                                                        <li class="lt-now">Visit Date [AUG 14]</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="col-sm-4">
+                                            <ul class="list text-left style-default">
+                                                <li class="tile">
+                                                    <div class="tile-text">Visit Report View [AUG 10]</div>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Visit Photo [AUG 10]</li>
+                                                        <li class="lt-now">Icon buttons [AUG 10]</li>
+                                                        <li class="lt-now">Visit Note [AUG 10]</li>
+                                                        <li class="lt-now">Note [AUG 10]</li>
+                                                        <li class="lt-now">Gratuity [AUG 10]</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <ul class="list text-left style-default">
+                                                <li class="tile">
+                                                    <div class="tile-text">Pet Photo Gallery View [AUG 25]</div>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Grid view [AUG 25]</li>
+                                                        <li class="lt-now">Carousel view [AUG 25]</li>
+                                                        <li class="lt-now">Enter caption and title [AUG 25]</li>
+                                                        <li class="lt-now">Apply filter [TBD]</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-4 ">
+                                            <ul class="list text-left style-default">
+                                                <li class="tile">
+                                                    <div class="tile-text">Profile Editor</div>
+                                                    <ul class="list-styled text-left">
+                                                        <li class="lt-now">Tabbed sections [DONE]</li>
+                                                        <li class="lt-now">Incremental save with single edit and save fields [AUG 20]</li>
+                                                        <li class="lt-now">Add new Pet Profile [SEPT 1]</li>
+                                                        <li class="lt-now">Upload profile image [SEPT 1]</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
 
-				<h3>Pet Photo Gallery View</h3>
-					<ul>
-						<li>Grid view</li>
-						<li>Carousel view</li>
-						<li>Enter caption and title</li>
-						<li>Apply filter</li>
-					</ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-				<h3>Profile Editor</h3>
-					<ul>
-						<li>Tabbed sections</li>
-						<li>Incremental save with single edit and save fields</li>
-						<li>Add new Pet Profile</li>
-						<li>Upload profile image</li>
-					</ul>
-		</div>
-		<div class="lt-network">
-			<h2>Networking</h2>
-		   		<h3>NEW API endpoints</h3>
-			   		<ul>
-			     		<li>Cancel visit(s)</li>
-			 			<li>Uncancel visit(s)</li>
-						<li>Request schedule visit(s)</li>
-						<li>Change (visits)</li>
-						<li>Get Pet Parent Profile</li>
-						<li>Send profile update changes</li>
-						<li>Get visit report</li>
-						<li>Send gratuity</li>
-					</ul>
-				<h3>Modifications to current API endpoints</h3>
-					<ul>
-						<li>Pending request parse</li>
-						<li>Visit report link info</li>
-					</ul>
-		</div>
-		<div class="lt-server">
-			<h2>Server</h2>
-			   <h3>Translate API endpoint requests to Request Queue items</h3>
-				   	<ul>
-						<li>Multi-visit cancel within single request item</li>
-						<li>Change request automated approval</li>
-					</ul>
-			   <h3>Manage Profile update persistence model</h3>
-				   <ul>
-						<li>Track shadow state for incomplete profile submissions</li>
-						<li>Append network API endpoint </li>
-					</ul>
-		</div>
-	</body>
+
+        </div>
+
+    </section>
+
+
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-type-pricing">
+                    <div class="card-body text-center style-accent">
+                        <h2 class="text-light">SERVERS & NETWORKING</h2>
+                        <p class="opacity-50"><em>Mobile Internet  Device Integrations</em></p>
+                    </div>
+                    <!--end .card-body -->
+
+                    <div class="card-body col-xs-6">
+                        <h3>NETWORKING</h3>
+                        <hr class="divider" />
+                        <ul class="list-unstyled text-left">
+                            <li>
+                                <div class="tile-text"><b>New API Endpoints [DONE]</b></div>
+                                <ul class="list-styled text-left">
+                                    <li class="lt-now">Cancel visit(s)</li>
+                                    <li class="lt-now">Uncancel visit(s)</li>
+                                    <li class="lt-now">Request schedule visit(s)</li>
+                                    <li class="lt-now">Change (visits)</li>
+                                    <li class="lt-now">Get Pet Parent Profile</li>
+                                    <li class="lt-now">Send profile update changes</li>
+                                    <li class="lt-now">Get visit report</li>
+                                    <li class="lt-now">Send gratuity</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="tile-text"><b>Modifications to current API endpoints [DONE]</b></div>
+                                <ul class="list-styled text-left">
+                                    <li class="lt-now">Pending request parse</li>
+                                    <li class="lt-now">Visit report link info</li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!--end .card-body -->
+
+                    <div class="card-body col-xs-6">
+                        <h3>SERVER</h3>
+                        <hr class="divider" />
+                        <ul class="list-unstyled text-left">
+                            <li class="tile">
+                                <div class="tile-text"><b>Translate API endpoint requests to Request Queue items [TESTING]</b></div>
+                                <ul class="list-styled text-left">
+                                    <li class="lt-now">Multi-visit cancel within single request item</li>
+                                    <li class="lt-now">Change request automated approval</li>
+                                </ul>
+                            </li>
+                            <li class="tile">
+                                <div class="tile-text"><b>Manage Profile update persistence model [SEPT 25]</b></div>
+                                <ul class="list-styled text-left">
+                                    <li class="lt-now">Track shadow state for incomplete profile submissions</li>
+                                    <li class="lt-now">Append network API endpoint </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        </div>
+
+                    <!--end .card-body -->
+
+
+                </div>
+                <!--end .card -->
+            </div>
+            <!--end .col -->
+        </div>
+    </section>
+
+
+    <!-- BEGIN JAVASCRIPT -->
+    <script src="../assets/js/libs/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../assets/js/libs/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script src="../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+    <script src="../assets/js/libs/spin.js/spin.min.js"></script>
+    <script src="../assets/js/libs/autosize/jquery.autosize.min.js"></script>
+    <script src="../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <script src="../assets/js/core/source/App.js"></script>
+    <script src="../assets/js/core/source/AppNavigation.js"></script>
+    <script src="../assets/js/core/source/AppOffcanvas.js"></script>
+    <script src="../assets/js/core/source/AppCard.js"></script>
+    <script src="../assets/js/core/source/AppForm.js"></script>
+    <script src="../assets/js/core/source/AppNavSearch.js"></script>
+    <script src="../assets/js/core/source/AppVendor.js"></script>
+    <script src="../assets/js/core/demo/Demo.js"></script>
+    <!-- END JAVASCRIPT -->
+
+
+
+</body>
+
 </html>
-
-

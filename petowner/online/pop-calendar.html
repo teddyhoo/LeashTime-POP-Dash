@@ -16,10 +16,11 @@
   <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/materialadmin.css?1425466319" />
   <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/font-awesome.min.css?1422529194" />
   <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/material-design-iconic-font.min.css?1421434286" />
+  <link type="text/css" rel="stylesheet" href="../../assets/css/libs/wizard/wizard.css" />
 
   <link href="../../assets/css/leashtime-theme/colors.css" rel="stylesheet" type="text/css">
   <link href="../../assets/css/leashtime-theme/layout.css" rel="stylesheet" type="text/css">
-  <link href="../../assets/css/leashtime-theme/lt-stlyes.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/leashtime-theme/lt-styles.css" rel="stylesheet" type="text/css">
 
   <link href="assets/css/petowner_portal.css" rel="stylesheet" type="text/css">
 
@@ -35,31 +36,49 @@
 <body id="LT-CalendarPage" class="header-fixed">
   <header id="header">
     <div class="headerbar blue">
-      <div class="pull-left">
-        <ul class="header-nav header-nav-options">
-          <li>
-            <i class=" fa fa-calendar white-text fa-2x"></i>
-          </li>
-          <li>
-            <div class="brand-holder text-lg white-text"> <span class="m-r-10"><strong>CARE</strong>PORTAL™ </span>
-              <button class=" no-margin sm-padding btn transparent thin ink-reaction btn-info btn-raised" data-toggle="modal" data-target="#bizModal" aria-expanded="true">
-                <span>PETLOVER LLC</span>
-              </button>
-              <button class=" no-margin sm-padding btn transparent thin ink-reaction btn-info btn-raised" id="pendingVisitBadge" data-toggle="modal" data-target="#bizModal" aria-expanded="false">
-                <span>PENDING VISITS</span>
-              </button>
-            </div>
-          </li>
-        </ul>
-      </div>
+
+        <div class="pull-left">
+            <ul class="header-nav header-nav-options">
+                <li style="padding-bottom:0;padding-top:10px">
+                    <div class="btn-group">
+                        <button type="button" class="btn ink-reaction btn-floating-action btn-info" data-toggle="dropdown" aria-expanded="true">
+                            <i class="fa fa-calendar"></i>
+                        </button>
+                        <sup id="lt-BadgePending" class="badge style-danger">4</sup>
+                        <ul class="dropdown-menu dropdown-menu-left panel-group width-6" role="menu">
+                            <!-- PENDING -->
+                            <div class="style-info card-sm">
+                                <div class="card-body no-padding">
+                                    <ul id="lt-PendingEvents" class="list divider-full-bleed">
+
+                                    </ul>
+                                </div><!--end .card-body -->
+                            </div>
+
+                            <div id="btn-CancelPending" class="alert-danger small-padding">
+                                <a href="#" class="btn btn-block btn-danger"><i class="fa fa-fw fa-times text-danger"></i> CANCEL ALL</a>
+                            </div>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="brand-holder text-lg white-text"> <span class="m-r-10"><strong>CARE</strong>PORTAL™ </span>
+                        <button class=" no-margin sm-padding btn transparent thin ink-reaction btn-info btn-raised" data-toggle="modal" data-target="#bizModal" aria-expanded="true">
+                            <span>PETLOVER LLC</span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
       <div class="pull-right">
         <ul class="header-nav header-nav-profile">
           <li class="dropdown  no-padding no-margin">
 
             <a href="javascript:void(0);" class="dropdown-toggle ink-reaction white-text width-7" data-toggle="dropdown">
-            
+
             <img src="./assets/img/lilly.jpg" class="hidden-sm-down" alt="">
-             
+
               <span class="profile-info hidden-sm-down">
                 Christoff Handbugr
                 <small>Pet Lover</small>
@@ -157,11 +176,11 @@
 
                         <div id="calendar"></div>
 
-                       
+
                        <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
                 </div>
-                       
-                       
+
+
                         <div id="calendarModal" class="modal fade">
                           <div class="modal-dialog">
                             <div class="modal-content">
@@ -263,7 +282,7 @@
                         <button type="button" class="btn btn-info btn-raised btn-sm pull-right white-text" data-dismiss="modal" data-toggle="modal">CLOSE WINDOW</button>
                       </div>
                       <div class="row">
-                       
+
                        <div class="col-md-7 pull-right">
                           <form class="form-horizontal" role="form">
                             <div class="modal-body no-padding">
@@ -629,6 +648,7 @@
   <script src="../../assets/js/libs/nanoscroller/jquery.nanoscroller.min.js"></script>
   <script src="../../assets/js/libs/autosize/jquery.autosize.min.js"></script>
   <script src="../../assets/js/libs/bootstrap/bootstrap.min.js"></script>
+<!--  <script src="../../assets/js/core/demo/DemoFormWizard.js"></script>-->
   <script src="../../assets/js/core/source/App.js"></script>
   <script src="../../assets/js/core/source/AppNavigation.js"></script>
   <script src="../../assets/js/core/source/AppOffcanvas.js"></script>
@@ -636,9 +656,32 @@
   <script src="../../assets/js/core/source/AppForm.js"></script>
   <script src="../../assets/js/core/source/AppNavSearch.js"></script>
   <script src="../../assets/js/core/source/AppVendor.js"></script>
-  
-  
+
+
   <style>
+      .service-name{
+          font-size: .8em;
+          margin-bottom: 0;
+      }
+      .time-window{
+          font-size: .5em;
+          opacity: .7;
+      }
+      .lt-cal-event{
+          line-height: 12px;
+      }
+      .list.lt-cal-event .tile-icon img{
+          width: 32px;
+          height: 32px;
+      }
+      .list.lt-cal-event .tile .tile-icon {
+          min-width: 38px;
+      }
+
+      .list .tile .tile-content{
+          padding-left: 10px;
+      }
+
     @media (max-width: 768px){
 
   #LT-CalendarPage > .headerbar-right {
@@ -660,7 +703,7 @@
     background-color: #2196F3 !important;
     border-bottom: 1px solid #2196F3;
     }
-      
+
   .header-nav-profile .dropdown > a {
     min-width: 35px;
 }
@@ -670,9 +713,9 @@
 }
 
 section {
-     padding: 0; 
-} 
-      
+     padding: 0;
+}
+
     }
   </style>
 </body>

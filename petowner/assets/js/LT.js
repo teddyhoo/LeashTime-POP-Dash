@@ -181,6 +181,11 @@ var LT = (function() {
 
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.date = visitDictionary['date'];     						// YYYY-MM-DD
+			let jsDate = new Date(this.date);
+			this.dayWeek = jsDate.getDay();
+			this.dateNum = jsDate.getDate();
+			this.jsMonth = jsDate.getMonth();
+
 			this.pendingState = parseInt(visitDictionary['pendingchange']);
 			if(this.pendingState != null) {
 				this.pendingType = visitDictionary['pendingchangetype'];
@@ -286,6 +291,11 @@ var LT = (function() {
 			this.mapImageURL = visitReportInfo['MAPROUTEURL'];
 			this.visitNote = visitReportInfo['NOTE'];
 			this.iconButtons = visitReportInfo['MOODBUTTONS'];
+			this.visitReportPets = visitReportInfo['PETS'];
+			/*let vrKeys = Object.keys(visitReportInfo);
+			vrKeys.forEach((item) => {
+				console.log(item);
+			});*/
 		}
 	};
 	class ServiceItem {
@@ -369,6 +379,37 @@ var LT = (function() {
 
 			event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
 		}
+	}
+	async function loginPetOwnerPortalAjaxTED(event) {
+
+		checkClient();
+
+		console.log('Login pet owner portal ajax');
+		userNameGlobal = window.localStorage.getItem('username');
+		passwordGlobal = window.localStorage.getItem('password');
+
+		let uName;
+		let pWord;
+
+		if (userNameGlobal == null) {
+			uName = document.getElementById('username').value;
+			pWord = document.getElementById('password').value;
+			window.localStorage.setItem('username', uName);
+			window.localStorage.setItem('password',pWord);
+		} else {
+			uName = userNameGlobal;
+			pWord = passwordGlobal;
+		}
+
+		let loginURL = 'https://leashtime.com/pop-login.php?user_name=' + uName + '&user_pass=' + pWord;
+		
+		let loginRequest = await fetch(loginURL).then((response)=> {
+			response.headers.forEach(function(val, key) { 
+				console.log(key + ' -> ' + val); 
+			 });
+			return response.json()
+		});
+		event.location = "./online/pop-calendar-TED.html";
 	}
 	async function loginPetOwnerPortalAjax(event) {
 
@@ -536,67 +577,38 @@ var LT = (function() {
 		});
 		return surcharge_list;
 	}
-	function sendCancelVisitRequest (url, visitID,  cancelNote) {
-		let urlEndpoint = url+'?type=cancel&cancelVisit=1&visitid='+visitID+'&visitnote='+cancelNote;
 
-		fetch(urlEndpoint)
-		.then(
-			function(response) {
-				if (response.status !== 200) {
-					console.log('Looks like problem. Status code: ' + response.status);
-					return;
-				}
-				response.json().then(function(data) {
-					if (data.response != null) {
-						//console.log(data.response);
-					}
-				});
-			})
-		.catch(err => function(err) {
-			console.log(err);
-			alert("failed to fetch");
-		});
+	async function sendUncancelRequest (url, visitID,  uncancelNote) {
+		console.log('UNCANCEL REQUEST');
 	}
-	function sendUncancelRequest (url, visitID,  uncancelNote) {
-		let urlEndpoint = url+'?type=uncancel&cancelVisit=1&visitid='+visitID+'&visitnote='+cancelNote;
-
-		fetch(urlEndpoint)
-		.then(
-			function(response) {
-				if (response.status !== 200) {
-					console.log('Looks like problem. Status code: ' + response.status);
-					return;
-				}
-				response.json().then(function(data) {
-					console.log(data);
-				});
-			}
-		)
-		.catch(err => function(err) {
-			console.log(err);
-			alert("failed to fetch");
-		});
+	async function sendChangeVisitRequest (url, visitID,  changeType,  changeNote) {
+		console.log('CHANGE VISIT REQUEST');
 	}
-	function sendChangeVisitRequest (url, visitID,  changeType,  changeNote) {
-		let urlEndpoint = url+'?type=change&cancelVisit=1&visitid='+visitID+'&visitnote='+cancelNote;
 
-		fetch(urlEndpoint)
-		.then(
-			function(response) {
-				if (response.status !== 200) {
-					console.log('Looks like problem. Status code: ' + response.status);
-					return;
-				}
-				response.json().then(function(data) {
-
-					console.log(data);
-				});
+	async function sendMultiVisitCancel(cancelDictionary) {
+		let url = 'https://leashtime.com/testxx.php';
+		let options = {
+			'method' : 'POST',
+			'headers' : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json'
 			}
-		)
-		.catch(err => function(err) {
-			console.log(err);
-			alert("failed to fetch");
-		});
+		};
+		let scheduleRequest = await(url, options);
+		let scheduleRequestResponse = await scheduleRequest.json();
+	}
+	async function sendCancelVisitRequest (visitID,  cancelNote) {
+		/*let url = 'https://leashtime.com/client-own-scheduler-cancel.php?visitid=' + visitID + '&cancelnote=';
+		let options =  {
+			'method' : 'GET',
+			'headers' : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json'
+			}
+		};
+		let visitCancelRequest = await(url,options)
+		let cancelRequestResponse = await visitCancelRequest.json();
+*/
 	}
 	async function sendRequestSchedule(visitJson) {
 		let url = 'https://leashtime.com/testxx.php';
@@ -609,7 +621,6 @@ var LT = (function() {
 		};
 		let scheduleRequest = await(url, options);
 		let scheduleRequestResponse = await scheduleRequest.json();
-
 	}
 	async function getVisitReport(visitReportURL, visitID) {
 
@@ -630,10 +641,8 @@ var LT = (function() {
 			}
 		})
 		return visitReportResponse;
-
 	}
 	function getVisitReportPhoto(visitID) {
-
 	}
 	function recursiveGetProperty(obj, lookup, callback) {
 		let level_depth = 1;
@@ -666,7 +675,8 @@ var LT = (function() {
 		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
 		getPetOwnerVisitsAjax : getPetOwnerVisitsAjax,
 		loginPetOwner : loginPetOwner,
-		checkClient : checkClient
+		checkClient : checkClient,
+		loginPetOwnerPortalAjaxTED : loginPetOwnerPortalAjaxTED
 	}
 	module.exports = {
 		visit_list : visit_list,

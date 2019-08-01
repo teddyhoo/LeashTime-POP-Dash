@@ -35,8 +35,10 @@
         }
     });
 
-    var submitProfileFieldChange = function(event, itemID) {
-        console.log('submit change: ' + event.tagName + ' --> ' + event.innerHTML + ' --> ' + event.parentWindow);
+    function submitProfileFieldChange (event) {
+        //console.log('submit change: ' + event.target + ' --> ' + event.innerHTML);
+        console.log('submit profile changes: ' + event.target + ' inner: ' + event.target.innerHTML);
+
     };
     async function getPetOwnerProfile() {
         petOwnerProfile = await LT.getClientProfileAjax();
@@ -47,55 +49,68 @@
         addEditEvents();
     }
 
-    function addEditEvents() {
+    function changeFormButtons(event) {
+        event.preventDefault();
+        const item = event.target;
+        //item.removeEventListener('click', changeFormButtons);        
+        console.log('clicked change form buttons');
+        let currentTextVal = item.textContent;
+        console.log(item);
+        console.log(item.id + ' : ' + currentTextVal);
 
-        const elemItems = document.getElementsByClassName('editField');
-        Array.from(elemItems).forEach((item)=> {
-            item.addEventListener('click', ()=> {
-                let currentTextVal = item.textContent;
-                console.log(item);
-                console.log(item.id + ' : ' + currentTextVal);
+        let formDiv = document.createElement('div');
+        let formElem = document.createElement('form');
+        let formInput = document.createElement('input');
+        let formLabel = document.createElement('label');
+        let formButton = document.createElement('button');
 
-                let formDiv = document.createElement('div');
-                let formElem = document.createElement('form');
-                let formInput = document.createElement('input');
-                let formLabel = document.createElement('label');
-                let formButton = document.createElement('button');
 
-                formDiv.setAttribute('class', 'form-group');
-                formElem.setAttribute('id', item.id);
-                //formElem.setAttribute('onsubmit', submitProfileFieldChange)
+        formDiv.setAttribute('class', 'form-group');
+        formElem.setAttribute('id', item.id);
+        //formElem.setAttribute('onsubmit', submitProfileFieldChange(item));
 
-                formInput.setAttribute('type', 'text');
-                formInput.setAttribute('class','form-control');
-                formInput.setAttribute('id', item.id);
-                formInput.setAttribute('name', item.id);
-                formInput.setAttribute('value', currentTextVal);
+        formLabel.setAttribute('for',item.id);
 
-                formDiv.appendChild(formElem);
-                formElem.appendChild(formInput);
+        formInput.setAttribute('type', 'textArea');
+        formInput.setAttribute('class','form-control');
+        formInput.setAttribute('id', item.id);
+        formInput.setAttribute('name', item.id);
+        formInput.setAttribute('value', '');
 
-                formLabel.setAttribute('for',item.id);
-                formButton.setAttribute('class','btn btn-primary');
-                formButton.setAttribute('type', 'submit');
-                formButton.setAttribute('onclick',submitProfileFieldChange(formDiv));
-                formButton.innerHTML = 'DONE';
+        formButton.setAttribute('class','btn btn-primary');
+        formButton.setAttribute('type', 'submit');
+        formButton.innerHTML = 'DONE';
 
-                //formElem.appendChild(formLabel);
-                formElem.appendChild(formButton);
+        formButton.addEventListener('click', function(e) {
+            submitProfileFieldChange(e);
+        }, true);
 
-                while (item.firstChild) {
-                    item.removeChild(item.firstChild);
-                }         
-                item.appendChild(formDiv);       
-            });
-        })
+        while (item.firstChild) {
+            item.removeChild(item.firstChild);
+        }         
+
+        formDiv.appendChild(formElem);
+        formElem.appendChild(formLabel);
+        formElem.appendChild(formInput);
+        formElem.appendChild(formButton);
+        item.appendChild(formDiv);
+        //formElem.addEventListener('onsubmit', submitProfileFieldChange(item), false);s
+        //formInput.focus();
+
+
     }
 
-    /*function submitProfileFieldChange(event) {
-        console.log('Submit form field change');
-        console.log(event);
-    }*/
+    function addEditEvents() {
+        const elemItems = document.getElementsByClassName('editField');
+        //console.log(elemItems.length);
+        Array.from(elemItems).forEach((item)=> {
+            //console.log(item);
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                changeFormButtons(e);
+            }, false);
+        });
+    }
 
     function editField(editComponent) {
 
