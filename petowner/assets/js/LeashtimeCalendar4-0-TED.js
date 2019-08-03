@@ -554,7 +554,6 @@
 
         jQuery(showModal).modal('show');
     }
-    
     function displayCancelChange(event, visitID) {
         console.log('FUTURE VISIT');
         let cancelChangeDate = event.date;
@@ -965,7 +964,7 @@
             parentNode.innerHTML = endDateHTML;
             parentNode.addEventListener('focusout', function(e) {
                 console.log(e.target);
-                /*let singleDate = document.getElementById('dateToday');
+                let singleDate = document.getElementById('dateToday');
                 let endDateObj = document.getElementById('scheduleUntilDate');
                 let endDateWrap = document.createElement('strong');
                 let endDateJS = new Date(endDateObj.value);
@@ -976,7 +975,7 @@
                         <span class="blue-text" id="endDate">${endDateMonthString} ${endDateNum}</span>
                         <br>`;
                 endDateWrap.innerHTML = endDateWidget;
-                singleDate.parentNode.insertBefore(endDateWrap, singleDate);*/
+                singleDate.parentNode.insertBefore(endDateWrap, singleDate);
             }, true);
 
             let requestButton = document.getElementById('requestServiceButton');
@@ -1067,11 +1066,6 @@
 
             } else {
 
-                let dateObj = new Date(beginDate);
-                dateObj.setYear(dateBeginYear);
-                let formatEndDate = new Date(endDate);
-                formatEndDate.setYear(dateBeginYear);
-                let dayDiff = LTDateLib.calcDateDayDiff(dateObj,formatEndDate);
                 let serviceList = LT.getServices();
 
                 serviceList.forEach((service)=> {
@@ -1080,10 +1074,16 @@
                     }
                 });
 
-                 for (let i = 0; i < dayDiff; i++) {
-                     let visitDateAdd = formatEndDate.getDate();
-                     formatEndDate.setDate(visitDateAdd);
-                     createRequestService(formatEndDate);
+                let dateObj = new Date(beginDate);
+                dateObj.setYear(dateBeginYear);
+                let formatEndDate = new Date(endDate);
+                let dayDiff = LTDateLib.calcDateDayDiff(dateObj,formatEndDate);
+
+                for (let i = 0; i < dayDiff; i++) {
+                    let visitDateAdd = new Date(dateObj);
+                    visitDateAdd.setDate(dateObj.getDate()+i);                    
+                    console.log(visitDateAdd);
+                    createRequestService(visitDateAdd);
                 }
             }
 
@@ -1125,7 +1125,6 @@
         pendingVisits.push(visitEvent);
         calendar.addEvent(visitEvent);
     }
-
     function sendGratuity() {
     }
     function populateTimeline() {

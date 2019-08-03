@@ -5,6 +5,10 @@ var LTDateLib = (function() {
 	const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 	var re = /([0-9]+):([0-9]+):([0-9]+)/;
 
+	function getDayStringForDate(date) {
+		let dateObj = new Date(date);
+		
+	}
 	function calDaysBefore(todayDate) {
 		let daysBeforeDate = new Date(todayDate);
 		daysBeforeDate.setDate(daysBeforeDate.getDate() - 30);
@@ -28,6 +32,7 @@ var LTDateLib = (function() {
 		let dateBeginTimeStamp = (new Date(beginDate).getTime());
 		let microSecondsDiff = Math.abs(dateBeginTimeStamp - dateEndTimeStamp);
 		let daysDiff = Math.floor(microSecondsDiff/(1000*60*60*24));
+		console.log('CALLING DAY DIFF: ' + microSecondsDiff + ' ' + daysDiff);
 		return daysDiff;
 	}
 	function getFullDate() {
