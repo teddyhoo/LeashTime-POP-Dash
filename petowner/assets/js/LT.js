@@ -177,8 +177,13 @@ var LT = (function() {
 	}
 	class Visit {
 		constructor(visitDictionary) {
-			//console.log('-------VISIT ID: ' + visitDictionary['appointmentid'] + ' --------------');
+			/*console.log('-------VISIT ID: ' + visitDictionary['appointmentid'] + ' --------------');
+			let dicKeys = Object.keys(visitDictionary);
+			dicKeys.forEach((key) => {
 
+				console.log(key);
+
+			})*/
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.date = visitDictionary['date'];     						// YYYY-MM-DD
 			let jsDate = new Date(this.date);
@@ -189,16 +194,12 @@ var LT = (function() {
 			this.pendingState = parseInt(visitDictionary['pendingchange']);
 			if(this.pendingState != null) {
 				this.pendingType = visitDictionary['pendingchangetype'];
-				//console.log('Visit state pending: ' + this.pendingType);
 			}
 			this.sitterID = visitDictionary['providerptr'];
 			this.status = visitDictionary['status'];						// completed, INCOMPLETE,  arrived, canceled
 			this.service = visitDictionary['servicelabel'];
 			this.service_code = visitDictionary['servicecode'];
 			this.packageType = visitDictionary['packagetype'];
-			if (this.packageType != 'ongoing') {
-				//console.log('Package type: ' + this.packageType)
-			}
 			this.time_window_start = visitDictionary['starttime'];		// HH:MM:SS
 			this.time_window_end = visitDictionary['endtime'];		// HH:MM:SS
 			this.timeOfDay = visitDictionary['timeofday'];
@@ -207,7 +208,7 @@ var LT = (function() {
 			this.visitNote = visitDictionary['note'];
 			this.charge = parseFloat(visitDictionary['charge']);
 			this.surchargeAmount = parseFloat(0);
-			this.isSurchargable = false;
+			this.isSurchargable = true;
 
 			if (visitDictionary['status'] == 'completed') {
 				
@@ -222,9 +223,6 @@ var LT = (function() {
 				let cHours = completeDate.getHours();
 				let cMinutes = completeDate.getMinutes();
 				this.completion_time = cHours + ':' + cMinutes; // YYYY-MM-DD HH:MM:SS
-
-				//console.log('COMPLETED VISIT: ' + this.arrival_time +' - ' + this.completion_time);
-
 				this.visitReport = visitDictionary['visitreport'];
 				this.visitReportStatus = visitDictionary['visitreportstatus'];
 				if(this.visitReportStatus != null) {
@@ -232,11 +230,9 @@ var LT = (function() {
 					getVisitReport(this.visitReportURLInfo, this.appointmentid);
 					this.visitReportReceived = this.visitReportStatus.received;
 					this.visitReportPhoto = this.visitReportStatus.photo;
-					//console.log('VISIT REPORT: ' + this.visitReportURLInfo + ' ' + ' PHOTO: ' + this.visitReportReceived);
 				}
 			}		
 
-			//console.log('Date: ' + this.date + ', Start: ' + this.time_window_start + ', End: ' + this.time_window_end + ' TOD: ' + this .timeOfDay	);
 			this.fullDate = new Date(this.date + ' ' + this.time_window_start);
 
 			if (visitDictionary['adjustment'] != null) {
@@ -289,13 +285,9 @@ var LT = (function() {
 		addVisitReportDetails(visitReportInfo) {
 			this.visitPhotoURL = visitReportInfo['VISITPHOTOURL'];
 			this.mapImageURL = visitReportInfo['MAPROUTEURL'];
-			this.visitNote = visitReportInfo['NOTE'];
+			this.visitReportNote = visitReportInfo['NOTE'];
 			this.iconButtons = visitReportInfo['MOODBUTTONS'];
 			this.visitReportPets = visitReportInfo['PETS'];
-			/*let vrKeys = Object.keys(visitReportInfo);
-			vrKeys.forEach((item) => {
-				console.log(item);
-			});*/
 		}
 	};
 	class ServiceItem {
@@ -316,22 +308,36 @@ var LT = (function() {
 			this.begin = timeWindowDict['start'];
 			this.endTW = timeWindowDict['end'];
 			this.indexVal = index;
+
+			/*console.log('Time window: ' + this.begin + ' - ' + this.endTW);*/
 		}
 	};
 	class SurchargeItem {
 		constructor(surchargeDictionary) {
+
 			this.surchargeTypeID = surchargeDictionary['surchargetypeid'];
 			this.surchargeLabel = surchargeDictionary['label'];
 			this.description = surchargeDictionary['description'];
 			this.surchargeDate = surchargeDictionary['date'];
+			console.log(this.surchargeDate);
 			this.surchargeType = surchargeDictionary['type'];
 			if (this.surchargeType == 'weekend') {
 				this.saturdayBool = surchargeDictionary['saturday'];
 				this.sundayBool = surchargeDictionary['sunday'];
 			} else if (this.surchargeType == 'after') {
 				this.afterTime = surchargeDictionary['time'];
+				let surchargeKeys = Object.keys(surchargeDictionary);
+					surchargeKeys.forEach((key)=> {
+					console.log(key);
+				});
 			} else if (this.surchargeType == 'before') {
 				this.beforeTime = surchargeDictionary['time']
+				let surchargeKeys = Object.keys(surchargeDictionary);
+					surchargeKeys.forEach((key)=> {
+					console.log(key);
+				});
+			} else {
+				this.surchargeType = 'Holiday';
 			}
 			this.charge = surchargeDictionary['charge'];
 			this.surchargeAutomatic = surchargeDictionary['automatic'];
