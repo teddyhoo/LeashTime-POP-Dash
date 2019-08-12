@@ -1024,13 +1024,20 @@
                 let dayDiff = LTDateLib.calcDateDayDiff(formattedVisitDateObject,formatEndDate);
 
                 let scheduleRequestItems = [];
+                let subtotalTaxCharges = 0;
+                let subtotalSurcharges = 0;
+                let subtotalVisitCharges = 0;
 
                 for (let i = 0; i < dayDiff; i++) {
                     let visitDateAdd = new Date(formattedVisitDateObject);
-                    visitDateAdd.setDate(formattedVisitDateObject.getDate()+i);                    
-                    let multiDayEvent = createRequestEvent(visitDateAdd, currentServiceChosen);
+                    visitDateAdd.setDate(formattedVisitDateObject.getDate()+i);   
+                    let newVisitDateAdd = parseTimeWindows(new Date(visitDateAdd));                 
+                    let multiDayEvent = createRequestEvent(newVisitDateAdd, currentServiceChosen);
                     scheduleRequestItems.push(multiDayEvent);
+                    subtotalVisitCharges += calculateVisitCharges(newVisitDateAdd, currentServiceChosen, 1);
                 }
+
+                console.log(subtotalVisitCharges);
 
                 buildMultipleScheduleRequestFetch(formattedVisitDateObject, scheduleRequestItems);
 
@@ -1039,6 +1046,7 @@
             calendar.render();
             resetVisit()
             displayPendingStatus();
+
             let showModal = document.getElementById("formModal");
             jQuery('#formModal').modal('hide');
 
@@ -1059,7 +1067,7 @@
             id : millisecondsVisitID,
             groupid : 'petsit',
             title: stringForCurrentService,
-            start : eventDateFormat,
+            start : serviceDate,
             note: 'NO NOTE',
             timeWindow : cBeginTW + ' - ' + cEndTW,
             pets : currentPetsChosen,
@@ -1119,14 +1127,20 @@
         
         let requestKeys = Object.keys(requestInfo);
         requestKeys.forEach((key) => {
-            //console.log(key);
+            console.log(key);
         });
+
+        let visitMonth = addZero(visitDateBegin.getUTCMonth()+1);
+        let visitDate = addZero(visitDateBegin.getUTCDate());
+        let visitYear = visitDateBegin.getUTCFullYear();
+        let formattedDateString = visitMonth + '/' + visitDate + '/' + visitYear;
+        console.log(formattedDateString);
+
         let visitItem = {
-            'date' : requestInfo.start,
+            'date' : formattedDateString,
             'timeofday' : requestInfo.timeWindow,
-            'servicecode' : requestInfo.serviceCode,
+            'servicecode' : currentServiceChosen,
             'pets' : requestInfo.pets,
-            'note' : requestInfo.note
         };
 
         let listOfVisits = [];
@@ -1135,24 +1149,57 @@
         let request = {
             'totaldays' : '1',
             'visitdays' : '1',
-            'start' : visitDateBegin,
-            'end' : visitDateBegin,
-            'servicecode' : requestInfo.serviceCode,
+            'start' : formattedDateString,
+            'end' : formattedDateString,
+            'servicecode' : currentServiceChosen,
             'note' : requestInfo.note,
             'visits' : listOfVisits
         };
 
         console.log(request); 
+
+        let sampleVisitRequest =   {
+            "start":"07/24/2019",
+            "end":"08/27/2019",
+            "servicecode":"29",
+            "prettypets":"Apple, Bubbles",
+            "pets":"Apple,Bubbles",
+            "visits":
+                [
+                    {
+                        "date":"07/24/2019",
+                        "servicecode":"29",
+                        "timeofday":"5:00 pm-7:00 pm",
+                        "pets":"Apple,Bubbles"
+                    },
+         
+                    {
+                        "date":"7/25/2019",
+                        "servicecode":"29",
+                        "timeofday":"9:00 am-11:00 am",
+                        "pets":"Apple,Bubbles"
+                    },
+                    {
+                        "date":"7/25/2019",
+                        "servicecode":"29",
+                        "timeofday":"3:00 pm-5:00 pm",
+                        "pets":"Apple,Bubbles"
+                    }
+                ],
+            "note":"Please be on time.",
+            "totaldays":4,
+            "visitdays":4
+        };
+
+        console.log(sampleVisitRequest);
+        LT.sendRequestSchedule(request);
     }
     function calculateVisitCharges(visitDate, serviceID, numPets) {
-        console.log('Visit date: ' + visitDate);
         let visitCharge = parseFloat(0);
         let serviceList = LT.getServices();
         serviceList.forEach((service)=> {
-            //console.log(service);
             if (service.serviceCode == serviceID) {
                 visitCharge += parseFloat(service.serviceCharge);
-                console.log('CHARGE FOR VISIT: ' +  visitCharge);
             }
         });
 

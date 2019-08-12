@@ -308,8 +308,6 @@ var LT = (function() {
 			this.begin = timeWindowDict['start'];
 			this.endTW = timeWindowDict['end'];
 			this.indexVal = index;
-
-			/*console.log('Time window: ' + this.begin + ' - ' + this.endTW);*/
 		}
 	};
 	class SurchargeItem {
@@ -319,29 +317,36 @@ var LT = (function() {
 			this.surchargeLabel = surchargeDictionary['label'];
 			this.description = surchargeDictionary['description'];
 			this.surchargeDate = surchargeDictionary['date'];
-			console.log(this.surchargeDate);
 			this.surchargeType = surchargeDictionary['type'];
-			if (this.surchargeType == 'weekend') {
-				this.saturdayBool = surchargeDictionary['saturday'];
-				this.sundayBool = surchargeDictionary['sunday'];
-			} else if (this.surchargeType == 'after') {
-				this.afterTime = surchargeDictionary['time'];
-				let surchargeKeys = Object.keys(surchargeDictionary);
-					surchargeKeys.forEach((key)=> {
-					console.log(key);
-				});
-			} else if (this.surchargeType == 'before') {
-				this.beforeTime = surchargeDictionary['time']
-				let surchargeKeys = Object.keys(surchargeDictionary);
-					surchargeKeys.forEach((key)=> {
-					console.log(key);
-				});
-			} else {
-				this.surchargeType = 'Holiday';
-			}
 			this.charge = surchargeDictionary['charge'];
 			this.surchargeAutomatic = surchargeDictionary['automatic'];
 			this.perVisit = surchargeDictionary['pervisit'];
+
+
+			if (this.surchargeType == 'weekend') {
+
+				this.saturdayBool = surchargeDictionary['saturday'];
+				this.sundayBool = surchargeDictionary['sunday'];
+				console.log('WEEKEND surcharge with Saturday: ' + this.saturdayBool + ', Sunday: ' + this.sundayBool + ' --> ' + this.charge);
+
+
+			} else if (this.surchargeType == 'after') {
+
+				this.afterTime = surchargeDictionary['time'];
+				console.log('AFTER: ' + 	this.afterTime + ' --> ' + this.charge);
+
+			} else if (this.surchargeType == 'before') {
+
+				this.beforeTime = surchargeDictionary['time']
+				console.log('BEFORE value: ' + this.beforeTime + ' --> ' + this.charge);
+
+			} else {
+
+				this.surchargeType = 'Holiday';
+				console.log('BEFORE value: ' + this.beforeTime + ' --> ' + this.charge);
+
+			}
+
 		}
 	};
 
@@ -617,16 +622,18 @@ var LT = (function() {
 */
 	}
 	async function sendRequestSchedule(visitJson) {
-		let url = 'https://leashtime.com/testxx.php';
+		let url = 'https://leashtime.com/client-scheduler-json-post.php';
 		let options = {
 			'method' : 'POST',
 			'headers' : {
 				'accept' : 'application/json',
 				'content-type' : 'application/json'
-			}
+			},
+			'body' : JSON.stringify(visitJson)
 		};
-		let scheduleRequest = await(url, options);
+		let scheduleRequest = await fetch(url, options);
 		let scheduleRequestResponse = await scheduleRequest.json();
+		console.log(scheduleRequestResponse);
 	}
 	async function getVisitReport(visitReportURL, visitID) {
 
