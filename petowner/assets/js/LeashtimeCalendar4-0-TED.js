@@ -15,12 +15,12 @@
     var cBeginTW;
     var cEndTW;
 
-
     var currentPetsChosen = [];
     var event_visits = [];
     var pendingVisits = [];
-    var surcharge_events = [];
     var all_visits = [];
+
+    var surcharge_events = [];
     var surchargeItems =[];
     var serviceList = [];
     var timeWindowList =[];
@@ -93,7 +93,7 @@
                 //styleElement.cssText = 'background-color: white';
                 //console.log(styleElement.cssText);
                 //console.log('Event id: ' + eventID + ' Title: ' + eventTitle);
-                buildCalendarCellView(info.el, eventTitle, eventID, eventInfo);
+                //buildCalendarCellView(info.el, eventTitle, eventID, eventInfo);
 
             }
         });
@@ -136,15 +136,14 @@
         calEventDiv.appendChild(calEventHeader);
 
         if (event.status == 'completed') {
-            calEventHeader.setAttribute('class' , 'panel-group style-success');
+            calEventHeader.setAttribute('class' , 'card-head card-head-xs panel-group style-success');
         } else if (event.status == 'canceled') {
-            calEventHeader.setAttribute('class' , 'panel-group style-danger');
+            calEventHeader.setAttribute('class' , 'card-head card-head-xs panel-group style-danger');
         } else if (event.status == 'INCOMPLETE') {
-            calEventHeader.setAttribute('class', 'panel-group style-default');
+            calEventHeader.setAttribute('class', 'card-head card-head-xs panel-group style-default');
         } 
-
         if (event.isPending) {
-            calEventHeader.setAttribute('class' , 'panel-group style-warning');
+            calEventHeader.setAttribute('class' , 'card-head card-head-xs  panel-group style-warning');
         }
 
         let evtHead = document.createElement('header');
@@ -167,71 +166,6 @@
         evtTime.innerHTML = event.service;
         evtHead.appendChild(evtTime);
 
-        //element.appendChild(calPanelDiv);
-    }
-    function buildCalendarCellViewTed(element, event, eventID) {
-
-        let eventKeys = Object.keys(event);
-        eventKeys.forEach((key)=> {
-            //console.log(key);
-        });
-
-        //console.log(event.status);
-        console.log('Element: ' + element.tagName);
-        let visitID = eventID;
-        let panelID = 'panel-' + visitID;
-        let calPanelDiv = document.createElement('div');
-        calPanelDiv.setAttribute('id', 'panel-'+visitID);
-
-
-        if (event.status == 'completed') {
-            calPanelDiv.setAttribute('class' , 'panel-group style-success');
-        } else if (event.status == 'canceled') {
-            calPanelDiv.setAttribute('class' , 'panel-group style-danger');
-        } else if (event.status == 'INCOMPLETE') {
-            calPanelDiv.setAttribute('class', 'panel-group style-default');
-        } else if (event.isPending) {
-            calPanelDiv.setAttribute('class' , 'panel-group style-warning');
-
-        }
-
-
-        let calEventDiv = document.createElement('div');
-        calEventDiv.setAttribute('class' , 'card-head card-head-xs');
-        calEventDiv.setAttribute('data-toggle', 'collapse');
-        calEventDiv.setAttribute('data-parent', '#' + panelID);
-        calEventDiv.setAttribute('data-target', '#' + visitID + '-body');
-        calEventDiv.setAttribute('aria-expanded', 'false');
-        calPanelDiv.appendChild(calEventDiv);
-
-        let evtHeader = document.createElement('header');
-        evtHeader.setAttribute('style' , 'line-height: 9px !important;padding-left:12px!important; width:70%;');
-        //calEventDiv.appendChild(evtHeader);
-
-        let evtTitle = document.createElement('span');
-        evtTitle.setAttribute('class', 'service-name');
-        evtTitle.innerHTML = event.title;
-        evtHeader.appendChild(evtTitle);
-
-        let evtTime = document.createElement('span');
-        evtTime.setAttribute('class', 'time-window');
-        evtTime.innerHTML = event.timeWindow;
-        evtHeader.appendChild(evtTime);
-
-        let pannelTools = document.createElement('div');
-        pannelTools.setAttribute('class', 'tools');
-        pannelTools.setAttribute('style', 'padding-right: 0');
-        pannelTools.innerHTML = '<a class="btn btn-icon-toggle" style="border-radius: 2px !important;margin:.15em;"><i class="fa fa-bars"></i></a>';
-        calEventDiv.appendChild(pannelTools);
-
-        let evtBody = document.createElement('div');
-        evtBody.setAttribute('id', visitID + '-body');
-        evtBody.setAttribute('class', 'collapse');
-        evtBody.setAttribute('aria-expanded', 'false');
-        evtBody.innerHTML = '<div class="card-body small-padding border-top"><button class="btn btn-xs btn-info m-r-10 pull-left btn-rounded p-l-15 p-r-15" style="margin-right:5px"> <i class="fa fa-edit"></i> </button><button class="btn btn-xs btn-warning pull-left btn-rounded p-l-10 p-r-10"> <i class="fa fa-comments"></i></button><button class="btn btn-xs btn-danger pull-right text-xs">  <i class="fa fa-trash"></i> <span class="hidden-mobile"></span></button></div>';
-        calEventDiv.appendChild(evtBody);
-
-        calPanelDiv.appendChild(calEventDiv);
         element.appendChild(calPanelDiv);
     }
     function createCalendarEvent(visit) {
@@ -257,59 +191,52 @@
         }
 
         let eventDateStart = visitDateObj;
+        console.log('EVENT DATE START: ' + eventDateStart);
+        console.log('START MONTH: ' + eventDateStart.getUTCMonth());
+        console.log('START DATE: ' + eventDateStart.getUTCDate());
+        console.log('START DAY: ' + eventDateStart.getUTCDay());
         let eventDateEnd = visit.date;
 
         if(visit.status == 'CANCELED' && visit.pendingType == null) {
-
             visitColor = 'red';
             CbackgroundColor = 'red';
             CborderColor ='red';
             eventDateStart = visit.fullDate;
         } else if (visit.status == 'completed' && visit.pendingType == null) {
-
             visitColor = 'green';
             CbackgroundColor = 'green';
             CborderColor ='green';
             let visitReportDate = new Date(visit.completed);
             eventDateStart =visitReportDate;
         } else if (visit.status == 'INCOMPLETE' && visit.pendingType == null) {
-
             visitColor = 'magenta';
             CbackgroundColor = 'magenta'
             CborderColor ='magenta';
             eventDateStart = visit.fullDate;
         }
         if (visit.pendingType != null) {
-            //console.log('PENDING TYPE: ' + visit.pendingType);
             pendingStatus = true;
             if (visit.pendingType == 'cancel') {
-
                 visitColor = 'orange';
                 CbackgroundColor = 'orange';
                 CborderColor ='red';
                 pendingStatus = true;
                 pType = 'CANCEL';
                 eventDateStart = visit.fullDate;
-
             } else if (visit.pendingType == 'uncancel') {
-
                 visitColor = 'orange';
                 CbackgroundColor = 'orange';
                 CborderColor ='green';
                 pendingStatus = true;
                 pType = 'CANCEL';
                 eventDateStart = visit.fullDate;
-
             } else {
-
                 visitColor = 'orange';
                 CbackgroundColor = 'orange';
                 CborderColor ='yellow';
-                //eventTitle += ' (PENDING APPROVAL)'
                 pendingStatus = true;
                 pType = 'SCHEDULE';
                 eventDateStart = visit.fullDate;
-
             }
         }
 
@@ -320,6 +247,7 @@
             start : eventDateStart,
             end : eventDateEnd,
             note: visit.visitNote,
+            visitDate : eventDateStart,
             timeWindow : visit.time_window_start + ' - ' + visit.time_window_end,
             arrivalTime : visit.arrival_timeDay,
             completionTime: visit.completion_time,
@@ -329,15 +257,18 @@
             sitter: visit.sitter,
             backgroundColor  : CbackgroundColor,
             color : 'white',
-            borderColor : CborderColor,
-
-            /*visitMonth : monthNum,
-            visitDate : dateOfDateString,
-            visitDayOfWeek : dayOfWeekString,
-            visitFormatDate : formatDateString*/
+            borderColor : CborderColor
         };
 
         addDateDataToEvent(event,eventDateStart);
+        let eventKeys = Object.keys(event);
+        console.log('-------NEW EVENT ENTRY--------');
+        eventKeys.forEach((key)=> {
+
+            console.log(key + ' ---> '  + event[key]);
+
+
+        })
         event_visits.push(event);
         if (event.isPending) {
             pendingVisits.push(event);
@@ -363,21 +294,50 @@
 
         return surchargeEvent;
     }
-    function displayPendingView(info) {
-        console.log('PENDING VIEW DISPLAY');
-        let eventInfo = info.event;
-        let eventDate = info.date;
-        console.log('VISIT TITLE: ' + eventInfo.title + ' --> ' + eventDate);
-        console.log(eventProps);
+    function createRequestEvent(serviceDate, serviceNameString) {
+        let fullYearPre = serviceDate.getFullYear();
+        let dateObj = new Date(serviceDate);
+        console.log('Creating date object for begin service date: ' + dateObj);
+        let realYear = dateObj.getFullYear();
+        let realMonth = dateObj.getMonth()+1;
+        let eventDateFormat = fullYearPre+'-'+realMonth+'-'+dateObj.getDate();
+        let millisecondsVisitID = dateObj.getMilliseconds();
+
+        let newEvent = {
+            id : millisecondsVisitID,
+            groupid : 'petsit',
+            title: stringForCurrentService,
+            start : serviceDate,
+            note: 'NO NOTE',
+            timeWindow : cBeginTW + ' - ' + cEndTW,
+            pets : currentPetsChosen,
+            status : 'pending',
+            isPending: true,
+            pendingType : 'SCHEDULE',
+            backgroundColor : 'orange',
+            eventTextColor : 'white',
+            color : 'orange',
+
+        };
+        //addDateDataToEvent(newEvent);
+        addVisitRequestEvent(newEvent);
+        return newEvent;
     }
-    function displaySurcharges() {
-        surchargeItems = LT.getSurcharges();
-        surchargeItems.forEach((surcharge)=> {
-            //console.log(surcharge.surchargeLabel);
-            let surchargeEventItem  =  createSurchargeEvent(surcharge);
-            surcharge_events.push(surchargeEventItem);
-            calendar.addEvent(surchargeEventItem);
-        });
+    function addDateDataToEvent(event , dateToAdd) {
+        let dayOfWeekString = dayArrStr[dateToAdd.getDay()];
+        let monthNum = dateToAdd.getMonth();
+        let dateOfDateString = dateToAdd.getDate();
+        let fullYearString = dateToAdd.getFullYear();
+        let formatDateString = monthNum + '/' + dateOfDateString + '/' + fullYearString;
+        event.visitMonth = monthNum;
+        event.visitDate = dateOfDateString;
+        event.visitDayOfWeek = dayOfWeekString;
+        event.visitFormatDate = formatDateString;
+    }
+    function addVisitRequestEvent(visitEvent) {
+        event_visits.push(visitEvent);
+        pendingVisits.push(visitEvent);
+        calendar.addEvent(visitEvent);
     }
     function clickedEvent(eventInfo) {
         let eventClicked = eventInfo.event._def;
@@ -395,7 +355,7 @@
 
         } else if (visitStatus == 'future' ||visitStatus == 'INCOMPLETE') {
 
-            displayCancelChange(eventClicked, selectedVisitID)
+            displayCancel(eventClicked, selectedVisitID)
 
         } else if (visitStatus == 'surcharges') {
 
@@ -411,7 +371,14 @@
             console.log(visitStatus);
         }
     }
-    
+
+    function displayPendingView(info) {
+        console.log('PENDING VIEW DISPLAY');
+        let eventInfo = info.event;
+        let eventDate = info.date;
+        console.log('VISIT TITLE: ' + eventInfo.title + ' --> ' + eventDate);
+        console.log(eventProps);
+    }
     function buildPendingView(event, eventID) {
         let visitID = eventID;
         let panelID = visitID;
@@ -520,6 +487,15 @@
             pendingView.innerHTML = pendingHTML;
         }
     }
+    function displaySurcharges() {
+        surchargeItems = LT.getSurcharges();
+        surchargeItems.forEach((surcharge)=> {
+            //console.log(surcharge.surchargeLabel);
+            let surchargeEventItem  =  createSurchargeEvent(surcharge);
+            surcharge_events.push(surchargeEventItem);
+            calendar.addEvent(surchargeEventItem);
+        });
+    }
     function displayVisitReport(event, visitID) {
         all_visits.forEach((visit)=> {
             if(visit.appointmentid == visitID) {
@@ -528,30 +504,27 @@
             }
         });
     }
+    function displayCancel(event, visitID) {
 
-    function displayCancelChange(event, visitID) {
-        console.log('FUTURE VISIT');
-        let cancelChangeDate = event.date;
-        let eventDetails = event.event;
-        let serviceList = LT.getServices();
-        let timeWindows = LT.getTimeWindows();
-        let timeWindowVisit;
+        let eventProps;
 
-        /*let eventKeys = Object.keys(eventDetails);
-
+        let eventKeys = Object.keys(event);
         eventKeys.forEach((key)=> {
             console.log(key + ' --> ' + event[key]);
             if (key == 'extendedProps') {
-                let propsDic = event['extendedProps']
-                let propsKeys = Object.keys(propsDic);
-                propsKeys.forEach((pKey) => {
-                    if (pKey == 'timeWindow') {
-                        timeWindowVisit = propsDic[pKey];
-                    }
-                    console.log('PROP: ' + pKey + ' --> ' + propsDic[pKey]);
+                eventProps = event[key];
+                let propKeys = Object.keys(eventProps);
+                propKeys.forEach((key)=> {
+                    console.log(key);
                 });
             }
-        });*/
+        });
+
+        let timeWindowVisit = eventProps.timeWindow;
+        let formatDate = new Date(eventProps.visitFormatDate);
+        console.log('Populate month in Cancel: ' + formatDate.getUTCMonth());
+        console.log('Populate date in Cancel: ' + formatDate.getUTCDate());
+
         const cancelChange = `
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -561,7 +534,7 @@
                         <p>VISIT ID:  ${visitID}</p>
                     </div>
                     <div class="alert alert-warning text-lg" role="alert">
-                        <strong>Date:</strong> <span class="blue-text" id="dateToday">${cancelChangeDate}</span>
+                        <strong>Date:</strong> <span class="blue-text" id="dateCancelBegin">${eventProps.visitFormatDate}</span>
                         <div class="form-group pull-right control-width-normal">
                             <div class="input-group date" id="demo-date">
                                 <div class="input-group-content">
@@ -573,23 +546,11 @@
                         </div>
                         <br>
                     </div>
-
                     <form class="form-horizontal" role="form">
                         <div class="modal-body" id="cancelVisit">
                             <div class="alert alert-warning text-lg" role="alert">
                                 <div class="modal-footer grey lighten-2">
-                                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestVisitCancel">CANCEL</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <form class="form-horizontal" role="form">
-                        <div class="modal-body" id="cancelVisit">
-                            <div class="alert alert-warning text-lg" role="alert">
-                                <div class="modal-footer grey lighten-2">
-                                    <button type="button" class="btn green width-6 white-text" data-dismiss="modal" data-toggle="modal" data-target="#formModal3" id="requestVisitCancel">CHANGE VISIT</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancelButton">NOTE</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal" forVisit="${visitID}" id="cancelVisitButton"}>REQUEST CANCELLATION</button>
                                 </div>
                             </div>
                         </div>
@@ -602,6 +563,31 @@
         jQuery('#formModal').modal('show');
         createCancelClick(visitID);
     }
+    function createCancelClick(visitID) {
+        let cancelButton = document.getElementById('cancelVisitButton');
+        cancelButton.addEventListener('click', (event)=> {
+
+            console.log(cancelButton.forVisit);
+
+            let dateCancelField = document.getElementById('dateCancelBegin');
+            let dateCancelBegin = new Date(dateCancelField.innerHTML);
+            let UTCCancelBegin = parseTimeWindows(dateCancelBegin);
+            let cancelUntilField = document.getElementById('cancelUntilDate');
+            let cancelUntilDate = new Date(cancelUntilField.value);
+            console.log('Begin cancel: ' + dateCancelBegin);
+            if (cancelUntilDate != null || cancelUntileDate != '') {
+                console.log('End cancel: ' + cancelUntilDate);
+            } else {
+                console.log('SINGLE DAY CANCEL');
+            }
+            console.log(event.target);
+            console.log(event.target.forVisit);
+            resetVisit();
+            jQuery(showModal).modal('hide');
+
+        });
+    }
+
     function displayUncancel(event, visitID) {
         console.log('UNCANCEL : ' + event + ' ' + visitID);
         let serviceList = LT.getServices();
@@ -663,9 +649,6 @@
         console.log('VISIT TITLE: ' + eventInfo.title + ' --> ' + eventDate);
         console.log(eventProps);
     }
-    function createCancelClick(visitID) {
-    }
-
     function displayVisitReportModal(visit) {
 
         let showModal = document.getElementById('ltVR-ModalContainer');
@@ -694,12 +677,8 @@
             elem.innerHTML = dayWeek + ', ' + monthStr + ' ' + dayDate;
         });
 
-        //        let visitShareButton = document.getElementsByClassName('ltVR-visitShareButton');
-        //        visitShareButton.setAttribute('href' , evtShareReport);
-
         jQuery(showModal).modal('show');
     }
-
     function displayVisitRequest(eventInfo) {
         beginDateService = new Date(eventInfo.date);
         let chosenDate = new Date(eventInfo.date);
@@ -799,7 +778,9 @@
             <div class="form-group text-center">
             <div class="btn-group" data-toggle="buttons" id="petPicker">
             ${petsInfo.map(function(pet) {
-                return '<label class=\"btn ink-reaction btn-info\"><input type=\"checkbox\" role=\"checkbox\" name=\"pet_name" id=\"pet' + pet.petID + '\"><i class=\"fa fa-paw fa-fw\"></i>' + pet.petName + '</label>'
+                return '<label for=\"pet_name' + pet.petID + '\" class=\"btn ink-reaction btn-info\"><input type=\"checkbox\" role=\"checkbox\" name=\"pet_name' + pet.petID +  '\" id=\"pet' + pet.petID + '\"><i class=\"fa fa-paw fa-fw\"></i>' + pet.petName + '</label>'
+                //return '<input type=\"checkbox\" role=\"checkbox\" name=\"pet_name' + pet.petID +  '\" id=\"pet' + pet.petID + '\"><label for=\"pet_name' + pet.petID + '\" class=\"btn ink-reaction btn-info\"><i class=\"fa fa-paw fa-fw\"></i>' + pet.petName + '</label></input>'
+
             })}
             </div>
             </div>
@@ -889,21 +870,38 @@
     function addPetPickerListener() {
         let pickPet = document.getElementById('petPicker');
         let childNodePet = pickPet.childNodes;
+
         childNodePet.forEach((petNode)=> {
+
             let petLabelNode = petNode.childNodes;
+
             if(petLabelNode != null) {
-                //console.log(petLabelNode);
-                let petInput = petLabelNode[0];
-                //console.log(petInput);
+                Array.from(petLabelNode).forEach((pNode)=> {
+                    if (pNode.type == 'checkbox') {
+                        console.log(pNode + ' CHECKBOX TYPE');
+                         pNode.addEventListener('click', function(event) {
+                            console.log('clicked on pNode: ');
+                            console.log(event.target);
+                            let re=/(pet)([0-9]+)/;
+                            let petNormal = re.exec(pNode.value);
+                            console.log('clicked on: ' + petNormal);
+                            if (pNode.value == 'on') {
+                                pNode.value = 'off';
+                            } else {
+                                pNode.value = 'on';
+                                console.log('Pet Event target: ' + event.target);
+                                console.log('Pet ID: ' + event.id);
+                            }
+                        });
+                    }
+                });
+            }
+        });
                 /*if (petInput != null) {
-                    console.log('PET element: ' + petInput.name + ' with ID: ' + petInput.id);
                     petLabelNode.addEventListener('click', function(event) {
                         //event.stopPropagation();
                         console.log(event);
-                        let re=/(pet)([0-9]+)/;
-                        let petNormal = re.exec(petInput.id)[2];
-                        console.log('Pet Event target: ' + event.target);
-                        console.log('Pet ID: ' + event.id);
+                       
 
                         let index = 0;
                         let popIndex = 0;
@@ -931,8 +929,6 @@
 
                     });        
                 }*/
-            }
-        });
     }
     function addMultiDayRequestPicker() {
         let multidayVisit = document.getElementById("requestMultiService");
@@ -1039,7 +1035,7 @@
 
                 console.log(subtotalVisitCharges);
 
-                buildMultipleScheduleRequestFetch(formattedVisitDateObject, scheduleRequestItems);
+                buildMultipleScheduleRequestFetch(formattedVisitDateObject, formatEndDate, scheduleRequestItems);
 
             }
 
@@ -1052,107 +1048,75 @@
 
         });
     }
+    function buildMultipleScheduleRequestFetch(visitDateBegin, visitDateEnd, requestInfo) {
 
- 
-    function createRequestEvent(serviceDate, serviceNameString) {
-        let fullYearPre = serviceDate.getFullYear();
-        let dateObj = new Date(serviceDate);
-        console.log('Creating date object for begin service date: ' + dateObj);
-        let realYear = dateObj.getFullYear();
-        let realMonth = dateObj.getMonth()+1;
-        let eventDateFormat = fullYearPre+'-'+realMonth+'-'+dateObj.getDate();
-        let millisecondsVisitID = dateObj.getMilliseconds();
+        let visitMonth = addZero(visitDateBegin.getUTCMonth()+1);
+        let visitDate = addZero(visitDateBegin.getUTCDate());
+        let visitYear = visitDateBegin.getUTCFullYear();
+        let formattedDateString = visitMonth + '/' + visitDate + '/' + visitYear;
+        let visitMonthEnd = addZero(visitDateEnd.getUTCMonth()+1);
+        let dateEnd = addZero(visitDateEnd.getUTCDate());
+        let visitYearEnd = visitDateEnd.getUTCFullYear();
+        let formattedEndDateString = visitMonthEnd + '/' + dateEnd + '/' + visitYearEnd;
 
-        let newEvent = {
-            id : millisecondsVisitID,
-            groupid : 'petsit',
-            title: stringForCurrentService,
-            start : serviceDate,
-            note: 'NO NOTE',
-            timeWindow : cBeginTW + ' - ' + cEndTW,
-            pets : currentPetsChosen,
-            status : 'pending',
-            isPending: true,
-            pendingType : 'SCHEDULE',
-            backgroundColor : 'orange',
-            eventTextColor : 'white',
-            color : 'orange',
+        console.log(formattedDateString + '  ' + formattedEndDateString);
 
-        };
-        //addDateDataToEvent(newEvent);
-        addVisitRequestEvent(newEvent);
-        return newEvent;
-    }
-    function addDateDataToEvent(event , dateToAdd) {
-        let dayOfWeekString = dayArrStr[dateToAdd.getDay()];
-        let monthNum = dateToAdd.getMonth();
-        let dateOfDateString = dateToAdd.getDate();
-        let fullYearString = dateToAdd.getFullYear();
-        let formatDateString = monthNum + '/' + dateOfDateString + '/' + fullYearString;
-        event.visitMonth = monthNum;
-        event.visitDate = dateOfDateString;
-        event.visitDayOfWeek = dayOfWeekString;
-        event.visitFormatDate = formatDateString;
-    }
-    function addVisitRequestEvent(visitEvent) {
-        event_visits.push(visitEvent);
-        pendingVisits.push(visitEvent);
-        calendar.addEvent(visitEvent);
-    }
-    function buildMultipleScheduleRequestFetch(visitDateBegin, requestInfo) {
         let listOfVisits = [];
+
         requestInfo.forEach((request)=> {
+            console.log('ADDING VISIT DATE TO REQUEST: '  + request.start);
             let visitItem = {
                 'date' : request.start,
                 'timeofday' : request.timeWindow,
-                'servicecode' : request.serviceCode,
+                'servicecode' : currentServiceChosen,
                 'pets' : request.pets,
                 'note' : request.note
             };
             listOfVisits.push(visitItem);
         });
+
         let request = {
-            'totaldays' : '1',
-            'visitdays' : '1',
-            'start' : visitDateBegin,
-            'end' : visitDateBegin,
-            'servicecode' : requestInfo.serviceCode,
-            'note' : requestInfo.note,
+            'totaldays' : LTDateLib.calcDateDayDiff(visitDateBegin,visitDateEnd),
+            'visitdays' : LTDateLib.calcDateDayDiff(visitDateBegin,visitDateEnd),
+            'start' : formattedDateString,
+            'end' : formattedEndDateString,
+            'servicecode' : currentServiceChosen,
+            'note' : 'NO NOTE',
             'visits' : listOfVisits
         };
         console.log(request);
+        LT.sendRequestSchedule(request);
 
     }
     function buildScheduleRequestFetch(requestInfo, visitDateBegin) {
         
-        let requestKeys = Object.keys(requestInfo);
-        requestKeys.forEach((key) => {
-            console.log(key);
-        });
-
         let visitMonth = addZero(visitDateBegin.getUTCMonth()+1);
         let visitDate = addZero(visitDateBegin.getUTCDate());
         let visitYear = visitDateBegin.getUTCFullYear();
         let formattedDateString = visitMonth + '/' + visitDate + '/' + visitYear;
         console.log(formattedDateString);
 
+        if (requestInfo.pets == null) {
+            requestInfo.pets = petOwnerProfile.pets;
+        }
         let visitItem = {
             'date' : formattedDateString,
             'timeofday' : requestInfo.timeWindow,
             'servicecode' : currentServiceChosen,
-            'pets' : requestInfo.pets,
+            'pets' : currentPetsChosen,
         };
 
         let listOfVisits = [];
         listOfVisits.push(visitItem);
 
         let request = {
-            'totaldays' : '1',
-            'visitdays' : '1',
             'start' : formattedDateString,
             'end' : formattedDateString,
             'servicecode' : currentServiceChosen,
-            'note' : requestInfo.note,
+            'pets' : currentPetsChosen,
+            'note' : 'NO NOTE',
+            'totaldays' : '1',
+            'visitdays' : '1',  
             'visits' : listOfVisits
         };
 
@@ -1164,6 +1128,9 @@
             "servicecode":"29",
             "prettypets":"Apple, Bubbles",
             "pets":"Apple,Bubbles",
+            "note":"Please be on time.",
+            "totaldays":4,
+            "visitdays":4,
             "visits":
                 [
                     {
@@ -1185,13 +1152,9 @@
                         "timeofday":"3:00 pm-5:00 pm",
                         "pets":"Apple,Bubbles"
                     }
-                ],
-            "note":"Please be on time.",
-            "totaldays":4,
-            "visitdays":4
-        };
+                ]
 
-        console.log(sampleVisitRequest);
+        };
         LT.sendRequestSchedule(request);
     }
     function calculateVisitCharges(visitDate, serviceID, numPets) {
@@ -1218,7 +1181,7 @@
                     visitCharge += surchargeAmt;
                 }
             } else {
-                console.log(surcharge.surchargeType + ' ' + surcharge.charge);
+                //console.log(surcharge.surchargeType + ' ' + surcharge.charge);
 
             }
 
@@ -1328,7 +1291,6 @@
         }
         return i;
     }
-
     function parseTimeWindows(beginDateObj) {
         let newBeginDateObj = new Date(beginDateObj);
         let re= /([0-9]+):([0-9]+) (am|pm)/;

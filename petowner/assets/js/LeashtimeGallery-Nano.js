@@ -8,6 +8,23 @@
 		let startDate = LTDateLib.getFullDate();
 		console.log('Date: ' + startDate);
 		getPhotoInfo(LTDateLib.calDaysBefore(startDate) , LTDateLib.calDaysAfter(startDate));
+
+	});
+
+
+
+	async function getPhotoInfo(start, end) {
+		all_visits = await LT.getPetOwnerVisitsAjax(this, start, end);
+		let imageGalleryArray = []
+		all_visits.forEach((visit)=> {
+			console.log(visit.visitPhotoURL);
+			let newImage = {
+				src : visit.visitPhotoURL,
+				srct: visit.visitPhotoURL,
+				title: visit.date
+			}
+			imageGalleryArray.push(newImage);
+		});
 		jQuery("#data-nanogallery2").nanogallery2({
 			thumbnailHeight:  'auto',
 			thumbnailWidth:   220,
@@ -29,8 +46,9 @@
 			icons : {
 				thumbnailAlbum : "<i style=\"color:#e00;\" class=\"fa fa-search-plus\"></i>"
 			},
-			itemsBaseURL:     'assets/img/',
-			items: [
+			itemsBaseURL:     '',
+			items : imageGalleryArray
+			/*items: [
 				{ src: 'dog0.jpg', srct: 'dog0.jpg', title: 'Watch your head', description: 'Having so much much much fun'},
 				{ src: 'Ball2.jpg', srct: 'Ball2.jpg', title: 'Play ball' },
 				{ src: 'IMG_1247.jpg', srct: 'IMG_1247.jpg', title: 'Hide and seek' },
@@ -44,16 +62,7 @@
 				{ src: 'Ball.jpg', srct:  'Ball.jpg', title: 'Play and Fun' },
 				{ src: 'DogStand.jpg', srct:  'DogStand.jpg', title: 'Dog Standoff' },
 				{ src: 'Lilly-close.jpg', srct:  'Lilly-close.jpg', title: 'Close up' },
-			]
-		});
-	});
-
-
-
-	async function getPhotoInfo(start, end) {
-		all_visits = await LT.getPetOwnerVisitsAjax(this, start, end);
-		all_visits.forEach((visit)=> {
-			console.log(visit.appointmentid);
+			]*/
 		});
 	}	
 }(this.materialadmin, window.jQuery)); 

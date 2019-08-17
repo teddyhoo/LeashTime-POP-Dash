@@ -6,8 +6,8 @@ var LTDateLib = (function() {
 	var re = /([0-9]+):([0-9]+):([0-9]+)/;
 
 	function getDayStringForDate(date) {
-		let dateObj = new Date(date);
 		
+		let dateObj = new Date(date);
 	}
 	function calDaysBefore(todayDate) {
 		let daysBeforeDate = new Date(todayDate);
@@ -32,7 +32,6 @@ var LTDateLib = (function() {
 		let dateBeginTimeStamp = (new Date(beginDate).getTime());
 		let microSecondsDiff = Math.abs(dateBeginTimeStamp - dateEndTimeStamp);
 		let daysDiff = Math.floor(microSecondsDiff/(1000*60*60*24));
-		console.log('CALLING DAY DIFF: ' + microSecondsDiff + ' ' + daysDiff);
 		return daysDiff;
 	}
 	function getFullDate() {
@@ -60,13 +59,71 @@ var LTDateLib = (function() {
 			return true;
 		}
 	}
+
+	function addZero(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+    function parseTimeWindows(beginDateObj) {
+        let newBeginDateObj = new Date(beginDateObj);
+        let re= /([0-9]+):([0-9]+) (am|pm)/;
+        let begTW = re.exec(cBeginTW);
+        let endTW = re.exec(cEndTW);
+        let bTWmatch = parseInt(begTW[1]);
+        let eTWmatch = parseInt(endTW[1]);
+        let isBeginMinutes = false;
+        let isEndMinutes = false;
+        console.log('Begin time window: ' + bTWmatch);
+        if (begTW[2]  > 0) {
+            isBeginMinutes = true;
+        }
+        if(endTW[2] > 0 ) {
+            isEndMinutes = true;
+        }
+        if (begTW[3] == 'pm' && bTWmatch != 12) {
+            bTWmatch += 12;
+        }
+        if(endTW[3] == 'pm' && eTWmatch != 12) {
+            eTWmatch += 12;
+        }
+        console.log('Begin time window PM AM: ' + bTWmatch);
+
+        newBeginDateObj.setUTCHours(addZero(bTWmatch));
+        if (isBeginMinutes) {
+            newBeginDateObj.setUTCMinutes(addZero(begTW[2]));
+        }
+
+        return newBeginDateObj;
+    }
+    function debugDateOutput(dateItem) {
+
+        let visitTempIDMilli = dateItem.getTime();
+        let realYear = dateItem.getUTCFullYear();
+        let realMonth = addZero(dateItem.getUTCMonth()+1);
+        let realHours = addZero(dateItem.getUTCHours());
+        let realMin = addZero(dateItem.getUTCMinutes());
+        let eventDateFormat = realYear+'-'+realMonth+'-'+dateItem.getUTCDate() + ' ' + realHours + ':' + realMin;
+                
+        console.log('Full obj: ' + dateItem);
+        console.log('Date obj milli: ' + visitTempIDMilli);
+        console.log('Date obj year: ' + realYear);
+        console.log('Date obj month: ' + realMonth);
+        console.log('Date obj hours: ' + realHours);
+        console.log('Date obj min: ' + realMin);
+        console.log(eventDateFormat);
+    }
+
 	return {
 		calDaysBefore : calDaysBefore,
 		calDaysAfter : calDaysAfter,
 		getFullDate : getFullDate,
 		calcDateDayDiff : calcDateDayDiff,
-		isValidDate : isValidDate
-
+		isValidDate : isValidDate,
+		addZero : addZero,
+		parseTimeWindows : parseTimeWindows,
+		debugDateOutput : debugDateOutput
 	}
 	module.exports = {
 		dayArrStr : dayArrStr,
