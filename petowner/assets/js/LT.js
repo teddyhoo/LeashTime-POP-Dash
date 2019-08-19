@@ -11,6 +11,7 @@ var LT = (function() {
 	var surcharge_list= [];
 	var visit_list = [];
 	var time_windows_list= [];
+	var requested_visits = [];
 	var petOwnerAndPets;
 	var isAjax = true;
 	var clientType;
@@ -177,13 +178,6 @@ var LT = (function() {
 	}
 	class Visit {
 		constructor(visitDictionary) {
-			/*console.log('-------VISIT ID: ' + visitDictionary['appointmentid'] + ' --------------');
-			let dicKeys = Object.keys(visitDictionary);
-			dicKeys.forEach((key) => {
-
-				console.log(key);
-
-			})*/
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.date = visitDictionary['date'];     						// YYYY-MM-DD
 			let jsDate = new Date(this.date);
@@ -193,6 +187,7 @@ var LT = (function() {
 			//console.log('ORIGINAL DATE: ' + this.date + '  as follows.  DAY WEEK: ' + this.dayWeek + ', DATE NUM: ' + this.dateNum + ' MONTH: ' + this.jsMonth);
 
 			this.pendingState = parseInt(visitDictionary['pendingchange']);
+			//console.log(this.pendingState);
 			if(this.pendingState != null) {
 				this.pendingType = visitDictionary['pendingchangetype'];
 			}
@@ -231,7 +226,7 @@ var LT = (function() {
 					getVisitReport(this.visitReportURLInfo, this.appointmentid);
 					this.visitReportReceived = this.visitReportStatus.received;
 					this.visitReportPhoto = this.visitReportStatus.photo;
-					console.log(this.visitReportPhoto);
+					//console.log(this.visitReportPhoto);
 				}
 			}		
 
@@ -362,33 +357,11 @@ var LT = (function() {
 		clientType = navigator.userAgent;
 		return navigator.platform;
 	}
-	async function loginPetOwner(event) {
 
-		checkClient();
+	// ********************************************************************************************
+	// *       NETWORK GET FUNCTIONS
+	// ********************************************************************************************
 
-		if(isAjax) {
-			loginPetOwnerPortalAjax(event);
-		} else {
-			console.log('Login pet owner portal NO AJAX');
-			console.log(event.location);
-			let uName = document.getElementById('username').value;
-			let pWord = document.getElementById('password').value;
-			let poDate = '2019-06-01';
-			let endpoDate = '2019-08-31';
-
-			let loginURL = 'http://localhost:3300?type=petOwnerLogin&username='+uName+'&password='+pWord+'&dateStart='+poDate+'&dateEnd='+endpoDate;
-			let loginRequest = await fetch(loginURL).then((response)=> {
-				console.log('Return response login request: ' + response.json());
-				let responseKeys = Object.keys(response.json());
-				responseKeys.forEach((key) => {
-					console.log(key);
-				});
-				return response.json()
-			});
-
-			event.location = "file:///Users/edwardhooban/Desktop/LeashTime-POP-Dash/petowner/online/pop-calendar.html";
-		}
-	}
 	async function loginPetOwnerPortalAjaxTED(event) {
 
 		checkClient();
@@ -464,6 +437,7 @@ var LT = (function() {
 		let visitPORequest = await fetch(clientVisitsURL,options);
 		let visitListResponse = await visitPORequest.json();
 		responseDictionary = visitListResponse;
+		
 		if (visitListResponse.visits != null) {
 				visitListResponse.visits.forEach((visitDict)=> {
 					const visit = new Visit(visitDict);
@@ -479,30 +453,108 @@ var LT = (function() {
 		if (visitListResponse.timeframes != null) {
 			parseTimeWindows(visitListResponse.timeframes);		
 		}
+		if(visitListResponse.requestedvisits != null) {
+			parsePendingVisits(visitListResponse.requestedvisits);
+		}
 		return visit_list;
 	}	
-
-	function getVisitList() {
-		
-		return visit_list;
-	}
-	function getServices() {
-
-		return listServices;
-	}
-	function getTimeWindows() {
-
-		return time_windows_list;
-	}
-	function getSurcharges() {
-
-		return surcharge_list;
-	}
-	function getPets() {
-
-		return petOwnerAndPets.pets;
+	async function getClientProfileAjax() {
+		let clientProfileURL = 'https://leashtime.com/client-own-profile-data.php';
+		let options = {
+			method : 'GET',
+			headers : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json',
+				'credentials' : 'same-origin'
+			}
+		}
+		let profileRequest = await fetch(clientProfileURL,options);
+		let profileResponse = await profileRequest.json();
+		petOwnerAndPets = new PetOwner(profileResponse);
+		return petOwnerAndPets;
 	}
 
+		/*
+			Purpose: to supply business and client identity info to populate the POP header.
+
+			Usage: WHEN LOGGED IN AS CLIENT: https://leashtime.com/pop-data-capsule-json.php
+
+			Returns JSON:
+
+				FAIL: {"error":<some error message>}
+
+				SUCCESS: 
+
+			{
+			"success":true,
+			"business":
+				{"bizName":"Dog's Life",
+				"shortBizName":"Dog's Life",
+				"logo":"https:\/\/LeashTime.com\/bizfiles\/biz_3\/logo.jpg",
+				"bizPhone":"703 555 1212",
+				"bizEmail":"dogslife69@yahoo.com",
+				"bizAddress":{"street1":"123 Main Street","street2":"","city":"Vienna","state":"VA","zip":"22180"},
+				"bizHomePage":"http:\/\/s179641890.onlinehome.us\/test\/dogslifehome.html",
+				"facebook":null,
+				"linkedinaddress":null,
+				"twitteraddress":null,
+				"instagraminaddress":null},
+			"client":{"fullname":"Elroy Krum","fname":"Elroy","lname":"Krum"}
+			}
+
+		*/
+
+	async function getPOPheaderInfo() {
+
+
+
+	}
+	async function getVisitReport(visitReportURL, visitID) {
+
+		//console.log(visitReportURL);
+		let url = visitReportURL;
+		let options = {
+			'method' : 'GET',
+			'headers' : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json'
+			}
+		}
+		let visitReportRequest = await fetch(url, options);
+		let visitReportResponse = await visitReportRequest.json();
+		visit_list.forEach((visit)=> {
+			if (visit.appointmentid == visitID) {
+				visit.addVisitReportDetails(visitReportResponse);
+			}
+		})
+		return visitReportResponse;
+	}
+
+
+	// ***********************************************
+	// *			PARSE RESPONSE FUNCTIONS
+	// ***********************************************
+
+	function parsePendingVisits(requestedDict) {
+
+		requestedDict.forEach((visitDic)=> {
+			let dictKeys = Object.keys(visitDic);
+			dictKeys.forEach((vKey) => {
+				if (vKey == 'visits') {
+					let requestArray = visitDic[vKey];
+					requestArray.forEach((newVisit)=> {
+						let visitRequestItemKeys = Object.keys(newVisit);
+						console.log('-----NEW VISIT -----');
+						visitRequestItemKeys.forEach((vvKey)=> {
+							//console.log(vvKey + ' --> ' + newVisit[vvKey]);
+						});
+						let requestVisit = new Visit(newVisit);
+						requested_visits.push(requestVisit);
+					});
+				}
+			});
+		});
+	}
 	function parseService(service_dict) {
 
 		service_dict.forEach((serviceDicItem) =>{
@@ -524,24 +576,25 @@ var LT = (function() {
 			surcharge_list.push(serviceObj);
 		});
 	}
-	async function getClientProfileAjax() {
-		let clientProfileURL = 'https://leashtime.com/client-own-profile-data.php';
-		let options = {
-			method : 'GET',
-			headers : {
-				'accept' : 'application/json',
-				'content-type' : 'application/json',
-				'credentials' : 'same-origin'
+
+	// ************************************************************
+	// *			RECURSIVE FUNCTIONS TO PARSE JSON
+	// ************************************************************
+
+	/*function recursiveGetProperty(obj, lookup, callback) {
+		let level_depth = 1;
+		let count_level = 1;
+		for (var property in obj) {
+			count_level = count_level + 1;
+			if (property == lookup) {
+				callback(obj[property]);
+			} else if(obj[property] instanceof Object) {
+				level_depth = level_depth + 1;
+				recursiveGetProperty(obj[property], lookup, callback);
 			}
 		}
-		let profileRequest = await fetch(clientProfileURL,options);
-		let profileResponse = await profileRequest.json();
-		petOwnerAndPets = new PetOwner(profileResponse);
-		return petOwnerAndPets;
-	}
-	// PET PHOTOS
-	// https://leashtime.com/pet-photo.php?id={petid}&version=display
-	// parameters: petid&version=display    [if set param, 300px max dimension; else, full size]
+	} 
+
 	function getClientProfileInfo(client_dict) {
 		let client_id = client_dict['clientid'];
 		let pet_info;
@@ -586,18 +639,18 @@ var LT = (function() {
 		});
 		return surcharge_list;
 	}
-
+*/
+	// ***********************************************
+	// *			SEND REQUEST FUNCTIONS
+	// ***********************************************
 	async function sendUncancelRequest (url, visitID,  uncancelNote) {
 
 		console.log('UNCANCEL REQUEST');
-
 	}
 	async function sendChangeVisitRequest (url, visitID,  changeType,  changeNote) {
 
 		console.log('CHANGE VISIT REQUEST');
-
 	}
-
 	async function sendMultiVisitCancel(cancelDictionary) {
 		let url = 'https://leashtime.com/testxx.php';
 		let options = {
@@ -610,20 +663,52 @@ var LT = (function() {
 		let scheduleRequest = await(url, options);
 		let scheduleRequestResponse = await scheduleRequest.json();
 	}
-
-	async function sendCancelVisitRequest (visitID,  cancelNote) {
-		/*let url = 'https://leashtime.com/client-own-scheduler-cancel.php?visitid=' + visitID + '&cancelnote=';
-		let options =  {
-			'method' : 'GET',
+	async function sendCancelVisitRequest (cancelVisitList) {
+		let url = "https://leashtime.com/client-own-schedule-change-json.php";
+		let options = {
+			'method' : 'POST',
 			'headers' : {
 				'accept' : 'application/json',
 				'content-type' : 'application/json'
-			}
-		};
-		let visitCancelRequest = await(url,options)
-		let cancelRequestResponse = await visitCancelRequest.json();
-		*/
+			},
+			'body' : JSON.stringify(cancelVisitList)
+		};		
+
+		let scheduleRequest = await fetch(url, options);
+		let scheduleRequestResponse = await scheduleRequest.json();
+		console.log(scheduleRequestResponse);
+
 	}
+
+	/*
+		client-own-schedule-change-json.php
+
+		to post a JSON request specifying a cancel, uncancel, or change request involving multiple visits.
+		accepts either a native JSON parameter (via "application/json" request type) 
+		OR a regular post with a JSON-formatted argument named "changes".
+		results in a "Schedule Change" request type, a request type invented a few months ago.
+		returns {"status":"ok", "requestid":29394994} or
+		{"error":"no active session"} or
+		{"error":"unknown visit[<some visit id >]"}
+
+
+		To see it in action, log in as a Dog's Life customer, select a few visits, and click one of the buttons.  The form that opens makes an AJAX call to client-own-schedule-change-json.php.
+		Input format:
+		{ 
+		  "fname", -- should be either client's fname or fname2
+		  "lname", -- should be either client's lname or lname2
+		  "groupnote", -- the note field for the whole request
+		  "changetype", -- change|cancel|uncancel
+		  "visits": [
+		      {"id", -- visit id
+		        "note", -- note specific to this visit
+		      },
+		      {"id", -- visit id
+		        "note", -- note specific to this visit
+		      },...
+		   ]
+		}
+	*/
 
 	async function sendRequestSchedule(visitJson) {
 		let url = 'https://leashtime.com/client-scheduler-json-post.php';
@@ -640,52 +725,36 @@ var LT = (function() {
 		console.log(scheduleRequestResponse);
 	}
 
-	async function getVisitReport(visitReportURL, visitID) {
+	// ***********************************************
+	// *			RETURN DATA ARRAYS UTILITY FUNCTIONS
+	// ***********************************************
+	function getVisitList() {
+		
+		return visit_list;
+	}
+	function getServices() {
 
-		//console.log(visitReportURL);
-		let url = visitReportURL;
-		let options = {
-			'method' : 'GET',
-			'headers' : {
-				'accept' : 'application/json',
-				'content-type' : 'application/json'
-			}
-		}
-		let visitReportRequest = await fetch(url, options);
-		let visitReportResponse = await visitReportRequest.json();
-		visit_list.forEach((visit)=> {
-			if (visit.appointmentid == visitID) {
-				visit.addVisitReportDetails(visitReportResponse);
-			}
-		})
-		return visitReportResponse;
+		return listServices;
+	}
+	function getTimeWindows() {
+
+		return time_windows_list;
+	}
+	function getSurcharges() {
+
+		return surcharge_list;
 	}
 
-	function getVisitReportPhoto(visitID) {
-	}
-	function recursiveGetProperty(obj, lookup, callback) {
-		let level_depth = 1;
-		let count_level = 1;
-		for (var property in obj) {
-			count_level = count_level + 1;
-			if (property == lookup) {
-				callback(obj[property]);
-			} else if(obj[property] instanceof Object) {
-				level_depth = level_depth + 1;
-				recursiveGetProperty(obj[property], lookup, callback);
-			}
-		}
-	} 
+
 
 	return {
-		getVisits : getVisits,
 		getVisitList : getVisitList,
 		getServices : getServices,
 		getSurcharges : getSurcharges,
 		getTimeWindows : getTimeWindows,
-		getPets : getPets,
-		getClientProfileInfo : getClientProfileInfo,
+		//getClientProfileInfo : getClientProfileInfo,
 		getClientProfileAjax : getClientProfileAjax,
+		getPOPheaderInfo : getPOPheaderInfo,
 		getVisitReport : getVisitReport,
 		sendCancelVisitRequest : sendCancelVisitRequest,
 		sendUncancelRequest : sendUncancelRequest,
@@ -693,7 +762,6 @@ var LT = (function() {
 		sendRequestSchedule : sendRequestSchedule,
 		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
 		getPetOwnerVisitsAjax : getPetOwnerVisitsAjax,
-		loginPetOwner : loginPetOwner,
 		checkClient : checkClient,
 		loginPetOwnerPortalAjaxTED : loginPetOwnerPortalAjaxTED
 	}
