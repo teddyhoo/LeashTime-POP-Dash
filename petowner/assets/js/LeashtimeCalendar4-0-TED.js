@@ -2,9 +2,10 @@
     "use strict";
     var calendar;
     var petOwnerProfile;
+    var poHeaderInfo;
     var all_visits = [];
-    var event_visits = [];
     var pendingVisits = [];
+    var surcharge_events = [];
 
     var dragBeginDate;
     var dragEndDate;
@@ -17,7 +18,7 @@
     var cEndTW;
 
     var currentPetsChosen = [];
-    var surcharge_events = [];
+
     var surchargeItems =[];
     var serviceList = [];
     var timeWindowList =[];
@@ -27,8 +28,6 @@
     const dayArrStr = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
     const monthsArrStr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     var re = /([0-9]+):([0-9]+):([0-9]+)/;
-
-
 
     function resetVisit() {
         beginDateService = null;
@@ -104,13 +103,28 @@
             all_visits.forEach((visit)=> {
                 let eventData = createCalendarEvent(visit);
                 calendar.addEvent(eventData);
+                if(visit.visitReportURLInfo != null) {
+                    LT.getVisitReport(visit);
+                }
             });
-            petOwnerProfile = await LT.getClientProfileAjax();
+
             displaySurcharges();
+
             displayPendingStatus();
+
+            petOwnerProfile = await LT.getClientProfileAjax();
+
+            poHeaderInfo  = await LT.getPOPheaderInfo();
+
             //populateTimeline();
         }
     }
+
+
+    // ***********************************************
+    // *          INITIAL CALENDAR SETUP EVENTS
+    // ***********************************************
+
     function buildCalendarCellView(element, eventTitle, eventID, event) {
         let visitID = eventID;
         let panelID = visitID;
@@ -203,6 +217,7 @@
             CborderColor ='magenta';
         }
         if (visit.pendingType != null) {
+            console.log(visit.pendingType);
             pendingStatus = true;
             if (visit.pendingType == 'cancel') {
                 visitColor = 'orange';
@@ -246,7 +261,6 @@
         };
 
         addDateDataToEvent(event,eventDateStart);
-        event_visits.push(event);
         if (event.isPending) {
             pendingVisits.push(event);
         }
@@ -270,6 +284,8 @@
         };
 
         return surchargeEvent;
+    }
+    function createCancelUncancelEvent(event, changeType) {
     }
     function createRequestEvent(serviceDate, serviceNameString) {
         let fullYearPre = serviceDate.getFullYear();
@@ -312,10 +328,13 @@
         event.visitFormatDate = formatDateString;
     }
     function addVisitRequestEvent(visitEvent) {
-        event_visits.push(visitEvent);
+        //event_visits.push(visitEvent);
         pendingVisits.push(visitEvent);
         calendar.addEvent(visitEvent);
     }
+    // ***********************************************
+    // *          CALENDAR EVENT CLICKED
+    // ***********************************************
     function clickedEvent(eventInfo) {
         let eventClicked = eventInfo.event._def;
         let eventProps = eventClicked.extendedProps;
@@ -348,7 +367,49 @@
             console.log(visitStatus);
         }
     }
+    // ***********************************************
+    // *           PENDING VIEWS
+    // ***********************************************
+    function displayPendingStatus() {
+        if (pendingVisits.length > 0) {
+            let pendingBadge = document.getElementById('lt-BadgePending');
+            pendingBadge.innerHTML = pendingVisits.length;
+            let pendingView = document.getElementById('lt-PendingEvents');
+            let pendingHTML;
 
+            pendingVisits.forEach((pend)=> {
+                //console.log(pend);
+                let dateStart = new Date(pend.start);
+                let monthStart = dateStart.getMonth();
+                let monthString = monthsArrStr[monthStart];
+                let serviceList = LT.getServices();
+                let serviceName;
+
+                serviceList.forEach((service)=>{
+                    if (service.serviceID == pend.title) {
+                        serviceName = service.serviceName;
+                        //console.log(serviceName)
+                    }
+                });
+
+                if(pend.pendingType == 'cancel') {
+
+                    pendingHTML += `<a href="#" class="btn btn-block btn-danger">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
+                
+                } else if (pend.pendingType == 'uncancel') {
+
+                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
+
+                } else if (pend.pendingType == 'SCHEDULE') {
+                
+                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
+
+                }
+            });
+
+            pendingView.innerHTML = pendingHTML;
+        }
+    }
     function displayPendingView(info) {
         console.log('PENDING VIEW DISPLAY');
         let eventInfo = info.event;
@@ -428,50 +489,9 @@
 
         element.appendChild(calPendingEventDiv);
     }
-    function displayPendingStatus() {
-        if (pendingVisits.length > 0) {
-            let pendingBadge = document.getElementById('lt-BadgePending');
-            pendingBadge.innerHTML = pendingVisits.length;
-            let pendingView = document.getElementById('lt-PendingEvents');
-            let pendingHTML;
-
-            pendingVisits.forEach((pend)=> {
-                //console.log(pend);
-                let dateStart = new Date(pend.start);
-                let monthStart = dateStart.getMonth();
-                let monthString = monthsArrStr[monthStart];
-                let serviceList = LT.getServices();
-                let serviceName;
-
-                serviceList.forEach((service)=>{
-                    if (service.serviceID == pend.title) {
-                        serviceName = service.serviceName;
-                        //console.log(serviceName)
-                    }
-                });
-
-                if(pend.pendingType == 'CANCEL') {
-
-                    pendingHTML += `<a href="#" class="btn btn-block btn-danger">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
-                
-                } else if (pend.pendingType == 'SCHEDULE') {
-                
-                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
-
-                }
-            });
-
-            pendingView.innerHTML = pendingHTML;
-        }
-    }
-    function displaySurcharges() {
-        surchargeItems = LT.getSurcharges();
-        surchargeItems.forEach((surcharge)=> {
-            let surchargeEventItem  =  createSurchargeEvent(surcharge);
-            surcharge_events.push(surchargeEventItem);
-            calendar.addEvent(surchargeEventItem);
-        });
-    }
+    // ***********************************************
+    // *           VISIT REPORT VIEWS
+    // ***********************************************
     function displayVisitReport(event, visitID) {
         all_visits.forEach((visit)=> {
             if(visit.appointmentid == visitID) {
@@ -480,6 +500,39 @@
             }
         });
     }
+    function displayVisitReportModal(visit) {
+
+        let showModal = document.getElementById('ltVR-ModalContainer');
+
+        let visitDuration = document.getElementsByClassName('ltVR-visitDuration');
+
+        Array.from(document.getElementsByClassName('ltVR-visitService')).forEach((elem) => {
+            elem.innerHTML = visit.service;
+        });
+        Array.from(document.getElementsByClassName('ltVR-visitStartStop')).forEach((elem) => {
+            elem.innerHTML = visit.arrival_time + ' to ' + visit.completion_time;
+        });
+        Array.from(document.getElementsByClassName('ltVR-visitPhoto')).forEach((elem) => {
+            elem.setAttribute('src' , visit.visitPhotoURL);
+        });
+        Array.from(document.getElementsByClassName('ltVR-visitMap')).forEach((elem) => {
+            elem.setAttribute('src' , visit.mapImageURL);
+        });
+        Array.from(document.getElementsByClassName('ltVR-visitPets')).forEach((elem) => {
+            elem.innerHTML = visit.visitReportPets;
+        });
+        Array.from(document.getElementsByClassName('ltVR-visitFullDate')).forEach((elem) => {
+            let dayWeek = dayArrStr[visit.dayWeek];
+            let dayDate = visit.dateNum;
+            let monthStr = monthsArrStr[visit.jsMonth]
+            elem.innerHTML = dayWeek + ', ' + monthStr + ' ' + dayDate;
+        });
+
+        jQuery(showModal).modal('show');
+    }
+    // ***********************************************
+    // *           CANCEL VIEWS
+    // ***********************************************
     function displayCancel(event, visitID) {
 
         let eventProps;
@@ -538,19 +591,75 @@
     }
     function createCancelClick(visitID) {
         let cancelButton = document.getElementById('cancelVisitButton');
+
         cancelButton.addEventListener('click', (event)=> {
+
             let dateCancelField = document.getElementById('dateCancelBegin');
             let dateCancelBegin = new Date(dateCancelField.innerHTML);
 
             let cancelUntilField = document.getElementById('cancelUntilDate');
             let cancelUntilValue = cancelUntilField.value;
 
-            
             if (cancelUntilValue != 'NONE') {
-                console.log('Begin cancel: ' + dateCancelBegin + ' Until cancel: ' + cancelUntilValue);
+
                 let cancelUntilDate = new Date(cancelUntilValue);
-                console.log('End cancel: ' + cancelUntilDate);
-                let cancelDayDiff = LTDateLib.dayDiff
+                let cancelDayDiff = LTDateLib.calcDateDayDiff(dateCancelBegin, cancelUntilDate);
+
+                let requestCancelItems = {};
+                let all_visits = LT.getVisitList();
+
+                for (let i=0; i <= cancelDayDiff; i++) {
+                    let newCancelBeginAgain = new Date(dateCancelBegin);
+                    newCancelBeginAgain.setUTCDate(dateCancelBegin.getUTCDate() + i);
+                    let newCancelDate = newCancelBeginAgain.getUTCDate();
+                    let newCancelMonth = newCancelBeginAgain.getUTCMonth() + 1;
+                    let newCancelYear = newCancelBeginAgain.getFullYear();
+                    let newCancelFormat = newCancelYear + '/' + newCancelMonth + '/' + newCancelDate;
+
+                    all_visits.forEach((visit) => {
+                        let visitDate = new Date(visit.date);
+
+                        let visitDateNum = visitDate.getUTCDate();
+                        let visitMonthNum = visitDate.getUTCMonth() + 1;
+                        let visitYearNum = visitDate.getFullYear();
+                        let visitFormatDate = visitYearNum + '/' + visitMonthNum + '/' +visitDateNum;
+
+                        if (newCancelFormat == visitFormatDate) {
+                            visit.status = 'CANCELED';
+                            visit.pendingState = parseInt(7578);
+                            visit.pendingType = 'cancel';
+                            requestCancelItems[visit.appointmentid] = visit;
+                        }
+                    });     
+                }
+
+                let cancelItemKeys = Object.keys(requestCancelItems);
+                let calendarEvent = calendar.getEvents();
+
+                calendarEvent.forEach((eventItem)=>{
+                    if (cancelItemKeys.includes(eventItem.id)) {
+                        eventItem.remove();
+                        let replaceVisit = createCalendarEvent(requestCancelItems[eventItem.id])
+                        calendar.addEvent(replaceVisit);
+                        pendingVisits.push(replaceVisit);
+                    }
+                });
+                let cancelItems = [];
+                requestCancelItems.forEach((cancelItem)=> {
+                    let cancelItemDict = {};
+                    cancelItemDict['id'] = cancelItem;
+                    cancelItemDict['note'] = 'NO NOTE';
+                    cancelItems.push(cancelItemDict);
+                })
+                let cancelDict = {
+                    'fname' : petOwnerProfile.fname,
+                    'lname' : petOwnerProfile.lname,
+                    'groupnote' : 'None',
+                    'changetype' : 'cancel',
+                    'visits' : cancelItems
+                };
+
+                buildCancelVisitRequestFetch(cancelDict);
 
             } else {
                 let buttonCancel = event.target;
@@ -570,16 +679,36 @@
                             }
                         });
                         calendar.addEvent(createCalendarEvent(visit));
+                        pendingVisits.push(visit);
+                        let cancelDict = {
+                            'fname' : petOwnerProfile.fname,
+                            'lname' : petOwnerProfile.lname,
+                            'groupnote' : 'None',
+                            'changetype' : 'cancel',
+                            'visits' : [
+                                {
+                                    'id' : visit.appointmentid,
+                                    'note' : 'NO NOTE'
+                                }
+                            ]
+                        };
+                        buildCancelVisitRequestFetch(cancelDict);
                     } 
+
+
                 });
             }
             calendar.rerenderEvents();
             resetVisit();
             let showModal = document.getElementById("formModal");
             jQuery('#formModal').modal('hide');
+            displayPendingStatus();
 
         });
     }
+    // ***********************************************
+    // *           UNCANCEL VIEWS
+    // ***********************************************
 
     function displayUncancel(event, visitID) {
 
@@ -637,22 +766,22 @@
         jQuery('#formModal').modal('show');
         createUncancelClick(visitID);
     }
-
     function createUncancelClick(visitID) {
         let cancelButton = document.getElementById('uncancelVisitButton');
         cancelButton.addEventListener('click', (event)=> {
 
-            let dateCancelField = document.getElementById('dateUncancelBegin');
-            let dateCancelBegin = new Date(dateCancelField.innerHTML);
+            let dateUnCancelField = document.getElementById('dateUncancelBegin');
+            let dateUnCancelBegin = new Date(dateUnCancelField.innerHTML);
 
-            let cancelUntilField = document.getElementById('uncancelUntil');
-            let cancelUntilValue = cancelUntilField.value;
+            let unCancelUntilField = document.getElementById('uncancelUntil');
+            let unCancelUntilValue = unCancelUntilField.value;
             
-            if (cancelUntilValue != 'NONE') {
-                console.log('Begin cancel: ' + dateCancelBegin + ' Until cancel: ' + cancelUntilValue);
-                let cancelUntilDate = new Date(cancelUntilValue);
-                console.log('End cancel: ' + cancelUntilDate);
-                let cancelDayDiff = LTDateLib.dayDiff
+            if (unCancelUntilValue != 'NONE') {
+                console.log('Begin uncancel: ' + dateUnCancelBegin + ' Until cancel: ' + unCancelUntilValue);
+                let unCancelUntilDate = new Date(unCancelUntilValue);
+                console.log('End uncancel: ' + unCancelUntilDate);
+                let uncancelDayDiff = LTDateLib.dayDiff(dateUnCancelBegin, unCancelUntilDate);
+                console.log('Day difference: ' + uncancelDayDiff)
 
             } else {
                 let buttonCancel = event.target;
@@ -671,6 +800,7 @@
                             }
                         });
                         calendar.addEvent(createCalendarEvent(visit));
+                        pendingVisits.push(visit);
                     } 
                 });
             }
@@ -679,15 +809,28 @@
             resetVisit();
             let showModal = document.getElementById("formModal");
             jQuery('#formModal').modal('hide');
+            displayPendingStatus();
 
         });
     }
-    function displayCancelPicker(visitID) {
-    }
+    // ***********************************************
+    // *           DRAG DROP VIEWS
+    // ***********************************************
     function displayDragDropChangeView(info) {
         let infoKeys = Object.keys(info);
         infoKeys.forEach((keyInfo) => {
             console.log(keyInfo + ' --> ' + info[keyInfo]);
+        });
+    }
+    // ***********************************************
+    // *           SURCHARGE VIEWS
+    // ***********************************************
+    function displaySurcharges() {
+        surchargeItems = LT.getSurcharges();
+        surchargeItems.forEach((surcharge)=> {
+            let surchargeEventItem  =  createSurchargeEvent(surcharge);
+            surcharge_events.push(surchargeEventItem);
+            calendar.addEvent(surchargeEventItem);
         });
     }
     function displaySurchargeView(info) {
@@ -697,36 +840,10 @@
         console.log('VISIT TITLE: ' + eventInfo.title + ' --> ' + eventDate);
         console.log(eventProps);
     }
-    function displayVisitReportModal(visit) {
 
-        let showModal = document.getElementById('ltVR-ModalContainer');
-
-        let visitDuration = document.getElementsByClassName('ltVR-visitDuration');
-
-        Array.from(document.getElementsByClassName('ltVR-visitService')).forEach((elem) => {
-            elem.innerHTML = visit.service;
-        });
-        Array.from(document.getElementsByClassName('ltVR-visitStartStop')).forEach((elem) => {
-            elem.innerHTML = visit.arrival_time + ' to ' + visit.completion_time;
-        });
-        Array.from(document.getElementsByClassName('ltVR-visitPhoto')).forEach((elem) => {
-            elem.setAttribute('src' , visit.visitPhotoURL);
-        });
-        Array.from(document.getElementsByClassName('ltVR-visitMap')).forEach((elem) => {
-            elem.setAttribute('src' , visit.mapImageURL);
-        });
-        Array.from(document.getElementsByClassName('ltVR-visitPets')).forEach((elem) => {
-            elem.innerHTML = visit.visitReportPets;
-        });
-        Array.from(document.getElementsByClassName('ltVR-visitFullDate')).forEach((elem) => {
-            let dayWeek = dayArrStr[visit.dayWeek];
-            let dayDate = visit.dateNum;
-            let monthStr = monthsArrStr[visit.jsMonth]
-            elem.innerHTML = dayWeek + ', ' + monthStr + ' ' + dayDate;
-        });
-
-        jQuery(showModal).modal('show');
-    }
+    // ***********************************************
+    // *           VISIT REQUEST VIEWS
+    // ***********************************************
     function displayVisitRequest(eventInfo) {
         beginDateService = new Date(eventInfo.date);
         let chosenDate = new Date(eventInfo.date);
@@ -740,7 +857,7 @@
         let serviceList = LT.getServices();
         let timeWindows = LT.getTimeWindows();
         let surcharges = LT.getSurcharges();
-        let petsInfo = LT.getPets();
+        let petsInfo = petOwnerProfile.pets;
         const visitRequestHTML = `
             <div class="modal-dialog">
             <div class="modal-content">
@@ -1036,26 +1153,11 @@
                 endDate = '';
             }
 
-            let formattedVisitDateObject = LTDateLib.parseTimeWindows(new Date(beginDate));
+            let formattedVisitDateObject = parseTimeWindows(new Date(beginDate));
 
-            console.log(formattedVisitDateObject);
             if (endDate == '' || endDate == null) {
                 endDate = 'NONE';        
-                let newEvent = {
-                    id : formattedVisitDateObject.getTime(),
-                    groupid : 'petsit',
-                    title: stringForCurrentService,
-                    start : formattedVisitDateObject,
-                    note: 'NO NOTE',
-                    timeWindow : cBeginTW + ' - ' + cEndTW,
-                    pets : currentPetsChosen,
-                    status : 'pending',
-                    isPending: true,
-                    pendingType: 'SCHEDULE',
-                    backgroundColor : 'orange',
-                    eventTextColor : 'white',
-                    color : 'orange',
-                };
+                let newEvent = createRequestEvent(formattedVisitDateObject, currentServiceChosen);
                 addDateDataToEvent(newEvent, formattedVisitDateObject);
                 addVisitRequestEvent(newEvent);
                 buildScheduleRequestFetch(newEvent, formattedVisitDateObject);
@@ -1080,9 +1182,6 @@
                     scheduleRequestItems.push(multiDayEvent);
                     subtotalVisitCharges += calculateVisitCharges(newVisitDateAdd, currentServiceChosen, 1);
                 }
-
-                console.log(subtotalVisitCharges);
-
                 buildMultipleScheduleRequestFetch(formattedVisitDateObject, formatEndDate, scheduleRequestItems);
 
             }
@@ -1094,6 +1193,17 @@
             let showModal = document.getElementById("formModal");
             jQuery('#formModal').modal('hide');
 
+        });
+    }
+    // ***********************************************
+    // *           REQUEST NETWORK 
+    // ***********************************************
+
+    function buildCancelVisitRequestFetch(visitList) {
+        console.log(visitList);
+        let requestKeys = Object.keys(visitList);
+        requestKeys.forEach((key) => {
+            console.log(key + ' -> ' + visitList[key]);
         });
     }
     function buildMultipleScheduleRequestFetch(visitDateBegin, visitDateEnd, requestInfo) {
@@ -1203,6 +1313,11 @@
         };
         LT.sendRequestSchedule(request);
     }
+
+    // ***********************************************
+    // *       OTHER 
+    // ***********************************************
+
     function calculateVisitCharges(visitDate, serviceID, numPets) {
         let visitCharge = parseFloat(0);
         let serviceList = LT.getServices();
@@ -1235,6 +1350,12 @@
         });
 
         return visitCharge;
+    }
+    function createIvoiceDictionary(visitList) {
+
+    }
+    function displayInvoiceView(invoiceItem) {
+
     }
     function sendGratuity() {
     }
@@ -1329,6 +1450,10 @@
 
         timelineList.innerHTML = timelineHTML;
     }
+
+    // ***********************************************
+    // *           DEPRECATED
+    // ***********************************************
 
 
     function addZero(i) {
