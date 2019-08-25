@@ -47,7 +47,10 @@
 
         var calendarEl = document.getElementById('calendar');
         calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: [ 'dayGrid', 'interaction', 'list' ],
+            plugins: [ 'dayGrid', 'interaction', 'list', 'timeGridPlugin' ],
+            header: {
+                center : 'dayGridMonth, dayGridWeek, timeGridPlugin'
+            },
             editable : true,
             timeZone : 'UTC',
             defaultView : 'dayGridMonth',
@@ -63,20 +66,59 @@
 
             eventDragStart :  function(info) {
                 dragBeginDate = info.event['start'];
-                console.log(dragBeginDate);
+                console.log('BEGIN DRAG: ' + dragBeginDate);
+                let infoKeys = Object.keys(info);
+                infoKeys.forEach((key)=> {
+                    console.log(key + ' -> ' + info[key]);
+                });
             },
 
             eventDrop : function(info) {
-                dragEndDate = info.event['end'];
-                console.log(dragEndDate);
+                let infoKeys = Object.keys(info);
 
-                if (LTDateLib.isValidDate(dragBeginDate, dragEndDate)) {
+                let dropEvent;
+                let oldEvent;
+                let deltaVal;
+
+                infoKeys.forEach((key)=> {
+                    console.log('drop info key: ' + key + ' -> ' + info[key]);
+                    if (key == 'event') {
+                        dropEvent = info[key];
+                        let eventDropKeys = Object.keys(dropEvent);
+                        eventDropKeys.forEach((key)=>{
+                            console.log(key + ' --> ' + dropEvent[key]);
+                        });
+                    }
+                    else if (key == 'oldEvent') {
+                        oldEvent = info[key];
+                        let oldEventKeys = Object.keys(oldEvent);
+                        oldEventKeys.forEach((key)=>{
+                            console.log(key + ' --> ' + oldEvent[key]);
+                        });
+                    } 
+                    else if (key == 'delta') {
+                        deltaVal = info[key];
+                        let deltaKeys = Object.keys(deltaVal);
+                        deltaKeys.forEach((key)=>{
+                            console.log(key + ' --> ' + deltaVal[key]);
+                        });
+                    }
+                });
+                /*let jsEventKeys = Object.keys(info.jsEvent);
+                jsEventKeys.forEach((eventkey)=> {
+                    console.log('JS EVENT KEY: ' + eventkey);
+                })*/
+
+
+                if (LTDateLib.isValidDate(dragEndDate,dragBeginDate)) {
+                    console.log('IS VALID DATE');
                     displayDragDropChangeView(info);
                 } else {
-                    info.revert()
-                    if (confirm('revert change?')) {
-                        info.revert();
-                    }
+                    //info.revert()
+                    //if (confirm('revert change?')) {
+                    //    info.revert();
+                    //}
+                    console.log('ivalid date');
                 }
             },
             eventRender : function(info) {
@@ -99,6 +141,11 @@
 
     async function getVisits(start, end) {
         if (isAjax) {
+            poHeaderInfo  = await LT.getPOPheaderInfo();
+            let headerKeys = Object.keys(poHeaderInfo);
+            headerKeys.forEach((key)=> {
+                console.log(key + ' --> ' + poHeaderInfo[key]);
+            })
             all_visits = await LT.getPetOwnerVisitsAjax(this, start, end);
             all_visits.forEach((visit)=> {
                 let eventData = createCalendarEvent(visit);
@@ -107,20 +154,34 @@
                     LT.getVisitReport(visit);
                 }
             });
-
-            displaySurcharges();
-
-            displayPendingStatus();
-
             petOwnerProfile = await LT.getClientProfileAjax();
-
-            poHeaderInfo  = await LT.getPOPheaderInfo();
-
+            populateBizInfo();
+            displaySurcharges();
+            displayPendingStatus();
+            displayPendingVisitRequests();
             //populateTimeline();
         }
     }
 
 
+    function populateBizInfo() {
+        let headerData = LT.getBizInfo();
+        let bizNameTitle = document .getElementById('bizNameTitle');
+        let bizName = document.getElementById('bizName');
+        let bizEmail= document.getElementById('bizEmail');
+        let bizPhone= document.getElementById('bizPhone');
+        let bizAddress = document.getElementById('bizAddress');
+        let bizZip = document.getElementById('bizZip');
+        let bizWebSite = document.getElementById('bizHomePage');
+
+        bizNameTitle.innerHTML = '<img src='+headerData.logo+' height=40 width=60>';
+        bizName.innerHTML = headerData.bizName;
+    }
+
+    function displayPendingVisitRequests() {
+        let pendingVisitRequests = LT.getRequestedVisits();
+        console.log('PENDING VISIT REQUESTS: ' + pendingVisitRequests.length);
+    }
     // ***********************************************
     // *          INITIAL CALENDAR SETUP EVENTS
     // ***********************************************
@@ -181,7 +242,7 @@
     function createCalendarEvent(visit) {
 
         let visitDateObj;
-        let visitColor = 'magenta';
+        let visitColor = 'blue';
         let CbackgroundColor = 'black';
         let CborderColor ='yellow';
         let CtextColor = 'white';
@@ -213,8 +274,8 @@
             CborderColor ='green';
         } else if (visit.status == 'INCOMPLETE') {
             visitColor = 'magenta';
-            CbackgroundColor = 'magenta'
-            CborderColor ='magenta';
+            CbackgroundColor = 'blue'
+            CborderColor ='blue';
         }
         if (visit.pendingType != null) {
             console.log(visit.pendingType);
@@ -261,8 +322,8 @@
         };
 
         addDateDataToEvent(event,eventDateStart);
-        if (event.isPending) {
-            pendingVisits.push(event);
+        if (pendingStatus) {
+            pendingVisits.push(visit);
         }
         return event;
     }
@@ -280,7 +341,8 @@
             color : 'yellow',
             backgroundColor  : 'yellow',
             borderColor : 'yellow',
-            textColor : 'white'
+            textColor : 'white',
+            rendering : 'background'
         };
 
         return surchargeEvent;
@@ -290,7 +352,6 @@
     function createRequestEvent(serviceDate, serviceNameString) {
         let fullYearPre = serviceDate.getFullYear();
         let dateObj = new Date(serviceDate);
-        console.log('Creating date object for begin service date: ' + dateObj);
         let realYear = dateObj.getFullYear();
         let realMonth = dateObj.getMonth()+1;
         let eventDateFormat = fullYearPre+'-'+realMonth+'-'+dateObj.getDate();
@@ -313,7 +374,7 @@
 
         };
         //addDateDataToEvent(newEvent);
-        addVisitRequestEvent(newEvent);
+        //addVisitRequestEvent(newEvent);
         return newEvent;
     }
     function addDateDataToEvent(event , dateToAdd) {
@@ -328,7 +389,6 @@
         event.visitFormatDate = formatDateString;
     }
     function addVisitRequestEvent(visitEvent) {
-        //event_visits.push(visitEvent);
         pendingVisits.push(visitEvent);
         calendar.addEvent(visitEvent);
     }
@@ -341,36 +401,29 @@
         let visitStatus = eventProps.status;
         let selectedVisitID = eventClicked.publicId;
 
-        if (visitStatus == 'CANCELED') {
-            console.log('VISIT CANCELED CLICKED');
-            displayUncancel(eventClicked,selectedVisitID);
+        console.log('VISIT STATUS: ' + visitStatus);
+        console.log('Is pending: ' + eventProps.isPending);
 
-        } else if (visitStatus == 'completed') {
-
-            displayVisitReport(eventClicked, selectedVisitID);
-
-        } else if (visitStatus == 'future' ||visitStatus == 'INCOMPLETE') {
-
-            displayCancel(eventClicked, selectedVisitID)
-
-        } else if (visitStatus == 'surcharges') {
-
-            displaySurchargeView();
-
-        } else if (visitStatus == 'pending') {
-
-            //displayVisitPending(info);
-
+        if (eventProps.isPending) {
 
         } else {
-
-            console.log(visitStatus);
+            if (visitStatus == 'CANCELED') {
+                displayUncancel(eventClicked,selectedVisitID);
+            } else if (visitStatus == 'completed') {
+                displayVisitReport(eventClicked, selectedVisitID);
+            } else if (visitStatus == 'future' ||visitStatus == 'INCOMPLETE') {
+                displayCancel(eventClicked, selectedVisitID)
+            } else if (visitStatus == 'surcharges') {
+                displaySurchargeView();
+            }
         }
+
     }
     // ***********************************************
     // *           PENDING VIEWS
     // ***********************************************
     function displayPendingStatus() {
+        console.log(pendingVisits.length);
         if (pendingVisits.length > 0) {
             let pendingBadge = document.getElementById('lt-BadgePending');
             pendingBadge.innerHTML = pendingVisits.length;
@@ -378,31 +431,22 @@
             let pendingHTML;
 
             pendingVisits.forEach((pend)=> {
-                //console.log(pend);
-                let dateStart = new Date(pend.start);
-                let monthStart = dateStart.getMonth();
+                let dateStart = new Date(pend.date);
+                let monthStart = dateStart.getUTCMonth();
                 let monthString = monthsArrStr[monthStart];
-                let serviceList = LT.getServices();
-                let serviceName;
-
-                serviceList.forEach((service)=>{
-                    if (service.serviceID == pend.title) {
-                        serviceName = service.serviceName;
-                        //console.log(serviceName)
-                    }
-                });
+                console.log('BUILD PEND VIEW' + pend.pendingType);
 
                 if(pend.pendingType == 'cancel') {
 
-                    pendingHTML += `<a href="#" class="btn btn-block btn-danger">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
+                    pendingHTML += `<a href="#" class="btn btn-block btn-danger">${pend.service} ${monthString} ${dateStart.getUTCDate()}</a></div>`;
                 
                 } else if (pend.pendingType == 'uncancel') {
 
-                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
+                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.service} ${monthString} ${dateStart.getUTCDate()}</a></div>`;
 
                 } else if (pend.pendingType == 'SCHEDULE') {
                 
-                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.title} ${monthString} ${dateStart.getDate()}</a></div>`;
+                    pendingHTML += `<a href="#" class="btn btn-block btn-success">${pend.service} ${monthString} ${dateStart.getUTCDate()}</a></div>`;
 
                 }
             });
@@ -410,24 +454,17 @@
             pendingView.innerHTML = pendingHTML;
         }
     }
-    function displayPendingView(info) {
-        console.log('PENDING VIEW DISPLAY');
-        let eventInfo = info.event;
-        let eventDate = info.date;
-        console.log('VISIT TITLE: ' + eventInfo.title + ' --> ' + eventDate);
-        console.log(eventProps);
-    }
-    function buildPendingView(event, eventID) {
-        let visitID = eventID;
-        let panelID = visitID;
-        let eventDate = new Date(event.start);
+    function buildPendingView(visit) {
+        let visitID = visit.appointmentid;
+        let panelID = visit.appointmentid;
+        let eventDate = new Date(visit.date);
 
-        let visitDay = eventDate.getDate();
-        let visitMonthNum = eventDate.getMonth();
+        let visitDay = eventDate.getUTCDate();
+        let visitMonthNum = eventDate.getUTCMonth() + 1;
         let visitMonth = monthsArrStr[visitMonthNum];
          
-        let visitService = event.title;
-        let visitTimeWindow = event.timeWindow;
+        let visitService = visit.service;
+        let visitTimeWindow = visit.timeOfDay;
         let pendingCount = pendingVisits.length;
 
         let pendingCountDiv = document.getElementById('#lt-BadgePending');
@@ -441,7 +478,6 @@
 
         let calPendingEventDiv = document.createElement('li');
         calPendingEventDiv.setAttribute('id', 'pending-'+visitID);
-        if(event)
         calPendingEventDiv.setAttribute('class' , 'tile alert-warning');
         pendingDiv.appendChild(calPendingEventDiv);
 
@@ -503,9 +539,7 @@
     function displayVisitReportModal(visit) {
 
         let showModal = document.getElementById('ltVR-ModalContainer');
-
         let visitDuration = document.getElementsByClassName('ltVR-visitDuration');
-
         Array.from(document.getElementsByClassName('ltVR-visitService')).forEach((elem) => {
             elem.innerHTML = visit.service;
         });
@@ -536,7 +570,6 @@
     function displayCancel(event, visitID) {
 
         let eventProps;
-
         let eventKeys = Object.keys(event);
         eventKeys.forEach((key)=> {
             if (key == 'extendedProps') {
@@ -591,7 +624,6 @@
     }
     function createCancelClick(visitID) {
         let cancelButton = document.getElementById('cancelVisitButton');
-
         cancelButton.addEventListener('click', (event)=> {
 
             let dateCancelField = document.getElementById('dateCancelBegin');
@@ -641,11 +673,11 @@
                         eventItem.remove();
                         let replaceVisit = createCalendarEvent(requestCancelItems[eventItem.id])
                         calendar.addEvent(replaceVisit);
-                        pendingVisits.push(replaceVisit);
                     }
                 });
-                let cancelItems = [];
-                requestCancelItems.forEach((cancelItem)=> {
+                /*let cancelItems = [];
+                let cancelKeys = Object.keys(requestCancelItems);
+                cancelKeys.forEach((cancelItem)=> {
                     let cancelItemDict = {};
                     cancelItemDict['id'] = cancelItem;
                     cancelItemDict['note'] = 'NO NOTE';
@@ -659,8 +691,9 @@
                     'visits' : cancelItems
                 };
 
-                buildCancelVisitRequestFetch(cancelDict);
+                buildCancelVisitRequestFetch(cancelDict);*/
 
+                buildCancelVisitRequestFetch(requestCancelItems);
             } else {
                 let buttonCancel = event.target;
                 let visitIDCancel = buttonCancel.getAttribute('forVisit');
@@ -679,7 +712,6 @@
                             }
                         });
                         calendar.addEvent(createCalendarEvent(visit));
-                        pendingVisits.push(visit);
                         let cancelDict = {
                             'fname' : petOwnerProfile.fname,
                             'lname' : petOwnerProfile.lname,
@@ -698,11 +730,11 @@
 
                 });
             }
+            displayPendingStatus();
             calendar.rerenderEvents();
             resetVisit();
             let showModal = document.getElementById("formModal");
             jQuery('#formModal').modal('hide');
-            displayPendingStatus();
 
         });
     }
@@ -777,12 +809,44 @@
             let unCancelUntilValue = unCancelUntilField.value;
             
             if (unCancelUntilValue != 'NONE') {
-                console.log('Begin uncancel: ' + dateUnCancelBegin + ' Until cancel: ' + unCancelUntilValue);
                 let unCancelUntilDate = new Date(unCancelUntilValue);
-                console.log('End uncancel: ' + unCancelUntilDate);
                 let uncancelDayDiff = LTDateLib.dayDiff(dateUnCancelBegin, unCancelUntilDate);
-                console.log('Day difference: ' + uncancelDayDiff)
+                let requestCancelItems = {};
+                let all_visits = LT.getVisitList();
+                for (let i=0; i <= uncancelDayDiff; i++) {
+                    let newUnCancelBeginAgain = new Date(dateUnCancelBegin);
+                    newUnCancelBeginAgain.setUTCDate(dateUnCancelBegin.getUTCDate() + i);
+                    let newCancelDate = newUnCancelBeginAgain.getUTCDate();
+                    let newCancelMonth = newUnCancelBeginAgain.getUTCMonth() + 1;
+                    let newCancelYear = newUnCancelBeginAgain.getFullYear();
+                    let newUnCancelFormat = newCancelYear + '/' + newCancelMonth + '/' + newCancelDate;
 
+                    all_visits.forEach((visit) => {
+                        let visitDate = new Date(visit.date);
+
+                        let visitDateNum = visitDate.getUTCDate();
+                        let visitMonthNum = visitDate.getUTCMonth() + 1;
+                        let visitYearNum = visitDate.getFullYear();
+                        let visitFormatDate = visitYearNum + '/' + visitMonthNum + '/' +visitDateNum;
+
+                        if (newUnCancelFormat == visitFormatDate) {
+                            visit.status = 'UNCANCEL';
+                            visit.pendingState = parseInt(7578);
+                            visit.pendingType = 'uncancel';
+                            requestCancelItems[visit.appointmentid] = visit;
+                        }
+                    });  
+                    let cancelItemKeys = Object.keys(requestCancelItems);
+                    let calendarEvent = calendar.getEvents();
+
+                    calendarEvent.forEach((eventItem)=>{
+                        if (cancelItemKeys.includes(eventItem.id)) {
+                            eventItem.remove();
+                            let replaceVisit = createCalendarEvent(requestCancelItems[eventItem.id])
+                            calendar.addEvent(replaceVisit);
+                        }
+                    });   
+                }
             } else {
                 let buttonCancel = event.target;
                 let visitIDCancel = buttonCancel.getAttribute('forVisit');
@@ -801,8 +865,22 @@
                         });
                         calendar.addEvent(createCalendarEvent(visit));
                         pendingVisits.push(visit);
+                        let uncancelDict = {
+                            'fname' : petOwnerProfile.fname,
+                            'lname' : petOwnerProfile.lname,
+                            'groupnote' : 'None',
+                            'changetype' : 'uncancel',
+                            'visits' : [
+                                {
+                                    'id' : visit.appointmentid,
+                                    'note' : 'NO NOTE'
+                                }
+                            ]
+                        };
+
+                        buildUncancelVisitRequestFetch(uncancelDict);
                     } 
-                });
+                });   
             }
 
             calendar.rerenderEvents();
@@ -1154,6 +1232,7 @@
             }
 
             let formattedVisitDateObject = parseTimeWindows(new Date(beginDate));
+            let visitChargeItems = [];
 
             if (endDate == '' || endDate == null) {
                 endDate = 'NONE';        
@@ -1170,9 +1249,6 @@
                 let dayDiff = LTDateLib.calcDateDayDiff(formattedVisitDateObject,formatEndDate);
 
                 let scheduleRequestItems = [];
-                let subtotalTaxCharges = 0;
-                let subtotalSurcharges = 0;
-                let subtotalVisitCharges = 0;
 
                 for (let i = 0; i < dayDiff; i++) {
                     let visitDateAdd = new Date(formattedVisitDateObject);
@@ -1180,10 +1256,9 @@
                     let newVisitDateAdd = parseTimeWindows(new Date(visitDateAdd));                 
                     let multiDayEvent = createRequestEvent(newVisitDateAdd, currentServiceChosen);
                     scheduleRequestItems.push(multiDayEvent);
-                    subtotalVisitCharges += calculateVisitCharges(newVisitDateAdd, currentServiceChosen, 1);
+                    let visitChargeDetails = calculateVisitCharges(newVisitDateAdd, currentServiceChosen, 1);
                 }
                 buildMultipleScheduleRequestFetch(formattedVisitDateObject, formatEndDate, scheduleRequestItems);
-
             }
 
             calendar.render();
@@ -1199,12 +1274,52 @@
     // *           REQUEST NETWORK 
     // ***********************************************
 
-    function buildCancelVisitRequestFetch(visitList) {
-        console.log(visitList);
+    function buildUncancelVisitRequestFetch(visitList) {
+        /*console.log(visitList);
         let requestKeys = Object.keys(visitList);
         requestKeys.forEach((key) => {
-            console.log(key + ' -> ' + visitList[key]);
+            if (key == 'visits') {
+                let visitArray = visitList[key];
+                visitArray.forEach((visit)=> {
+                    console.log(visit.id);
+                });
+
+            } else {
+                console.log(key + ' -> ' + visitList[key]);
+            }
+        });*/
+        LT.sendUncancelRequest(visitList);
+    }
+    function buildCancelVisitRequestFetch(visitList) {
+        /*console.log(visitList);
+        let requestKeys = Object.keys(visitList);
+        requestKeys.forEach((key) => {
+            if (key == 'visits') {
+                let visitArray = visitList[key];
+                visitArray.forEach((visit)=> {
+                    console.log(visit.id);
+                });
+
+            } else {
+                console.log(key + ' -> ' + visitList[key]);
+            }
+        });*/
+        let cancelItems = [];
+        let cancelKeys = Object.keys(visitList);
+        cancelKeys.forEach((cancelItem)=> {
+            let cancelItemDict = {};
+            cancelItemDict['id'] = cancelItem;
+            cancelItemDict['note'] = 'NO NOTE';
+            cancelItems.push(cancelItemDict);
         });
+        let cancelDict = {
+            'fname' : petOwnerProfile.fname,
+            'lname' : petOwnerProfile.lname,
+            'groupnote' : 'None',
+            'changetype' : 'cancel',
+            'visits' : cancelItems
+        };
+        LT.sendCancelVisitRequest(cancelDict);
     }
     function buildMultipleScheduleRequestFetch(visitDateBegin, visitDateEnd, requestInfo) {
 
@@ -1222,7 +1337,6 @@
         let listOfVisits = [];
 
         requestInfo.forEach((request)=> {
-            console.log('ADDING VISIT DATE TO REQUEST: '  + request.start);
             let visitItem = {
                 'date' : request.start,
                 'timeofday' : request.timeWindow,
@@ -1275,43 +1389,12 @@
             'visitdays' : '1',  
             'visits' : listOfVisits
         };
-
         console.log(request); 
-
-        let sampleVisitRequest =   {
-            "start":"07/24/2019",
-            "end":"08/27/2019",
-            "servicecode":"29",
-            "prettypets":"Apple, Bubbles",
-            "pets":"Apple,Bubbles",
-            "note":"Please be on time.",
-            "totaldays":4,
-            "visitdays":4,
-            "visits":
-                [
-                    {
-                        "date":"07/24/2019",
-                        "servicecode":"29",
-                        "timeofday":"5:00 pm-7:00 pm",
-                        "pets":"Apple,Bubbles"
-                    },
-         
-                    {
-                        "date":"7/25/2019",
-                        "servicecode":"29",
-                        "timeofday":"9:00 am-11:00 am",
-                        "pets":"Apple,Bubbles"
-                    },
-                    {
-                        "date":"7/25/2019",
-                        "servicecode":"29",
-                        "timeofday":"3:00 pm-5:00 pm",
-                        "pets":"Apple,Bubbles"
-                    }
-                ]
-
-        };
         LT.sendRequestSchedule(request);
+    }
+    function buildChangeVisitRequestFetch(changeRequestDict)  {
+
+
     }
 
     // ***********************************************
@@ -1319,18 +1402,27 @@
     // ***********************************************
 
     function calculateVisitCharges(visitDate, serviceID, numPets) {
-        let visitCharge = parseFloat(0);
+        let pricingDictionary ={} 
         let serviceList = LT.getServices();
         serviceList.forEach((service)=> {
             if (service.serviceCode == serviceID) {
+                let visitCharge = parseFloat(0);
+                let visitTax;
                 visitCharge += parseFloat(service.serviceCharge);
+                if (service.serviceTax != null) {
+                    visitTax = parseFloat(service.serviceTax);
+                } else {
+                    visitTax = parseFloat(0);
+                }
             }
         });
 
         let doesSurchargeApply = false;
+        let surchargeList = [];
         let surcharge_events = LT.getSurcharges();
         surcharge_events.forEach((surcharge) => {
             if (surcharge.surchargeDate != null) {
+
                 let sDate= new Date(surcharge.surchargeDate);
                 let visitDateNum = visitDate.getUTCDate();
                 let visitMonthNum = visitDate.getUTCMonth();
@@ -1343,7 +1435,6 @@
                 }
             } else {
                 //console.log(surcharge.surchargeType + ' ' + surcharge.charge);
-
             }
 
 

@@ -9,6 +9,8 @@
 
     <link href='../../assets/js/libs/fullcalendar-4.0.0/packages/core/main.css' rel='stylesheet' />
     <link href='../../assets/js/libs/fullcalendar-4.0.0/packages/daygrid/main.css' rel='stylesheet' />
+    <link href='../../assets/js/libs/fullcalendar-4.0.0/packages/timegrid/main.css' rel='stylesheet' />
+
     <link href='../../assets/js/libs/fullcalendar-4.0.0/packages/list/main.css' rel='stylesheet' />
     <link href='https://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
     <link type="text/css" rel="stylesheet" href="../../assets/css/leashtime-default/bootstrap.css?1422792965" />
@@ -27,6 +29,8 @@
     <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/interaction/main.js'></script>
     <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/list/main.js'></script>
     <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/daygrid/main.js'></script>
+    <script src='../../assets/js/libs/fullcalendar-4.0.0/packages/timegrid/main.js'></script>
+
     <script src='../assets/js/LT.js'></script>
     <script src='../assets/js/LTDateLib.js'></script>
     <script src='../assets/js/LeashtimeCalendar4-0-TED.js'></script>
@@ -61,7 +65,7 @@
                     <li>
                         <div class="brand-holder text-lg white-text"> <span class="m-r-10"><strong>CARE</strong>PORTAL™ </span>
                             <button class=" no-margin sm-padding btn transparent thin ink-reaction btn-info btn-raised" data-toggle="modal" data-target="#bizModal" aria-expanded="true">
-                                <span>PETLOVER LLC</span>
+                                <span id="bizNameTitle">PETLOVER LLC</span>
                             </button>
                         </div>
                     </li>
@@ -186,7 +190,7 @@
                                                                                 <div class="row">
                                                                                     <div class="col-xs-12 col-sm-8 p-r-0">
                                                                                         <div class="small-padding p-t-0">
-                                                                                            <img class="ltVR-visitPhoto" id="ltVR-visitPhoto" src="./assets/img/lilly.jpg" width="100%" />
+                                                                                            <img class="ltVR-visitPhoto" id="ltVR-visitPhoto" src="" width="100%" />
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-xs-12 col-sm-4 p-l-0 m-b-0">
@@ -643,24 +647,24 @@
                                                     <form class="form-horizontal" role="form">
                                                         <div class="modal-body no-padding">
                                                             <div class="alert text-lg m-b-0" role="alert">
-                                                                <h3 class="no-margin p-t-10"><span class="blue-text">Business Name</span></h3>
+                                                                <h3 class="no-margin p-t-10"><span class="blue-text" id="bizName">Business Name</span></h3>
                                                                 <br>
-                                                                <strong class="text-muted text-light m-r-5">Email:</strong> <a href="#1"><span class="blue-text">service@petbiz.com</span></a>
+                                                                <strong class="text-muted text-light m-r-5">Email:</strong> <a href="#1"><span class="blue-text id="bizEmail">service@petbiz.com</span></a>
                                                                 <br>
-                                                                <strong class="text-muted text-light m-r-5">Phone:</strong> <span class="blue-text">(804) 555-5555</span>
+                                                                <strong class="text-muted text-light m-r-5" id="bizPhone">Phone:</strong> <span class="blue-text">(804) 555-5555</span>
                                                                 <br>
-                                                                <strong class="text-muted text-light m-r-5">Address:</strong> <span class="blue-text">777 Good Morning Lane</span>
+                                                                <strong class="text-muted text-light m-r-5" id="bizAddress">Address:</strong> <span class="blue-text">777 Good Morning Lane</span>
                                                                 <br>
-                                                                <strong class="text-muted text-light m-r-5">State Zip:</strong> <span class="blue-text">Virgnia, 23226</span>
+                                                                <strong class="text-muted text-light m-r-5" id="bizZip">State Zip:</strong> <span class="blue-text">Virgnia, 23226</span>
                                                                 <br>
 
                                                                 <div class="text-divider"></div>
                                                                 <div class="btn-group btn-group-justified p-t-10" role="group" aria-label="Justified button group">
-                                                                    <a href="#!" class="btn btn-default-bright ">
+                                                                    <a href="#!" class="btn btn-default-bright" id="bizWebSite">
                                     WEBSITE</a>
-                                                                    <a href="#!" class="btn btn-default-bright">
+                                                                    <a href="#!" class="btn btn-default-bright" id="bizFacebook">
                                     FACEBOOK</a>
-                                                                    <a href="#!" class="btn btn-default-bright ">
+                                                                    <a href="#!" class="btn btn-default-bright" id="bizLinkedIn">
                                     LINKEDIN</a>
                                                                 </div>
 
