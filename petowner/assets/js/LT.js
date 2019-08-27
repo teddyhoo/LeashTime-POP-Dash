@@ -7,7 +7,6 @@ var LT = (function() {
 
 	var visit_list = [];
 	var surcharge_list= [];
-
 	var listServices = [];
 	var time_windows_list= [];
 	var requested_visits = [];
@@ -24,9 +23,9 @@ var LT = (function() {
 	// *       NETWORK GET FUNCTIONS
 	// ********************************************************************************************
 
-	async function loginPetOwnerPortalAjaxTED(event) {
+	 async function loginPetOwner(event) {
 
-		checkClient();
+		getBrowserDetails();
 		userNameGlobal = window.localStorage.getItem('username');
 		passwordGlobal = window.localStorage.getItem('password');
 
@@ -49,13 +48,43 @@ var LT = (function() {
 			response.headers.forEach(function(val, key) { 
 				console.log(key + ' -> ' + val); 
 			 });
-			return response.json()
+			return response.json();
+		});
+		event.location = "./online/pop-calendar.html";
+	}
+	
+	async function loginPetOwnerPortalAjaxTED(event) {
+
+		getBrowserDetails();
+		userNameGlobal = window.localStorage.getItem('username');
+		passwordGlobal = window.localStorage.getItem('password');
+
+		let uName;
+		let pWord;
+
+		if (userNameGlobal == null) {
+			uName = document.getElementById('username').value;
+			pWord = document.getElementById('password').value;
+			window.localStorage.setItem('username', uName);
+			window.localStorage.setItem('password',pWord);
+		} else {
+			uName = userNameGlobal;
+			pWord = passwordGlobal;
+		}
+
+		let loginURL = 'https://leashtime.com/pop-login.php?user_name=' + uName + '&user_pass=' + pWord;
+		
+		let loginRequest = await fetch(loginURL).then((response)=> {
+			response.headers.forEach(function(val, key) { 
+				console.log(key + ' -> ' + val); 
+			 });
+			return response.json();
 		});
 		event.location = "./online/pop-calendar-TED.html";
 	}
 	async function loginPetOwnerPortalAjax(event) {
 
-		checkClient();
+		getBrowserDetails();
 
 		console.log('Login pet owner portal ajax');
 		userNameGlobal = window.localStorage.getItem('username');
@@ -181,15 +210,19 @@ var LT = (function() {
 			dictKeys.forEach((vKey) => {
 				if (vKey == 'visits') {
 					let requestArray = visitDic[vKey];
-					requestArray.forEach((newVisit)=> {
-						let visitRequestItemKeys = Object.keys(newVisit);
-						//console.log('-----NEW VISIT -----');
-						visitRequestItemKeys.forEach((vvKey)=> {
-							//console.log(vvKey + ' --> ' + newVisit[vvKey]);
+					if (requestArray != null) {
+
+						requestArray.forEach((newVisit)=> {
+							let visitRequestItemKeys = Object.keys(newVisit);
+							//console.log('-----NEW VISIT -----');
+							visitRequestItemKeys.forEach((vvKey)=> {
+								//console.log(vvKey + ' --> ' + newVisit[vvKey]);
+							});
+							let requestVisit = new RequestedVisit(newVisit);
+							requested_visits.push(requestVisit);
 						});
-						let requestVisit = new RequestedVisit(newVisit);
-						requested_visits.push(requestVisit);
-					});
+					}
+					
 				}
 			});
 		});
@@ -218,26 +251,18 @@ var LT = (function() {
 	// ***********************************************
 	// *			SEND REQUEST FUNCTIONS
 	// ***********************************************
-	async function sendUncancelRequest (uncancelDictionary) {
-		console.log('UNCANCEL REQUEST');
-
-		let url = "https://leashtime.com/client-own-schedule-change-json.php";
+	async function sendRequestSchedule(visitJson) {
+		let url = 'https://leashtime.com/client-scheduler-json-post.php';
 		let options = {
 			'method' : 'POST',
 			'headers' : {
 				'accept' : 'application/json',
 				'content-type' : 'application/json'
 			},
-			'body' : JSON.stringify(uncancelDictionary)
-		};		
-
+			'body' : JSON.stringify(visitJson)
+		};
 		let scheduleRequest = await fetch(url, options);
 		let scheduleRequestResponse = await scheduleRequest.json();
-		console.log(scheduleRequestResponse);
-	}
-	async function sendChangeVisitRequest (url, visitID,  changeType,  changeNote) {
-
-		console.log('CHANGE VISIT REQUEST');
 	}
 	async function sendCancelVisitRequest (cancelVisitList) {
 
@@ -253,23 +278,44 @@ var LT = (function() {
 			'body' : JSON.stringify(cancelVisitList)
 		};		
 
-		let scheduleRequest = await fetch(url, options);
-		let scheduleRequestResponse = await scheduleRequest.json();
-		console.log(scheduleRequestResponse);
+		let cancelRequest = await fetch(url, options);
+		let cancelRequestResponse = await cancelRequest.json();
 	} 
-	async function sendRequestSchedule(visitJson) {
-		let url = 'https://leashtime.com/client-scheduler-json-post.php';
+	async function sendUncancelRequest (uncancelDictionary) {
+		console.log('UNCANCEL REQUEST');
+
+		let url = "https://leashtime.com/client-own-schedule-change-json.php";
 		let options = {
 			'method' : 'POST',
 			'headers' : {
 				'accept' : 'application/json',
 				'content-type' : 'application/json'
 			},
-			'body' : JSON.stringify(visitJson)
-		};
-		let scheduleRequest = await fetch(url, options);
-		let scheduleRequestResponse = await scheduleRequest.json();
+			'body' : JSON.stringify(uncancelDictionary)
+		};		
+
+		let uncancelRequest = await fetch(url, options);
+		let uncancelRequestResponse = await uncancelRequest.json();
 	}
+	async function sendChangeVisitRequest (changeDictionary) {
+
+		console.log('CHANGE VISIT REQUEST');
+
+		let url = "https://leashtime.com/client-own-schedule-change-json.php";
+		let options = {
+			'method' : 'POST',
+			'headers' : {
+				'accept' : 'application/json',
+				'content-type' : 'application/json'
+			},
+			'body' : JSON.stringify(changeDictionary)
+		};		
+
+		let changeRequest = await fetch(url, options);
+		let changeRequestResponse = await changeRequest.json();
+
+	}
+
 	// ***********************************************
 	// *			RETURN DATA ARRAYS UTILITY FUNCTIONS
 	// ***********************************************
@@ -290,12 +336,14 @@ var LT = (function() {
 		return surcharge_list;
 	}
 	function getRequestedVisits() {
+
 		return requested_visits;
 	}
 	function getBizInfo() {
+
 		return businessInfo;
 	}
-	function checkClient() {
+	function getBrowserDetails() {
 		console.log(location.hostname);
 		console.log(navigator.appCodeName);
 		console.log(navigator.appName);
@@ -601,6 +649,10 @@ var LT = (function() {
 	class SurchargeItem {
 		constructor(surchargeDictionary) {
 			
+			/*let surchargeKeys = Object.keys(surchargeDictionary);
+			surchargeKeys.forEach((key)=> {
+				console.log(key + ' --> ' + surchargeDictionary[key]);
+			});*/
 			this.surchargeTypeID = surchargeDictionary['surchargetypeid'];
 			this.surchargeLabel = surchargeDictionary['label'];
 			this.description = surchargeDictionary['description'];
@@ -630,6 +682,11 @@ var LT = (function() {
 
 			} 
 
+			/*console.log('SURCHARGE ID: ' + this.surchargeTypeID + ' LABEL: ' + this.surchargeLabel);
+			console.log('----------------------------------------------------------------------');
+			console.log('DESCRIPTION: ' + this.description);
+			console.log('DATE: ' + this.surchargeDate + ' TYPE: ' + this.surchargeType + ' AMOUNT: ' + this.charge);*/
+
 		}
 	};
 	class BizInfo {
@@ -657,7 +714,7 @@ var LT = (function() {
 			let bKeys = Object.keys(businessElem);
 			let cKeys = Object.keys(clientElem);
 
-			succKeys.forEach((key)=> {
+			/*succKeys.forEach((key)=> {
 				console.log('[s] ' + key + ' -> ' + successElem[key]);
 			});
 			bKeys.forEach((key)=> {
@@ -665,12 +722,14 @@ var LT = (function() {
 			});
 			cKeys.forEach((key)=> {
 				console.log('[c] ' + key + ' -> ' + clientElem[key]);
-			});
+			});*/
 		}
 	};
 	class RequestedVisit {
 		constructor(requestVisitInfo) {
-			this.date = requestVisitInfo['date'];
+			this.date = new Date(requestVisitInfo['date']);
+			this.month = this.date.getUTCMonth()+1;
+			this.dateNum = this.date.getUTCDate();
 			this.timeOfDay = requestVisitInfo['timeofday'];
 			this.serviceCode = requestVisitInfo['servicecode'];
 			this.pets = requestVisitInfo['pets'];
@@ -707,8 +766,9 @@ var LT = (function() {
 		sendChangeVisitRequest : sendChangeVisitRequest,
 		sendRequestSchedule : sendRequestSchedule,
 		loginPetOwnerPortalAjax :loginPetOwnerPortalAjax,
+		loginPetOwner : loginPetOwner,
 		getPetOwnerVisitsAjax : getPetOwnerVisitsAjax,
-		checkClient : checkClient,
+		getBrowserDetails : getBrowserDetails,
 		loginPetOwnerPortalAjaxTED : loginPetOwnerPortalAjaxTED
 	}
 	module.exports = {

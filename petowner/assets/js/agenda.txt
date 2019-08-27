@@ -1,0 +1,63 @@
+STEERING COMMITTEE MEETING AGENDA
+AUGUST 26, 2019
+
+1. DEMO: PET PARENT PORTAL
+
+	- ACTIONS: 
+		- request single visit
+		- request multiple visits
+		- cancel, uncancel
+		- drag and drop change request
+
+	- SERVER REQUEST QUEUE: 
+		transmit success to current request queue
+		approve request and live
+
+	- PENDING status state reflected in UI
+
+	- SUCHARGE calendar days displayed [charges included in requested schedules]
+
+	- VISIT REPORT VIEW
+
+	- MONTH / WEEK TOGGLE
+
+	- CUSTOM BUSINESS LOGO AND CONTACT ELEMENTS
+
+2. FUNCTIONALITY GAP
+
+	- BILLING
+		- invoice history
+		- enter payment info
+		- process ad-hoc payment
+	
+	- SCHEDULE REQUEST WITH:
+		- multiple days
+		- each day with multiple visits
+		- but not the same pattern
+
+	- COMPLETED SCHEDULE REQUEST INVOICE ITEMIZATION OF CHARGES VIEW
+
+	- CHANGE PASSWORD
+
+3. NEXT PHASE: PET PARENT PORTAL
+
+	- PROFILE EDIT
+		- explanation of the implicaitons of pending queue for profile editing sessions
+		- persistence model and workflow for multi-session profile updating
+
+	- ENHANCED CHAGE REQUEST (e.g. time of day, service)
+
+	- NOTE ON REQUEST [possibly tied to messaging architecture]
+
+	- SITTER GRATUITY ON VISIT REPORT [need to figure out pacing and manage transaction volume]
+
+	- MOBILE STYLE RESPONSIVE
+
+4.	--------FOLLOWING ARE NEW CAPABILITIES THAT ARE NOT CONSIDERED MVP------
+
+	- GALLERY VIEW
+
+	- TIMELINE VIEW
+
+	- LOGIN PAGE: oauth and other credential resolution flows
+	
