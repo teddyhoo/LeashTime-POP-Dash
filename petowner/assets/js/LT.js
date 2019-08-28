@@ -520,14 +520,14 @@ var LT = (function() {
 		constructor(visitDictionary) {
 			this.appointmentid = visitDictionary['appointmentid'];
 			this.date = visitDictionary['date'];     						// YYYY-MM-DD
+			console.log(this.date);
 			let jsDate = new Date(this.date);
-			this.dayWeek = jsDate.getDay();
-			this.dateNum = jsDate.getDate();
-			this.jsMonth = jsDate.getMonth();
-			//console.log('ORIGINAL DATE: ' + this.date + '  as follows.  DAY WEEK: ' + this.dayWeek + ', DATE NUM: ' + this.dateNum + ' MONTH: ' + this.jsMonth);
-
+			this.dayWeek = jsDate.getUTCDay();
+			this.dateNum = jsDate.getUTCDate();
+			this.jsMonth = jsDate.getUTCMonth();
+			this.jsYear = jsDate.getFullYear();
+			console.log('Day week: ' + this.dayWeek + ' Date: ' + this.dateNum + ' Month: ' + this.jsMonth + ' Year: ' + this.jsYear);
 			this.pendingState = parseInt(visitDictionary['pendingchange']);
-			//console.log(this.pendingState);
 			if(this.pendingState != null) {
 				this.pendingType = visitDictionary['pendingchangetype'];
 			}

@@ -87,7 +87,6 @@
                 let oldEvent = info.oldEvent;
                 let deltaEvent = info.delta;
                 dragEndDate = droppedEvent.start;
-                console.log('START: ' + dragBeginDate + ', END: ' + dragEndDate + ' DELTA days: ' + deltaEvent.days + ' months: ' + deltaEvent.months);
                 displayDragDropChangeView(info);
 
                 if (LTDateLib.isValidDate(dragEndDate,dragBeginDate)) {
@@ -101,10 +100,6 @@
                 let eventID = info.event.id;
                 let eventTitle = info.event.title;
                 let elementHolder = info.el;
-                let styleElement = elementHolder.style
-                //styleElement.cssText = 'background-color: white';
-                //console.log(styleElement.cssText);
-                //console.log('Event id: ' + eventID + ' Title: ' + eventTitle);
                 buildCalendarCellView(info.el, eventTitle, eventID, eventInfo);
 
             }
@@ -187,45 +182,90 @@
     function buildCalendarCellView(element, eventTitle, eventID, event) {
         let visitID = eventID;
         let panelID = visitID;
+        let styleElement = element.style
         let calPanelDiv = document.createElement('div');
+        let calEventDiv = document.createElement('div');
+        let calEventHeader = document.createElement('div');
+        let evtHead = document.createElement('header');
+        let editBtn = document.createElement('i');
+        let evtTitle = document.createElement('span');
+
+
+        calPanelDiv.appendChild(calEventDiv);
+        calEventDiv.appendChild(calEventHeader);
+        calPanelDiv.appendChild(evtHead);
+        calEventHeader.appendChild(evtHead);
+
+        calEventHeader.innerHTML = event.timeWindow;
+
         calPanelDiv.setAttribute('id', 'panel-'+visitID);
         calPanelDiv.setAttribute('class', 'lt-CalendarPanel panel-group');
 
-        let calEventDiv = document.createElement('div');
-        calPanelDiv.setAttribute('id', 'event-'+visitID);
-        calEventDiv.setAttribute('class' , 'lt-ListItem card panel transparent');
-        calPanelDiv.appendChild(calEventDiv);
+        //evtHead.appendChild(editBtn);
+        //evtHead.appendChild(evtTitle);
+        //calPanelDiv.setAttribute('id', 'event-'+visitID);
+        //calEventDiv.setAttribute('class' , 'lt-ListItem card panel transparent');
 
-        let calEventHeader = document.createElement('div');
         calEventHeader.setAttribute('class' , 'card-head card-head-xs');
         calEventHeader.setAttribute('data-toggle', 'modal');
         calEventHeader.setAttribute('data-parent', '#panel-' + panelID);
         calEventHeader.setAttribute('data-target', '#formModal');
         calEventHeader.setAttribute('aria-expanded', 'false');
-        calEventDiv.appendChild(calEventHeader);
 
         if (event.status == 'completed') {
             calEventHeader.setAttribute('class' , 'card-head card-head-xs panel-group style-success');
+            styleElement.cssText = 'background-color: #4caf50';
+
+            calEventHeader.innerHTML = event.arrivalTime + ' - ' + event.completionTime;
+
+
         } else if (event.status == 'canceled') {
+
             calEventHeader.setAttribute('class' , 'card-head card-head-xs panel-group style-danger');
+            styleElement.cssText = 'background-color: #f44336';
+            calEventHeader.innerHTML = event.timeWindow;
+
+
         } else if (event.status == 'INCOMPLETE') {
-            calEventHeader.setAttribute('class', 'card-head card-head-xs panel-group style-default');
+
+            calEventHeader.setAttribute('class', 'card-head card-head-xs panel-group style-info');
+            styleElement.cssText = 'background-color: #2196f3';
+
+            let timeBeginEnd; 
+            let timeReg = new RegExp('([0-9]+):([0-9]+):([0-9]+) - ([0-9]+):([0-9]+):([0-9]+)')
+            let amPM ='a';
+
+            if (event.timeWindow != null) {
+                timeBeginEnd = timeReg.exec(event.timeWindow);
+            } 
+            let timeBegin = timeBeginEnd[1];
+            let timeEnd = timeBeginEnd[4];
+            let timeBeginInt = parseInt(timeBegin);
+            let timeEndInt = parseInt(timeEnd);
+
+            if (timeBeginInt > 12) {
+                timeBeginInt = timeBeginInt - 12;
+                timeEndInt = timeEndInt - 12;
+                amPM = 'p';
+            }
+          
+
+
+            calEventHeader.innerHTML = timeBeginInt + ' - ' + timeEndInt + amPM;
+
         } 
         if (event.isPending) {
+
             calEventHeader.setAttribute('class' , 'card-head card-head-xs  panel-group style-warning');
+            styleElement.cssText = 'background-color:ff9800';
+            calEventHeader.innerHTML = 'PENDING: ' + event.pendingType;
+
         }
 
-        let evtHead = document.createElement('header');
-        //calEventHeader.appendChild(evtHead);
-        calPanelDiv.appendChild(evtHead);
-        let editBtn = document.createElement('i');
-        editBtn.setAttribute('class', 'fa fa-pencil lt-hide-toggle pull-right');
-        //evtHead.appendChild(editBtn);
+        //editBtn.setAttribute('class', 'fa fa-pencil lt-hide-toggle pull-right');
 
-        let evtTitle = document.createElement('span');
         evtTitle.setAttribute('class', 'lt-ServiceName');
         evtTitle.innerHTML = event.timeWindow;
-        evtHead.appendChild(evtTitle);
 
         let br = document.createElement('br');
         evtHead.appendChild(br);
@@ -252,10 +292,12 @@
             eventTitle += '\n' + visit.note;
         }
         if (visit.arrival_time != null) {
-            visitDateObj = new Date(visit.date + ' ' + visit.arrival_time);
+            visitDateObj = new Date(visit.date + ' T ' + visit.arrival_time);
         } else {
             visitDateObj = new Date(visit.date);
         }
+        console.log('START attribute for calendar view: ' + visitDateObj);
+
         let eventDateStart = visitDateObj;
         let startMonth = eventDateStart.getUTCMonth() + 1;
         let startDate = eventDateStart.getUTCDate();
@@ -310,7 +352,7 @@
             note: visit.visitNote,
             visitDate : visitStartDateFormat,
             timeWindow : visit.time_window_start + ' - ' + visit.time_window_end,
-            arrivalTime : visit.arrival_timeDay,
+            arrivalTime : visit.arrival_time,
             completionTime: visit.completion_time,
             status : visit.status,
             isPending: pendingStatus,
